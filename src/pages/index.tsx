@@ -1,9 +1,17 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { prisma } from "lib/prisma";
+import { Product, Store } from "@prisma/client";
 
-const Home: NextPage = () => {
+type Props = {
+  stores: (Store & {
+    products: Product[];
+  })[];
+};
+
+const Home: NextPage<Props> = ({ stores }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -18,7 +26,7 @@ const Home: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
 
@@ -51,6 +59,20 @@ const Home: NextPage = () => {
             </p>
           </a>
         </div>
+
+        <ul>
+          {stores.map((store) => (
+            <li key={store.id}>
+              <span>{store.name}</span>
+              {" - "}
+              <span>Produkter: {store.products.length}</span>
+              {" - "}
+              <a href={store.baseUrl} target="_blank" rel="noreferrer">
+                LINK
+              </a>
+            </li>
+          ))}
+        </ul>
       </main>
 
       <footer className={styles.footer}>
@@ -59,14 +81,29 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const data = await prisma.store.findMany({
+    include: {
+      products: true,
+    },
+  });
+  const stores = JSON.parse(JSON.stringify(data));
+
+  return {
+    props: {
+      stores,
+    },
+  };
+};
+
+export default Home;
