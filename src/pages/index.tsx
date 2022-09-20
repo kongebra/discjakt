@@ -47,18 +47,27 @@ const Home: NextPage<Props> = ({ stores }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const data = await prisma.store.findMany({
-    include: {
-      products: true,
-    },
-  });
-  const stores = JSON.parse(JSON.stringify(data));
+  try {
+    const data = await prisma.store.findMany({
+      include: {
+        products: true,
+      },
+    });
+    const stores = JSON.parse(JSON.stringify(data));
 
-  return {
-    props: {
-      stores,
-    },
-  };
+    return {
+      props: {
+        stores,
+      },
+    };
+  } catch (ex) {
+    console.error(ex);
+    return {
+      props: {
+        stores: [],
+      },
+    };
+  }
 };
 
 export default Home;
