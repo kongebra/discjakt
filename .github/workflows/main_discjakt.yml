@@ -20,12 +20,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+          cache: "yarn"
 
-      - name: npm install, build, and test
+      - name: yarn install and build
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          yarn --freeze-lock
+          yarn build
 
       - name: copy standalone files
         run: |
