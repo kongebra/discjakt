@@ -19,7 +19,8 @@ type ProductPageHandler = ($: CheerioAPI) => {
 
 export type CrawlParams = {
   debug?: {
-    maxCount: number;
+    log?: boolean;
+    maxCount?: number;
   };
 
   store: Pick<Store, "name" | "baseUrl" | "sitemapUrl">;
@@ -46,7 +47,9 @@ async function POST(
   res: NextApiResponse,
   { debug, store: storeParam, handleSitemap, handleProductPage }: CrawlParams
 ) {
-  console.time(storeParam.name);
+  if (debug?.log) {
+    console.time(storeParam.name);
+  }
 
   const store = (await prisma.store.upsert({
     where: {
@@ -81,14 +84,18 @@ async function POST(
       });
     }
 
-    console.log(`${store.name} ${++count}/${urls.length}`);
+    if (debug?.log) {
+      console.log(`${store.name} ${++count}/${urls.length}`);
+    }
 
     if (debug?.maxCount && count >= debug.maxCount) {
       break;
     }
   }
 
-  console.timeEnd(storeParam.name);
+  if (debug?.log) {
+    console.timeEnd(storeParam.name);
+  }
 }
 
 async function crawlSitemap(store: StoreDetail, handleSitemap: SitemapHandler) {
