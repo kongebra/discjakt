@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: cURL request
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{\"secret\":\"${{ secrets.CRAWL_SECRET }}\"}' https://discjakt.azurewebsites.net/api/crawl/start
+          curl -X POST -H "Content-Type: application/json" -d '{\"secret\":\"${{ secrets.CRAWL_SECRET }}\"}' https://discjakt.azurewebsites.net/api/stores/crawl
