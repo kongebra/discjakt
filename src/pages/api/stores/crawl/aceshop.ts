@@ -7,10 +7,11 @@ export default async function handler(
 ) {
   crawlHelper(req, res, {
     store: {
-      name: "frisbeebutikken.no",
-      sitemapUrl: "https://frisbeebutikken.no/sitemap.xml",
-      baseUrl: "https://frisbeebutikken.no/",
+      name: "aceshop.no",
+      baseUrl: "https://www.aceshop.no",
+      sitemapUrl: "https://www.aceshop.no/sitemap.xml",
     },
+
     handleSitemap($) {
       const result: SitemapResponse[] = [];
 
@@ -25,6 +26,7 @@ export default async function handler(
 
       return result;
     },
+
     handleProductPage($) {
       const price = $(".product-price")?.text()?.trim().replace(",-", "") || "";
 
