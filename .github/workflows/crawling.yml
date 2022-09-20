@@ -1,0 +1,15 @@
+name: Crawling
+
+on:
+  schedule:
+    - cron: "5 0 * * *" # At 00:05
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Trigger crawler
+    runs-on: ubuntu-latest
+    steps:
+      - name: cURL request
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{\"secret\":\"${{ secrets.CRAWL_SECRET }}\"}' https://discjakt.azurewebsites.net/api/crawl/start
