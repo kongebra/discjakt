@@ -1,0 +1,25 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- DropForeignKey
+ALTER TABLE [dbo].[Product] DROP CONSTRAINT [Product_discId_fkey];
+
+-- AlterTable
+ALTER TABLE [dbo].[Product] ALTER COLUMN [discId] NVARCHAR(1000) NULL;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[Product] ADD CONSTRAINT [Product_discId_fkey] FOREIGN KEY ([discId]) REFERENCES [dbo].[Disc]([id]) ON DELETE SET NULL ON UPDATE CASCADE;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

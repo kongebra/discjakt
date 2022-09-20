@@ -39,12 +39,12 @@ async function productPage(url: string) {
   const html = await response.text();
   const $ = load(html);
 
-  const price = $("span.product-price")?.text()?.trim().replace(",-", "") || "";
+  const price = $(".product-price")?.text()?.trim().replace(",-", "") || "";
 
   const data = {
-    title: $('meta[property="og:title"]').attr("content")?.trim() || "",
+    title: $("h1").text()?.trim() || "",
     description: $('meta[name="description"]').attr("content")?.trim() || "",
-    imageUrl: $('meta[property="og:image"]').attr("content")?.trim() || "",
+    imageUrl: $(".product_image_price_row img").attr("src")?.trim() || "",
   };
 
   return {
@@ -66,10 +66,10 @@ export default async function handler(
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
-  console.time("krokholdgs.no");
+  console.time("frisbeebutikken.no");
 
-  const storeName = "krokholdgs.no";
-  const sitemapUrl = "https://krokholdgs.no/sitemap.xml";
+  const storeName = "frisbeebutikken.no";
+  const sitemapUrl = "https://frisbeebutikken.no/sitemap.xml";
   const urls = await sitemap(sitemapUrl);
 
   const store = (await prisma.store.upsert({
@@ -78,7 +78,7 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
     },
     create: {
       name: storeName,
-      baseUrl: "https://krokholdgs.no/",
+      baseUrl: "https://frisbeebutikken.no/",
       sitemapUrl,
     },
     update: {},
@@ -107,10 +107,10 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    console.log(`krokholdgs.no ${++count}/${urls.length}`);
+    console.log(`frisbeebutikken.no ${++count}/${urls.length}`);
   }
 
-  console.timeEnd("krokholdgs.no");
+  console.timeEnd("frisbeebutikken.no");
 }
 
 async function crawlUrl(
