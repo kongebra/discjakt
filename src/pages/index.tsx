@@ -41,7 +41,13 @@ const Home: NextPage<Props> = ({ stores }) => {
         </button>
       )}
 
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      <pre>
+        {JSON.stringify(
+          stores.map((x) => x.name),
+          null,
+          2
+        )}
+      </pre>
     </div>
   );
 };
