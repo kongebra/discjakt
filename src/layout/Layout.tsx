@@ -1,19 +1,19 @@
-import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
-import Footer from "./Footer";
+
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 type Props = React.PropsWithChildren<{}>;
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <Stack minH="100vh">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <Box flex={"auto"}>{children}</Box>
+      <div className="flex-auto">{children}</div>
 
       <Footer />
-    </Stack>
+    </div>
   );
 };
 

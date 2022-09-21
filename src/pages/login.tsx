@@ -1,11 +1,10 @@
 import React from "react";
 
 import { signIn } from "next-auth/react";
-import Main from "components/Main";
 
 const LoginPage = () => {
   return (
-    <Main>
+    <div className="max-w-7xl mx-auto">
       <div className="flex flex-col gap-3 py-5">
         <h1 className="text-4xl font-bold text-center mb-5">Logg inn</h1>
 
@@ -25,7 +24,7 @@ const LoginPage = () => {
           Facebook
         </button>
       </div>
-    </Main>
+    </div>
   );
 };
 

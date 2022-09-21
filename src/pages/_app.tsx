@@ -10,9 +10,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import config from "lib/react-query";
 
-import { ChakraProvider } from "@chakra-ui/react";
-import theme from "theme";
-
 import Layout from "layout/Layout";
 
 import "../styles/globals.css";
@@ -30,15 +27,13 @@ function App({
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <Head>
-            <title>DiscJakt</title>
-          </Head>
+        <Head>
+          <title>DiscJakt</title>
+        </Head>
 
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ChakraProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
 
         <ReactQueryDevtools />
       </QueryClientProvider>

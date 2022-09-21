@@ -1,50 +1,17 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 
-import { signIn, signOut, useSession } from "next-auth/react";
-
-import { Product, Store } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { useSession } from "next-auth/react";
 
 import useUser from "hooks/use-user";
-import Navbar from "layout/Navbar";
 
-import Main from "components/Main";
+type Props = {};
 
-type Props = {
-  stores: (Store & {
-    products: Product[];
-  })[];
-};
-
-const Home: NextPage<Props> = ({ stores }) => {
-  const session = useSession();
-  const user = useUser();
-
+const Home: NextPage<Props> = () => {
   return (
-    <Main>
-      <h1 className="text-xl font-semibold">Hello world</h1>
-    </Main>
+    <div className="max-w-7xl mx-auto">
+      <h1>Hello world!</h1>
+    </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  try {
-    const data = await prisma.store.findMany({});
-    const stores = JSON.parse(JSON.stringify(data));
-
-    return {
-      props: {
-        stores,
-      },
-    };
-  } catch (ex) {
-    console.error(ex);
-    return {
-      props: {
-        stores: [],
-      },
-    };
-  }
 };
 
 export default Home;

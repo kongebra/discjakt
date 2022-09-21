@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        "spin-fast": "spin 0.45s linear infinite",
+      },
+    },
   },
   plugins: [require("@tailwindcss/forms")],
 };
