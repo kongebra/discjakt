@@ -1,3 +1,4 @@
+import Avatar from "components/Avatar";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
 import { signIn, useSession } from "next-auth/react";
@@ -23,7 +24,7 @@ const links = [
 ];
 
 const Navbar = () => {
-  const { status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-gray-300">
@@ -36,14 +37,23 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {links.map(({ text, href }) => (
               <Link key={href} href={href} passHref>
-                <a className="">{text}</a>
+                <Button as="a" color="black" variant="link">
+                  {text}
+                </Button>
               </Link>
             ))}
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button>Login</Button>
+          {session ? (
+            <Avatar
+              name={session.user.name || "John Doe"}
+              src={session.user.image || ""}
+            />
+          ) : (
+            <Button>Login</Button>
+          )}
         </div>
       </div>
     </nav>

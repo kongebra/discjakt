@@ -14,6 +14,7 @@ type SpinnerColor =
 export type SpinnerProps = {
   size?: SpinnerSize;
   color?: SpinnerColor;
+  className?: string;
 };
 
 type SpinnerSizeClasses = Record<SpinnerSize, string>;
@@ -40,13 +41,15 @@ const spinnerColorClasses: SpinnerColorClasses = {
 const Spinner: React.FC<SpinnerProps> = ({
   size = "md",
   color = "primary",
+  className,
 }) => {
   return (
     <div
       className={clsx(
         "inline-block rounded-full border-2 border-b-transparent border-l-transparent animate-spin-fast",
         spinnerSizeClasses[size],
-        spinnerColorClasses[color]
+        spinnerColorClasses[color],
+        className
       )}
     >
       <span className="sr-only">Loading...</span>

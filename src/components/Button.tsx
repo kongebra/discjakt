@@ -1,12 +1,15 @@
 import clsx from "clsx";
-import React from "react";
+import React, { useMemo } from "react";
+import Spinner from "./Spinner";
 
 export type ButtonColor =
   | "primary"
   | "secondary"
   | "success"
   | "danger"
-  | "warning";
+  | "warning"
+  | "black"
+  | "white";
 export type ButtonVariant = "solid" | "outline" | "ghost" | "link";
 export type ButtonSize = "xs" | "sm" | "md" | "lg";
 
@@ -14,6 +17,8 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: ButtonColor;
   variant?: ButtonVariant;
   size?: ButtonSize;
+  isLoading?: boolean;
+  as?: React.ElementType;
 };
 
 type ButtonClasses = {
@@ -23,7 +28,7 @@ type ButtonClasses = {
 };
 
 const buttonDefaultClasses =
-  "inline-flex appearance-none items-center select-none relative whitespace-nowrap align-middle outline outline-transparent outline-2 outline-offset-2 leading-tight rounded-md font-semibold transition";
+  "inline-flex appearance-none justify-center items-center select-none relative whitespace-nowrap align-middle outline outline-transparent outline-2 outline-offset-2 leading-tight rounded-md font-semibold transition";
 
 type ButtonSizeClasses = Record<ButtonSize, string>;
 
@@ -80,6 +85,24 @@ const buttonClasses: ButtonClasses = {
       "text-yellow-500 hover:bg-yellow-50 active:bg-yellow-100 disabled:hover:bg-transparent",
     link: "text-yellow-500 hover:underline active:text-yellow-700 disabled:hover:no-underline",
   },
+  black: {
+    solid:
+      "bg-black hover:bg-gray-900 active:bg-gray-800 text-white disabled:hover:bg-black",
+    outline:
+      "border border-black text-black hover:bg-gray-50 active:bg-gray-200 disabled:hover:bg-transparent",
+    ghost:
+      "text-black hover:bg-gray-50 active:bg-gray-200 disabled:hover:bg-transparent",
+    link: "text-black hover:underline active:text-gray-700 disabled:hover:no-underline",
+  },
+  white: {
+    solid:
+      "bg-white hover:bg-gray-100 active:bg-gray-200 text-black disabled:hover:bg-white",
+    outline:
+      "border border-white text-white hover:bg-gray-50 hover:text-black active:bg-gray-200 disabled:hover:bg-transparent",
+    ghost:
+      "text-white hover:bg-gray-50 active:bg-gray-200 hover:text-black disabled:hover:bg-transparent",
+    link: "text-white hover:underline active:text-gray-200 disabled:hover:no-underline",
+  },
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -91,30 +114,56 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       type = "button",
       className,
       disabled,
+      isLoading,
       children,
+      as,
       ...rest
     },
     ref
   ) => {
+    const spinnerColor = useMemo(() => {
+      if (variant === "solid") {
+        if (color === "secondary" || color === "white") {
+          return "black";
+        }
+
+        return "white";
+      }
+
+      return color;
+    }, [color, variant]);
+
+    const Component = as || "button";
+    const resolvedType = as === "button" ? type : undefined;
+
     return (
-      <button
+      <Component
         ref={ref}
-        type={type}
+        type={resolvedType}
         className={clsx(
           buttonDefaultClasses,
           buttonClasses[color][variant],
           buttonSizeClasses[size],
           {
-            "cursor-not-allowed opacity-40 shadow-none": disabled,
+            "cursor-not-allowed opacity-40 shadow-none": disabled || isLoading,
           },
           className
         )}
-        aria-disabled={disabled || undefined}
-        disabled={disabled || undefined}
+        aria-disabled={disabled || isLoading || undefined}
+        disabled={disabled || isLoading || undefined}
         {...rest}
       >
-        {children}
-      </button>
+        {isLoading ? (
+          <>
+            <span className="opacity-0">{children}</span>
+            <div className="flex items-center absolute text-base leading-normal">
+              <Spinner color={spinnerColor} />
+            </div>
+          </>
+        ) : (
+          children
+        )}
+      </Component>
     );
   }
 );
