@@ -6,6 +6,9 @@ import { Product, Store } from "@prisma/client";
 import { prisma } from "lib/prisma";
 
 import useUser from "hooks/use-user";
+import Navbar from "layout/Navbar";
+
+import Main from "components/Main";
 
 type Props = {
   stores: (Store & {
@@ -18,47 +21,15 @@ const Home: NextPage<Props> = ({ stores }) => {
   const user = useUser();
 
   return (
-    <div className="container mx-auto">
+    <Main>
       <h1 className="text-xl font-semibold">Hello world</h1>
-
-      {!session.data && (
-        <button
-          type="button"
-          className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4"
-          onClick={() => signIn("auth0")}
-        >
-          Sign in
-        </button>
-      )}
-
-      {session.data && (
-        <button
-          type="button"
-          className="bg-red-500 hover:bg-red-600 text-white py-2 px-4"
-          onClick={() => signOut()}
-        >
-          Sign out
-        </button>
-      )}
-
-      <pre>
-        {JSON.stringify(
-          stores.map((x) => x.name),
-          null,
-          2
-        )}
-      </pre>
-    </div>
+    </Main>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   try {
-    const data = await prisma.store.findMany({
-      include: {
-        products: true,
-      },
-    });
+    const data = await prisma.store.findMany({});
     const stores = JSON.parse(JSON.stringify(data));
 
     return {

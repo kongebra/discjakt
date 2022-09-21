@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
-import Auth0Provider from "next-auth/providers/auth0";
+
+import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "lib/prisma";
@@ -8,18 +10,22 @@ import { prisma } from "lib/prisma";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    Auth0Provider({
-      clientId: process.env.AUTH0_CLIENT_ID || "",
-      clientSecret: process.env.AUTH0_CLIENT_SECRET || "",
-      issuer: process.env.AUTH0_ISSUER || "",
+    EmailProvider({
+      server: process.env.EMAIL_SERVER || "",
+      from: process.env.EMAIL_FROM || "",
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
 
   secret: "HBm3/JcDRRtmQKXzzM17oS/jZJEyJmyR3PEDKdCg6b4=",
 
   callbacks: {
-    session({ session, user }) {
+    session({ session, user, token }) {
       session.user.id = user.id;
+      session.user.role = user.role;
 
       return session;
     },
