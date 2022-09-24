@@ -46,8 +46,6 @@ async function PUT(req: NextApiRequest, res: NextApiResponse, id: string) {
     },
   });
 
-  console.log({ product });
-
   res.status(200).json(product);
 }
 

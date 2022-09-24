@@ -28,6 +28,7 @@ model Product {
   title       String
   description String
   imageUrl    String
+  isDisc      Boolean?
   store       Store          @relation(fields: [storeId], references: [id])
   storeId     String
   prices      ProductPrice[]

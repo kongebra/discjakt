@@ -10,7 +10,7 @@ const fetchProducts = async () => {
 };
 
 const updateProduct = async (record: Product) => {
-  const resp = await axios.put(`${BASE_URL}/${record.id}`, record);
+  const resp = await axios.put<Product>(`${BASE_URL}/${record.id}`, record);
   return resp.data;
 };
 
@@ -20,8 +20,12 @@ export default function useProducts() {
   const { data, ...rest } = useQuery<Product[]>(["products"], fetchProducts);
 
   const updateMutation = useMutation(updateProduct, {
-    onSuccess() {
+    onSuccess(resp) {
       queryClient.invalidateQueries(["products"]);
+
+      if ((resp && resp.discId) || resp.isDisc === false) {
+        queryClient.resetQueries(["data-cleaning"]);
+      }
     },
   });
 

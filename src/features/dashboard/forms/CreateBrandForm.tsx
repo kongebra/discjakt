@@ -23,7 +23,6 @@ const CreateBrandForm: React.FC<Props> = ({
 
   const isNameInUse = useCallback(
     (name: string) => {
-      console.log({ brands });
       const names = brands.map((x) => x.name.toLowerCase());
 
       return names.includes(name.toLowerCase());

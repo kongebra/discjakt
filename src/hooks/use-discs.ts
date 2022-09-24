@@ -22,7 +22,7 @@ export default function useDiscs() {
   const createMutation = useMutation(createDisc, {
     onSuccess() {
       queryClient.invalidateQueries(["discs"]);
-      queryClient.invalidateQueries(["data-cleaning"]);
+      queryClient.resetQueries(["data-cleaning"]);
     },
   });
 

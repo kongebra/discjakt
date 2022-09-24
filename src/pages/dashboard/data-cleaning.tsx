@@ -1,10 +1,13 @@
-import { Product } from "@prisma/client";
+import { Disc, Product } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import Button from "components/Button";
+import Drawer from "components/Drawer";
 import Modal from "components/Modal";
+import CreateDiscDrawer from "features/dashboard/drawers/CreateDiscDrawer";
 import CreateDiscForm from "features/dashboard/forms/CreateDiscForm";
 import CreateDiscModal from "features/dashboard/modals/CreateDiscModal";
 import useDiscs from "hooks/use-discs";
+import useProducts from "hooks/use-products";
 import DashboardLayout from "layout/DashboardLayout";
 import Image from "next/image";
 import React, { useMemo } from "react";
@@ -17,6 +20,9 @@ const fetchData = async () => {
 
 const DashboardDataCleaingPage = () => {
   const { discs } = useDiscs();
+  const {
+    mutations: { update: updateProduct },
+  } = useProducts();
 
   const { data, isFetching } = useQuery<Product>(["data-cleaning"], fetchData);
 
@@ -36,6 +42,17 @@ const DashboardDataCleaingPage = () => {
 
   const createModal = useBoolean();
   const selectModal = useBoolean();
+
+  const handleNoDisc = async () => {
+    if (data) {
+      const copy = {
+        ...data,
+        isDisc: false,
+      };
+
+      await updateProduct.mutateAsync(copy);
+    }
+  };
 
   const render = () => {
     if (isFetching) {
@@ -64,6 +81,11 @@ const DashboardDataCleaingPage = () => {
             <Button type="button" color="success" onClick={createModal.setTrue}>
               Lag ny disc
             </Button>
+
+            <Button type="button" color="danger" onClick={handleNoDisc}>
+              Ikke en disc
+            </Button>
+
             <Button type="button" color="warning" onClick={selectModal.setTrue}>
               Velg eksisterende
             </Button>
@@ -91,7 +113,7 @@ const DashboardDataCleaingPage = () => {
     <>
       <DashboardLayout>{render()}</DashboardLayout>
 
-      <CreateDiscModal
+      <CreateDiscDrawer
         show={createModal.value}
         onClose={createModal.setFalse}
         defaultValues={data}

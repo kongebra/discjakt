@@ -17,6 +17,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   const item = await prisma.product.findFirst({
     where: {
       discId: null,
+      isDisc: null,
     },
   });
 

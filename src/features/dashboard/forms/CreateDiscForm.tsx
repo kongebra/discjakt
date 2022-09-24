@@ -13,7 +13,7 @@ type Props = {
   defaultValues?: Product;
 
   onSubmit: (data: Disc) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 };
 
 const CreateDiscForm: React.FC<Props> = ({
@@ -72,28 +72,50 @@ const CreateDiscForm: React.FC<Props> = ({
 
       <div className="flex gap-3">
         <div className="flex-1">
-          <FormInput type="number" label="Speed" {...form.register("speed")} />
+          <FormInput
+            type="number"
+            label="Speed"
+            {...form.register("speed")}
+            step="0.5"
+          />
         </div>
         <div className="flex-1">
-          <FormInput type="number" label="Glide" {...form.register("glide")} />
+          <FormInput
+            type="number"
+            label="Glide"
+            {...form.register("glide")}
+            step="0.5"
+          />
         </div>
         <div className="flex-1">
-          <FormInput type="number" label="Turn" {...form.register("turn")} />
+          <FormInput
+            type="number"
+            label="Turn"
+            {...form.register("turn")}
+            step="0.5"
+          />
         </div>
         <div className="flex-1">
-          <FormInput type="number" label="Fade" {...form.register("fade")} />
+          <FormInput
+            type="number"
+            label="Fade"
+            {...form.register("fade")}
+            step="0.5"
+          />
         </div>
       </div>
 
       <div className="flex justify-between pt-3">
-        <Button
-          type="button"
-          variant="outline"
-          color="secondary"
-          onClick={onCancel}
-        >
-          Avbryt
-        </Button>
+        {onCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            color="secondary"
+            onClick={onCancel}
+          >
+            Avbryt
+          </Button>
+        )}
 
         <Button type="submit" isLoading={form.formState.isSubmitting}>
           Lagre
