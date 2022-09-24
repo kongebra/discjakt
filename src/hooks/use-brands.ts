@@ -2,7 +2,8 @@ import { Brand } from "@prisma/client";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const BASE_URL = "http://localhost:3000/api/brands";
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const BASE_URL = `${API_URL}/api/brands`;
 
 const fetchBrands = async () => {
   const resp = await axios.get<Brand[]>(`${BASE_URL}`);

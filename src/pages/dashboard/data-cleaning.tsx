@@ -1,11 +1,8 @@
-import { Disc, Product } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import Button from "components/Button";
-import Drawer from "components/Drawer";
 import Modal from "components/Modal";
 import CreateDiscDrawer from "features/dashboard/drawers/CreateDiscDrawer";
-import CreateDiscForm from "features/dashboard/forms/CreateDiscForm";
-import CreateDiscModal from "features/dashboard/modals/CreateDiscModal";
 import useDiscs from "hooks/use-discs";
 import useProducts from "hooks/use-products";
 import DashboardLayout from "layout/DashboardLayout";
@@ -13,8 +10,11 @@ import Image from "next/image";
 import React, { useMemo } from "react";
 import { useBoolean } from "usehooks-ts";
 
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const BASE_URL = `${API_URL}/api/data`;
+
 const fetchData = async () => {
-  const resp = await fetch("http://localhost:3000/api/data");
+  const resp = await fetch(BASE_URL);
   return await resp.json();
 };
 
