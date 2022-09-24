@@ -12,7 +12,9 @@ type LinkType = {
   };
 };
 
-type Props = React.PropsWithChildren<{}>;
+type Props = React.PropsWithChildren<{
+  className?: string;
+}>;
 
 const links: LinkType[] = [
   {
@@ -49,7 +51,7 @@ const links: LinkType[] = [
   },
 ];
 
-const DashboardLayout: React.FC<Props> = ({ children }) => {
+const DashboardLayout: React.FC<Props> = ({ className, children }) => {
   const { pathname } = useRouter();
 
   return (
@@ -79,7 +81,9 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 overflow-x-auto">{children}</main>
+      <main className={clsx("flex-1 p-4 overflow-x-auto", className)}>
+        {children}
+      </main>
     </div>
   );
 };

@@ -20,9 +20,35 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const discs = await prisma.disc.findMany();
+  const pageIndexStr = Array.isArray(req.query.pageIndex)
+    ? req.query.pageIndex[0]
+    : req.query.pageIndex;
+  const pageSizeStr = Array.isArray(req.query.pageSize)
+    ? req.query.pageSize[0]
+    : req.query.pageSize;
 
-  res.status(200).json(discs);
+  const pageIndex = Number(pageIndexStr) || 0;
+  const take = Number(pageSizeStr) || 20;
+  const skip = pageIndex * take;
+
+  const totalCount = await prisma.disc.count();
+  const pageCount = Math.ceil(totalCount / take);
+
+  console.log({ totalCount, take, skip, pageIndexStr, pageSizeStr });
+
+  const rows = await prisma.disc.findMany({
+    skip,
+    take,
+    include: {
+      brand: true,
+      products: true,
+    },
+  });
+
+  res.status(200).json({
+    rows,
+    pageCount,
+  });
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
