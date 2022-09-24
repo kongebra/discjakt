@@ -3,11 +3,21 @@ import Button from "components/Button";
 import CreateBrandModal from "features/dashboard/modals/CreateBrandModal";
 import useBrands from "hooks/use-brands";
 import DashboardLayout from "layout/DashboardLayout";
+import { useSession } from "next-auth/react";
 import Image from "next/future/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { useBoolean } from "usehooks-ts";
 
 const DashboardBrandsPage = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+
   const { brands, isLoading } = useBrands();
 
   const createModal = useBoolean();
@@ -68,6 +78,18 @@ const DashboardBrandsPage = () => {
       </div>
     );
   };
+
+  if (status === "loading") {
+    return <div>loading...</div>;
+  }
+
+  if (session?.user.role !== "admin") {
+    return (
+      <div>
+        <p>no authorized</p>
+      </div>
+    );
+  }
 
   return (
     <>

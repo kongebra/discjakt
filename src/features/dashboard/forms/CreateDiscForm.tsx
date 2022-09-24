@@ -36,8 +36,12 @@ const CreateDiscForm: React.FC<Props> = ({
   });
 
   const brandOptions = useMemo(
-    () =>
-      brands
+    () => [
+      {
+        value: "",
+        label: "---",
+      },
+      ...brands
         .map((brand) => ({ value: brand.id, label: brand.name }))
         .sort((a, b) => {
           if (a.label > b.label) {
@@ -50,6 +54,7 @@ const CreateDiscForm: React.FC<Props> = ({
 
           return 0;
         }),
+    ],
     [brands]
   );
 
@@ -65,7 +70,9 @@ const CreateDiscForm: React.FC<Props> = ({
       <FormSelect
         label="Merke"
         options={brandOptions}
-        {...form.register("brandId")}
+        {...form.register("brandId", {
+          required: "Feltet er påkrevd",
+        })}
       />
 
       <FormInput label="Bilde URL" {...form.register("imageUrl")} />
@@ -75,7 +82,9 @@ const CreateDiscForm: React.FC<Props> = ({
           <FormInput
             type="number"
             label="Speed"
-            {...form.register("speed")}
+            {...form.register("speed", {
+              required: "Feltet er påkrevd",
+            })}
             step="0.5"
           />
         </div>
@@ -83,7 +92,9 @@ const CreateDiscForm: React.FC<Props> = ({
           <FormInput
             type="number"
             label="Glide"
-            {...form.register("glide")}
+            {...form.register("glide", {
+              required: "Feltet er påkrevd",
+            })}
             step="0.5"
           />
         </div>
@@ -91,7 +102,9 @@ const CreateDiscForm: React.FC<Props> = ({
           <FormInput
             type="number"
             label="Turn"
-            {...form.register("turn")}
+            {...form.register("turn", {
+              required: "Feltet er påkrevd",
+            })}
             step="0.5"
           />
         </div>
@@ -99,7 +112,9 @@ const CreateDiscForm: React.FC<Props> = ({
           <FormInput
             type="number"
             label="Fade"
-            {...form.register("fade")}
+            {...form.register("fade", {
+              required: "Feltet er påkrevd",
+            })}
             step="0.5"
           />
         </div>

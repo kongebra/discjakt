@@ -1,13 +1,17 @@
-import { Product } from "@prisma/client";
+import { Disc, Product } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import Button from "components/Button";
 import Modal from "components/Modal";
 import CreateDiscDrawer from "features/dashboard/drawers/CreateDiscDrawer";
+import SelectDiscDrawer from "features/dashboard/drawers/SelectDiscDrawer";
+import useBrands from "hooks/use-brands";
 import useDiscs from "hooks/use-discs";
 import useProducts from "hooks/use-products";
 import DashboardLayout from "layout/DashboardLayout";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useMemo } from "react";
+import { useRouter } from "next/router";
+import React, { useCallback, useMemo } from "react";
 import { useBoolean } from "usehooks-ts";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -19,7 +23,16 @@ const fetchData = async () => {
 };
 
 const DashboardDataCleaingPage = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+
   const { discs } = useDiscs();
+  const { brands } = useBrands();
   const {
     mutations: { update: updateProduct },
   } = useProducts();
@@ -43,11 +56,29 @@ const DashboardDataCleaingPage = () => {
   const createModal = useBoolean();
   const selectModal = useBoolean();
 
+  const getBrandName = useCallback(
+    (id: string) => {
+      return brands.find((brand) => brand.id === id)?.name;
+    },
+    [brands]
+  );
+
   const handleNoDisc = async () => {
     if (data) {
       const copy = {
         ...data,
         isDisc: false,
+      };
+
+      await updateProduct.mutateAsync(copy);
+    }
+  };
+
+  const handleMatchFound = async (disc: Disc) => {
+    if (data) {
+      const copy = {
+        ...data,
+        discId: disc.id,
       };
 
       await updateProduct.mutateAsync(copy);
@@ -98,9 +129,9 @@ const DashboardDataCleaingPage = () => {
               <p className="text-center">Ingen lignende discer funnet.</p>
             )}
 
-            {matches.map((match) => (
-              <Button key={match.id}>
-                {match.name} ({match.brandId})
+            {matches.map((disc) => (
+              <Button key={disc.id} onClick={() => handleMatchFound(disc)}>
+                {disc.name} ({getBrandName(disc.brandId)})
               </Button>
             ))}
           </div>
@@ -108,6 +139,18 @@ const DashboardDataCleaingPage = () => {
       </div>
     );
   };
+
+  if (status === "loading") {
+    return <div>loading...</div>;
+  }
+
+  if (session?.user.role !== "admin") {
+    return (
+      <div>
+        <p>no authorized</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -119,13 +162,11 @@ const DashboardDataCleaingPage = () => {
         defaultValues={data}
       />
 
-      <Modal
-        title="Velg disc"
+      <SelectDiscDrawer
         show={selectModal.value}
         onClose={selectModal.setFalse}
-      >
-        <p>Velg en disc</p>
-      </Modal>
+        defaultValues={data}
+      />
     </>
   );
 };
