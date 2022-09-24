@@ -1,0 +1,84 @@
+import { Brand } from "@prisma/client";
+import Button from "components/Button";
+import CreateBrandModal from "features/dashboard/modals/CreateBrandModal";
+import useBrands from "hooks/use-brands";
+import DashboardLayout from "layout/DashboardLayout";
+import Image from "next/future/image";
+import React from "react";
+import { useBoolean } from "usehooks-ts";
+
+const DashboardBrandsPage = () => {
+  const { brands, isLoading } = useBrands();
+
+  const createModal = useBoolean();
+
+  const render = () => {
+    if (isLoading) {
+      return <p>Loading...</p>;
+    }
+
+    const sortBrand = (a: Brand, b: Brand) => {
+      if (a.name > b.name) {
+        return 1;
+      }
+
+      if (a.name < b.name) {
+        return -1;
+      }
+
+      return 0;
+    };
+
+    return (
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h1 className="text-4xl font-bold mb-3">Brands</h1>
+
+          <Button onClick={createModal.setTrue}>Lag nytt brand</Button>
+        </div>
+
+        <div className="grid grid-cols-5 gap-3">
+          {brands.sort(sortBrand).map((brand) => (
+            <div key={brand.id} className="bg-slate-100 p-3 rounded">
+              <div className="flex gap-3">
+                <div>
+                  <Image
+                    className="rounded"
+                    src={brand.imageUrl}
+                    alt={brand.name}
+                    width={128}
+                    height={128}
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">{brand.name}</h2>
+                    <p>Discs: {0}</p>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <Button size="sm">Edit</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <DashboardLayout>{render()}</DashboardLayout>
+      <CreateBrandModal
+        show={createModal.value}
+        onClose={createModal.setFalse}
+      />
+      /
+    </>
+  );
+};
+
+export default DashboardBrandsPage;

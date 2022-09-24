@@ -1,3 +1,4 @@
+import DashboardLayout from "layout/DashboardLayout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -23,9 +24,9 @@ const DashboardPage = () => {
   }
 
   return (
-    <div>
+    <DashboardLayout>
       <h1>Dashboard</h1>
-    </div>
+    </DashboardLayout>
   );
 };
 

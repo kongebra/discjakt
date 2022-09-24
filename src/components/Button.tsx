@@ -28,7 +28,7 @@ type ButtonClasses = {
 };
 
 const buttonDefaultClasses =
-  "inline-flex appearance-none justify-center items-center select-none relative whitespace-nowrap align-middle outline outline-transparent outline-2 outline-offset-2 leading-tight rounded-md font-semibold transition";
+  "inline-flex appearance-none justify-center items-center select-none relative whitespace-nowrap align-middle outline outline-transparent outline-2 outline-offset-2 leading-tight rounded-md font-semibold transition focus:ring";
 
 type ButtonSizeClasses = Record<ButtonSize, string>;
 

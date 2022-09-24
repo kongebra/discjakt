@@ -1,59 +1,55 @@
-import Avatar from "components/Avatar";
-import Button from "components/Button";
-import Spinner from "components/Spinner";
-import { signIn, useSession } from "next-auth/react";
+import { useState } from "react";
+
 import Link from "next/link";
+
+import UserAvatar from "components/UserAvatar";
 
 const links = [
   {
-    text: "Home",
+    label: "Forsiden",
     href: "/",
   },
   {
-    text: "Discs",
+    label: "Discer",
     href: "/discs",
   },
   {
-    text: "Brands",
+    label: "Merker",
     href: "/brands",
   },
   {
-    text: "Stores",
+    label: "Butikker",
     href: "/stores",
   },
 ];
 
 const Navbar = () => {
-  const { data: session } = useSession();
+  const [show, setShow] = useState(false);
+  const toggle = () => setShow((prev) => !prev);
 
   return (
-    <nav className="bg-gray-300">
-      <div className="h-16 max-w-7xl mx-auto flex justify-between items-center">
-        <div className="flex items-center">
+    <nav className="bg-slate-100">
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
+        {/* LOGO + MENU */}
+        <div className="flex items-center gap-4">
           <Link href="/" passHref>
-            <a className="text-xl font-bold mr-6">DiscJakt</a>
+            <a className="text-2xl font-semibold">DiscJakt</a>
           </Link>
 
-          <div className="flex items-center gap-4">
-            {links.map(({ text, href }) => (
-              <Link key={href} href={href} passHref>
-                <Button as="a" color="black" variant="link">
-                  {text}
-                </Button>
-              </Link>
+          <ul className="flex gap-4">
+            {links.map(({ label, href }) => (
+              <li key={href}>
+                <Link href={href} passHref>
+                  <a className="text-slate-600 hover:text-slate-900">{label}</a>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
-        <div className="flex items-center gap-3">
-          {session ? (
-            <Avatar
-              name={session.user.name || "John Doe"}
-              src={session.user.image || ""}
-            />
-          ) : (
-            <Button>Login</Button>
-          )}
+        {/* LOGIN + ACCOUNT */}
+        <div className="flex items-center">
+          <UserAvatar />
         </div>
       </div>
     </nav>
