@@ -31,19 +31,23 @@ const DashboardDataCleaingPage = () => {
     },
   });
 
-  const { discs } = useDiscs();
+  const { data, isFetching } = useQuery<Product>(
+    ["data-cleaning"],
+    fetchData,
+    {}
+  );
+
+  const { discs, isFetching: isFetchingDiscs } = useDiscs({ pageSize: 9999 });
   const { brands } = useBrands();
   const {
     mutations: { update: updateProduct },
   } = useProducts();
 
-  const { data, isFetching } = useQuery<Product>(["data-cleaning"], fetchData);
-
   const matches = useMemo(() => {
     if (data) {
       const titleWords = data.title.toLowerCase().split(" ");
 
-      return discs.filter((disc) => {
+      return discs.rows.filter((disc) => {
         const discNameWords = disc.name.toLowerCase().split(" ");
 
         return titleWords.some((word) => discNameWords.includes(word));
@@ -52,7 +56,6 @@ const DashboardDataCleaingPage = () => {
 
     return [];
   }, [data, discs]);
-
   const createModal = useBoolean();
   const selectModal = useBoolean();
 

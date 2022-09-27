@@ -24,6 +24,8 @@ type Props = React.PropsWithChildren<{
   onClose: () => void;
 
   size?: DrawerSize;
+
+  className?: string;
 }>;
 
 const Drawer: React.FC<Props> = ({
@@ -32,6 +34,7 @@ const Drawer: React.FC<Props> = ({
   show,
   onClose,
   size = "md",
+  className,
 }) => {
   return (
     <Transition appear show={show} as={Fragment}>
@@ -64,7 +67,7 @@ const Drawer: React.FC<Props> = ({
             >
               <Dialog.Panel
                 className={clsx(
-                  "min-h-screen w-full transform overflow-hidden bg-white p-6 align-middle shadow-xl transition-all",
+                  "flex flex-col min-h-screen w-full transform overflow-hidden bg-white p-6 align-middle shadow-xl transition-all",
                   `max-w-${size}`
                 )}
               >
@@ -79,7 +82,7 @@ const Drawer: React.FC<Props> = ({
                   </button>
                 </Dialog.Title>
 
-                <div>{children}</div>
+                <div className={clsx("flex-1", className)}>{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -15,10 +15,10 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  secret: "HBm3/JcDRRtmQKXzzM17oS/jZJEyJmyR3PEDKdCg6b4=",
+  secret: process.env.NEXT_AUTH_SECRET,
 
   callbacks: {
-    session({ session, user, token }) {
+    session({ session, user }) {
       session.user.id = user.id;
       session.user.role = user.role;
 

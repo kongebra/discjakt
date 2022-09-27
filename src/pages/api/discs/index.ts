@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
+import { getQueryNumberValue, getQueryStringValue } from "utils/query";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,34 +21,57 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const pageIndexStr = Array.isArray(req.query.pageIndex)
-    ? req.query.pageIndex[0]
-    : req.query.pageIndex;
-  const pageSizeStr = Array.isArray(req.query.pageSize)
-    ? req.query.pageSize[0]
-    : req.query.pageSize;
+  const pageIndex = getQueryNumberValue("pageIndex", req) || 0;
+  const pageSize = getQueryNumberValue("pageSize", req) || 20;
 
-  const pageIndex = Number(pageIndexStr) || 0;
-  const take = Number(pageSizeStr) || 20;
+  const name = getQueryStringValue("name", req);
+  const brand = getQueryStringValue("brand", req);
+
+  // TODO: Expand to min-max values
+  const speed = getQueryNumberValue("speed", req);
+  const glide = getQueryNumberValue("glide", req);
+  const turn = getQueryNumberValue("turn", req);
+  const fade = getQueryNumberValue("fade", req);
+
+  const take = pageSize;
   const skip = pageIndex * take;
 
-  const totalCount = await prisma.disc.count();
+  const where = {
+    name: name ? { contains: name } : undefined,
+    brand: brand
+      ? {
+          name: { contains: brand },
+        }
+      : undefined,
+    speed,
+    glide,
+    turn,
+    fade,
+  };
+
+  const totalCount = await prisma.disc.count({
+    where,
+  });
   const pageCount = Math.ceil(totalCount / take);
 
-  console.log({ totalCount, take, skip, pageIndexStr, pageSizeStr });
-
   const rows = await prisma.disc.findMany({
+    where,
     skip,
     take,
     include: {
       brand: true,
-      products: true,
+      products: {
+        include: {
+          prices: true,
+        },
+      },
     },
   });
 
   res.status(200).json({
     rows,
     pageCount,
+    totalCount,
   });
 }
 

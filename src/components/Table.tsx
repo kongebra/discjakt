@@ -43,6 +43,7 @@ declare module "@tanstack/table-core" {
 export type PaginationData<T extends object> = {
   rows: T[];
   pageCount: number;
+  totalCount: number;
 };
 
 type Props<T extends object> = {

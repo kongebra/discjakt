@@ -19,6 +19,30 @@ import {
   FaRegUserCircle,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { IconType } from "react-icons/lib";
+
+type MenuLinkProps = {
+  icon: IconType;
+  href: string;
+  text: React.ReactNode;
+};
+
+const MenuLink = ({ icon, href, text }: MenuLinkProps) => {
+  const Icon = icon;
+
+  return (
+    <Link href={href} passHref>
+      <a
+        className={clsx(
+          "group flex w-full items-center rounded-md px-2 py-2 text-sm hover:bg-teal-100 text-gray-900"
+        )}
+      >
+        <Icon className="mr-2" />
+        {text}
+      </a>
+    </Link>
+  );
+};
 
 const UserAvatar = () => {
   const { user, isFetching, login } = useUser();
@@ -64,83 +88,37 @@ const UserAvatar = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y  divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1">
               <Menu.Item>
-                {({ active }) => (
-                  <div>
-                    <Link href="/account" passHref>
-                      <a
-                        className={clsx(
-                          "group flex w-full items-center rounded-md px-2 py-2 text-sm",
-                          active ? "bg-violet-500 text-white" : "text-gray-900"
-                        )}
-                      >
-                        <FaRegUserCircle className="mr-2" />
-                        Min side
-                      </a>
-                    </Link>
-                  </div>
-                )}
+                <MenuLink
+                  href="/account"
+                  icon={FaRegUserCircle}
+                  text="Min Side"
+                />
               </Menu.Item>
               <Menu.Item>
-                {({ active }) => (
-                  <div>
-                    <Link href="/account/favorites" passHref>
-                      <a
-                        className={clsx(
-                          "group flex w-full items-center rounded-md px-2 py-2 text-sm",
-                          active ? "bg-violet-500 text-white" : "text-gray-900"
-                        )}
-                      >
-                        <FaHeart className="mr-2" />
-                        Min favoritter
-                      </a>
-                    </Link>
-                  </div>
-                )}
+                <MenuLink
+                  href="/account/favorites"
+                  icon={FaHeart}
+                  text="Mine favoritter"
+                />
               </Menu.Item>
             </div>
             {user.role === "admin" && (
               <div className="px-1 py-1">
                 <Menu.Item>
-                  {({ active }) => (
-                    <div>
-                      <Link href="/dashboard" passHref>
-                        <a
-                          className={clsx(
-                            "group flex w-full items-center rounded-md px-2 py-2 text-sm",
-                            active
-                              ? "bg-violet-500 text-white"
-                              : "text-gray-900"
-                          )}
-                        >
-                          <FaRegGem className="mr-2" />
-                          Admin Dashboard
-                        </a>
-                      </Link>
-                    </div>
-                  )}
+                  <MenuLink
+                    href="/dashboard"
+                    icon={FaRegGem}
+                    text="Dashboard"
+                  />
                 </Menu.Item>
               </div>
             )}
             <div className="px-1 py-1">
               <Menu.Item>
-                {({ active }) => (
-                  <div>
-                    <Link href="/logout" passHref>
-                      <a
-                        className={clsx(
-                          "group flex w-full items-center rounded-md px-2 py-2 text-sm",
-                          active ? "bg-violet-500 text-white" : "text-gray-900"
-                        )}
-                      >
-                        <FaSignOutAlt className="mr-2" />
-                        Logg ut
-                      </a>
-                    </Link>
-                  </div>
-                )}
+                <MenuLink href="/logout" icon={FaSignOutAlt} text="Logg ut" />
               </Menu.Item>
             </div>
           </Menu.Items>

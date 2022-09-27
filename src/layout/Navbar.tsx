@@ -28,7 +28,7 @@ const Navbar = () => {
   const toggle = () => setShow((prev) => !prev);
 
   return (
-    <nav className="bg-slate-100">
+    <nav className="bg-teal-500 text-white">
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
         {/* LOGO + MENU */}
         <div className="flex items-center gap-4">
@@ -40,7 +40,7 @@ const Navbar = () => {
             {links.map(({ label, href }) => (
               <li key={href}>
                 <Link href={href} passHref>
-                  <a className="text-slate-600 hover:text-slate-900">{label}</a>
+                  <a className="hover:text-slate-200">{label}</a>
                 </Link>
               </li>
             ))}
