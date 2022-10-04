@@ -116,7 +116,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       isLoading,
       children,
-      as,
+      as = "button",
       ...rest
     },
     ref

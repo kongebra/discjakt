@@ -5,52 +5,47 @@ import useDiscs from "hooks/use-discs";
 import useProducts from "hooks/use-products";
 import React from "react";
 import CreateDiscForm from "../forms/CreateDiscForm";
+import EditDiscForm from "../forms/EditDiscForm";
 
 type Props = {
   show: boolean;
   onClose: () => void;
 
-  defaultValues?: Product;
+  defaultValues?: Disc;
 };
 
-const CreateDiscDrawer: React.FC<Props> = ({
-  show,
-  onClose,
-  defaultValues,
-}) => {
+const EditDiscDrawer: React.FC<Props> = ({ show, onClose, defaultValues }) => {
   const { brands } = useBrands();
-  const {
-    mutations: { create: createDisc },
-  } = useDiscs();
-  const {
-    mutations: { update: updateProduct },
-  } = useProducts();
+  const { mutations } = useDiscs();
 
   const onSubmit = async (data: Disc) => {
-    data.name = data.name.trim();
-    data.description = data.description.trim();
-
-    const disc = await createDisc.mutateAsync(data);
-
-    if (defaultValues && disc) {
-      await updateProduct.mutateAsync({
-        ...defaultValues,
-        discId: disc.id,
-      });
+    if (!defaultValues) {
+      return;
     }
+
+    const record = {
+      ...data,
+      name: data.name.trim(),
+      description: data.description.trim(),
+    };
+
+    delete (record as any).products;
+    delete (record as any).brand;
+
+    await mutations.update.mutateAsync({ id: defaultValues?.id, record });
 
     onClose();
   };
 
   return (
     <Drawer
-      title="Lag ny disc"
+      title="Editer  disc"
       show={show}
       onClose={onClose}
       size="xl"
       className="flex flex-col"
     >
-      <CreateDiscForm
+      <EditDiscForm
         brands={brands}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
@@ -59,4 +54,4 @@ const CreateDiscDrawer: React.FC<Props> = ({
   );
 };
 
-export default CreateDiscDrawer;
+export default EditDiscDrawer;

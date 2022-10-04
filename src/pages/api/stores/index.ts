@@ -14,7 +14,7 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const stores = await prisma.store.findMany({});
+  const stores = await prisma.store.findMany();
 
   res.status(200).json(stores);
 }

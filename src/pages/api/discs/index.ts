@@ -21,43 +21,7 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const pageIndex = getQueryNumberValue("pageIndex", req) || 0;
-  const pageSize = getQueryNumberValue("pageSize", req) || 20;
-
-  const name = getQueryStringValue("name", req);
-  const brand = getQueryStringValue("brand", req);
-
-  // TODO: Expand to min-max values
-  const speed = getQueryNumberValue("speed", req);
-  const glide = getQueryNumberValue("glide", req);
-  const turn = getQueryNumberValue("turn", req);
-  const fade = getQueryNumberValue("fade", req);
-
-  const take = pageSize;
-  const skip = pageIndex * take;
-
-  const where = {
-    name: name ? { contains: name } : undefined,
-    brand: brand
-      ? {
-          name: { contains: brand },
-        }
-      : undefined,
-    speed,
-    glide,
-    turn,
-    fade,
-  };
-
-  const totalCount = await prisma.disc.count({
-    where,
-  });
-  const pageCount = Math.ceil(totalCount / take);
-
-  const rows = await prisma.disc.findMany({
-    where,
-    skip,
-    take,
+  const discs = await prisma.disc.findMany({
     include: {
       brand: true,
       products: {
@@ -68,17 +32,14 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  res.status(200).json({
-    rows,
-    pageCount,
-    totalCount,
-  });
+  res.status(200).json(discs);
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
   const body = req.body as Disc;
 
-  body.imageUrl = await downloadAndUploadImage(body.imageUrl);
+  // azure subscription is down :'(
+  // body.imageUrl = await downloadAndUploadImage(body.imageUrl);
 
   const disc = await prisma.disc.create({
     data: {

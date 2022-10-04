@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "sqlserver"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Store {
@@ -108,9 +107,15 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          String?
+  role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
+}
+
+enum Role {
+  USER
+  SUBSCRIBER
+  ADMIN
 }
 
 model VerificationToken {

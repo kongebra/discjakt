@@ -47,24 +47,28 @@ const DashboardBrandsPage = () => {
           <Button onClick={createModal.setTrue}>Lag nytt brand</Button>
         </div>
 
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {brands.sort(sortBrand).map((brand) => (
             <div key={brand.id} className="bg-slate-100 p-3 rounded">
               <div className="flex gap-3">
                 <div>
-                  <Image
-                    className="rounded"
-                    src={brand.imageUrl}
-                    alt={brand.name}
-                    width={128}
-                    height={128}
-                  />
+                  {brand.imageUrl ? (
+                    <Image
+                      className="rounded"
+                      src={brand.imageUrl}
+                      alt={brand.name}
+                      width={128}
+                      height={128}
+                    />
+                  ) : (
+                    <div className="w-32 h-32 rounded bg-slate-300"></div>
+                  )}
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between">
                   <div>
                     <h2 className="text-2xl font-bold">{brand.name}</h2>
-                    <p>Discs: {0}</p>
+                    <p>Discs: {(brand as any)._count.discs}</p>
                   </div>
 
                   <div className="flex justify-end">
@@ -83,7 +87,7 @@ const DashboardBrandsPage = () => {
     return <div>loading...</div>;
   }
 
-  if (session?.user.role !== "admin") {
+  if (session?.user.role !== "ADMIN") {
     return (
       <div>
         <p>no authorized</p>

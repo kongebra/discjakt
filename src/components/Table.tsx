@@ -1,57 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
-  ColumnFiltersState,
   FilterFn,
   flexRender,
   getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
-  SortingFn,
-  sortingFns,
-  SortingState,
+  Header,
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 import Select from "./Select";
 
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import Input from "./Input";
-import {
-  compareItems,
-  RankingInfo,
-  rankItem,
-} from "@tanstack/match-sorter-utils";
 import { useDebounce } from "usehooks-ts";
-
-declare module "@tanstack/table-core" {
-  interface FilterFns {
-    fuzzy: FilterFn<any>;
-  }
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
-
-export type PaginationData<T extends object> = {
-  rows: T[];
-  pageCount: number;
-  totalCount: number;
-};
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 type Props<T extends object> = {
   title: React.ReactNode;
 
+  data: T[];
   columns: ColumnDef<T, any>[];
-
-  fetchData: (options: PaginationState) => Promise<PaginationData<T>>;
 };
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -67,86 +39,46 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
-
-const Table = <T extends object>({ title, columns, fetchData }: Props<T>) => {
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+const Table = <T extends object>({ title, data, columns }: Props<T>) => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const debouncedGlobalFilter = useDebounce(globalFilter, 200);
-
-  const fetchDataOptions = {
-    pageIndex,
-    pageSize,
-  };
-
-  const dataQuery = useQuery<PaginationData<T>>(
-    ["table", fetchDataOptions],
-    () => fetchData(fetchDataOptions),
-    {
-      keepPreviousData: true,
-      onSettled(data, error) {
-        console.log({ data });
-      },
-    }
-  );
-
-  const defaultData = useMemo<T[]>(() => [], []);
-
-  const pagination = useMemo(
-    () => ({ pageIndex, pageSize }),
-    [pageIndex, pageSize]
-  );
+  const delayedGlobalFilter = useDebounce(globalFilter, 200);
 
   const table = useReactTable<T>({
-    data: dataQuery.data?.rows ?? defaultData,
+    data,
     columns,
-    pageCount: dataQuery.data?.pageCount ?? -1,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
+
     state: {
-      pagination,
-      sorting,
-      columnFilters,
-      globalFilter: debouncedGlobalFilter,
+      globalFilter: delayedGlobalFilter,
     },
 
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
 
     globalFilterFn: fuzzyFilter,
 
+    // Pipeline
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-
-    manualPagination: true,
+    getSortedRowModel: getSortedRowModel(),
   });
+
+  function renderSortIcon({
+    column: { getCanSort, getIsSorted },
+  }: Header<T, unknown>): React.ReactNode {
+    if (getCanSort()) {
+      switch (getIsSorted()) {
+        case "asc":
+          return <FaSortUp />;
+        case "desc":
+          return <FaSortDown />;
+        case false:
+        default:
+          return <FaSort />;
+      }
+    }
+
+    return null;
+  }
 
   return (
     <div>
@@ -189,10 +121,7 @@ const Table = <T extends object>({ title, columns, fetchData }: Props<T>) => {
                         header.getContext()
                       )}
 
-                      {{
-                        asc: <FaSortUp />,
-                        desc: <FaSortDown />,
-                      }[header.column.getIsSorted() as string] ?? <FaSort />}
+                      {renderSortIcon(header)}
                     </div>
                   )}
                 </th>

@@ -22,7 +22,6 @@ async function GET(req: NextApiRequest, res: NextApiResponse<User | any>) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session?.user?.id) {
-    console.log("bad request?");
     return res.status(403).end("bad request");
   }
 
@@ -33,7 +32,6 @@ async function GET(req: NextApiRequest, res: NextApiResponse<User | any>) {
   });
 
   if (!user) {
-    console.log("user not found");
     return res.status(404).end("user not found");
   }
 

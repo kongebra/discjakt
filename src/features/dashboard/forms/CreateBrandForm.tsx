@@ -50,19 +50,9 @@ const CreateBrandForm: React.FC<Props> = ({
 
       <FormInput label="Beskrivelse" {...form.register("description")} />
 
-      <FormFileUpload
-        label="Bilde"
-        onFileUploaded={(url) => {
-          form.setValue("imageUrl", url);
-        }}
-      />
+      <FormInput label="Bilde" {...form.register("imageUrl")} />
 
-      <FormInput
-        label="Hjemmeside"
-        {...form.register("url", {
-          required: "Feltet er påkrevd",
-        })}
-      />
+      <FormInput label="Hjemmeside" {...form.register("url")} />
 
       <div className="flex justify-between pt-3">
         <Button

@@ -8,35 +8,15 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 const DashboardPage = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
-
   const { discs } = useDiscs();
   const { brands } = useBrands();
-  const { products } = useProducts();
   const { stores } = useStores();
+  const { products } = useProducts();
 
   const unlinkedProducts = useMemo(
     () => products.filter((x) => x.discId === null && x.isDisc !== false),
     [products]
   );
-
-  if (status === "loading") {
-    return <div>loading...</div>;
-  }
-
-  if (session?.user.role !== "admin") {
-    return (
-      <div>
-        <p>no authorized</p>
-      </div>
-    );
-  }
 
   return (
     <DashboardLayout className="bg-gray-100">

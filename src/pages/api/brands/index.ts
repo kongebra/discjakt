@@ -17,7 +17,11 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const brands = await prisma.brand.findMany();
+  const brands = await prisma.brand.findMany({
+    include: {
+      _count: true,
+    },
+  });
 
   res.status(200).json(brands);
 }

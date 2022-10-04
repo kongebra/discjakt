@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -52,7 +53,27 @@ const links: LinkType[] = [
 ];
 
 const DashboardLayout: React.FC<Props> = ({ className, children }) => {
-  const { pathname } = useRouter();
+  const router = useRouter();
+  const { pathname } = router;
+
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+
+  if (status === "loading") {
+    return <div>loading...</div>;
+  }
+
+  if (session?.user.role !== "ADMIN") {
+    return (
+      <div>
+        <p>no authorized</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row">

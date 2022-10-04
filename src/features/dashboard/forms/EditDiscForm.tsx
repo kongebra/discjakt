@@ -11,29 +11,20 @@ import { useForm } from "react-hook-form";
 type Props = {
   brands: Brand[];
 
-  defaultValues?: Product;
+  defaultValues?: Disc;
 
   onSubmit: (data: Disc) => void;
   onCancel?: () => void;
 };
 
-const CreateDiscForm: React.FC<Props> = ({
+const EditDiscForm: React.FC<Props> = ({
   brands,
   defaultValues,
   onSubmit,
   onCancel,
 }) => {
   const form = useForm<Disc>({
-    defaultValues: {
-      name: defaultValues?.title || "",
-      imageUrl: defaultValues?.imageUrl,
-      description: defaultValues?.description,
-
-      speed: 0,
-      glide: 0,
-      turn: 0,
-      fade: 0,
-    },
+    defaultValues,
   });
 
   const brandOptions = useMemo(
@@ -130,7 +121,7 @@ const CreateDiscForm: React.FC<Props> = ({
             <Image
               className="max-w-full h-auto rounded-lg mb-2"
               src={defaultValues?.imageUrl}
-              alt={defaultValues?.title}
+              alt={defaultValues?.name}
               width={512}
               height={512}
             />
@@ -158,4 +149,4 @@ const CreateDiscForm: React.FC<Props> = ({
   );
 };
 
-export default CreateDiscForm;
+export default EditDiscForm;

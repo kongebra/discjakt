@@ -14,16 +14,13 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const item = await prisma.product.findFirst({
+  const items = await prisma.product.findMany({
     where: {
       discId: null,
       isDisc: null,
     },
+    take: 20,
   });
 
-  if (item === null) {
-    return res.status(404).json({ message: "no more products without disc" });
-  }
-
-  res.status(200).json(item);
+  res.status(200).json(items);
 }

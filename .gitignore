@@ -38,3 +38,6 @@ next-env.d.ts
 
 # mssql
 /mssql
+
+# overlord
+/src/pages/api/overlord.ts

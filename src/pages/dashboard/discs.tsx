@@ -1,17 +1,12 @@
-import { Brand, Disc, Product } from "@prisma/client";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import axios from "axios";
+import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
+import { createColumnHelper } from "@tanstack/react-table";
 import Button from "components/Button";
-import DiscItemOne from "components/DiscItemOne";
-import DiscItemTwo from "components/DiscItemTwo";
-import Table, { PaginationData } from "components/Table";
-import useBrands from "hooks/use-brands";
+import Drawer from "components/Drawer";
+import Table from "components/Table";
+import EditDiscDrawer from "features/dashboard/drawers/EditDiscDrawer";
 import useDiscs from "hooks/use-discs";
 import DashboardLayout from "layout/DashboardLayout";
-import { useSession } from "next-auth/react";
-import Image from "next/future/image";
-import { useRouter } from "next/router";
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 
 type DiscDetails = Disc & {
   brand: Brand;
@@ -20,79 +15,139 @@ type DiscDetails = Disc & {
 
 const columnHelper = createColumnHelper<DiscDetails>();
 
-const columns = [
-  columnHelper.accessor("name", {
-    header: () => "Navn",
-    cell: ({ getValue }) => {
-      return getValue();
-    },
-  }),
-  columnHelper.accessor("brand.name", {
-    header: () => "Merke",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("speed", {
-    header: () => "Speed",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("glide", {
-    header: () => "Glide",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("turn", {
-    header: () => "Turn",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("fade", {
-    header: () => "Fade",
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("products", {
-    header: () => "Produkter",
-    cell: (info) => info.getValue().length,
-  }),
-];
+type DefaultColumnsProps = {
+  onEdit: (item: DiscDetails) => void;
+  onDelete: (item: DiscDetails) => void;
+};
+
+const defaultColumns = ({ onEdit, onDelete }: DefaultColumnsProps) => {
+  const columns = [
+    columnHelper.accessor("name", {
+      header: () => "Navn",
+      cell: ({ getValue }) => {
+        return getValue();
+      },
+    }),
+    columnHelper.accessor("brand.name", {
+      header: () => "Merke",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("speed", {
+      header: () => "Speed",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("glide", {
+      header: () => "Glide",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("turn", {
+      header: () => "Turn",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("fade", {
+      header: () => "Fade",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("products", {
+      header: () => "Produkter",
+      enableSorting: false,
+      cell: (info) => info.getValue().length,
+    }),
+    columnHelper.accessor("products", {
+      id: "price",
+      enableSorting: false,
+      header: () => "Lavest Pris",
+      cell: (info) => {
+        const products = info.getValue();
+        const prices = products
+          .map((x) => (x as Product & { prices: ProductPrice[] }).prices)
+          .flat();
+
+        const lowest = prices.reduce((prev, curr) =>
+          Number(prev.amount) < Number(curr.amount) ? prev : curr
+        );
+        const price = Number(lowest.amount.replace(",", "."));
+
+        return `${price.toFixed(2)} NOK`;
+      },
+    }),
+    columnHelper.accessor("id", {
+      header: () => "Action",
+      enableSorting: false,
+      cell: (info) => (
+        <div className="flex gap-3 items-center">
+          <Button
+            color="primary"
+            size="sm"
+            onClick={() => onEdit(info.row.original)}
+          >
+            Edit
+          </Button>
+          <Button
+            color="danger"
+            size="sm"
+            onClick={() => onDelete(info.row.original)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    }),
+  ];
+
+  return columns;
+};
 
 const DashboardDiscsPage = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
+  const { discs, mutations } = useDiscs();
 
-  const render = () => {
-    return (
-      <div>
-        <Table
-          title="Disker"
-          fetchData={async ({ pageIndex, pageSize }) => {
-            const resp = await axios.get<PaginationData<DiscDetails>>(
-              `http://localhost:3000/api/discs?pageIndex=${pageIndex}&pageSize=${pageSize}`
-            );
+  const [selectedDisc, setSelectedDisc] = useState<DiscDetails | undefined>();
+  const [deleteDisc, setDeleteDisc] = useState<DiscDetails | undefined>();
 
-            return resp.data;
-          }}
-          columns={columns}
-        />
-      </div>
-    );
+  const onEdit = (item: DiscDetails) => {
+    setSelectedDisc(item);
+  };
+  const onDelete = (item: DiscDetails) => {
+    setDeleteDisc(item);
   };
 
-  if (status === "loading") {
-    return <div>loading...</div>;
-  }
+  const columns = defaultColumns({ onEdit, onDelete });
 
-  if (session?.user.role !== "admin") {
-    return (
-      <div>
-        <p>no authorized</p>
-      </div>
-    );
-  }
+  return (
+    <>
+      <DashboardLayout className="bg-gray-100">
+        <div>
+          <Table title="Disker" data={discs} columns={columns} />
+        </div>
+      </DashboardLayout>
 
-  return <DashboardLayout className="bg-gray-100">{render()}</DashboardLayout>;
+      <EditDiscDrawer
+        show={selectedDisc !== undefined}
+        onClose={() => setSelectedDisc(undefined)}
+        defaultValues={selectedDisc}
+      />
+
+      <Drawer
+        title="Delete disc"
+        show={deleteDisc !== undefined}
+        onClose={() => setDeleteDisc(undefined)}
+      >
+        <Button
+          type="button"
+          color="danger"
+          onClick={async () => {
+            if (deleteDisc) {
+              await mutations.delete.mutateAsync(deleteDisc.id);
+              setDeleteDisc(undefined);
+            }
+          }}
+          isLoading={mutations.delete.isLoading}
+        >
+          Slett
+        </Button>
+      </Drawer>
+    </>
+  );
 };
 
 export default DashboardDiscsPage;

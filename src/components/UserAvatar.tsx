@@ -105,7 +105,7 @@ const UserAvatar = () => {
                 />
               </Menu.Item>
             </div>
-            {user.role === "admin" && (
+            {user.role === "ADMIN" && (
               <div className="px-1 py-1">
                 <Menu.Item>
                   <MenuLink

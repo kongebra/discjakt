@@ -1,7 +1,6 @@
 import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { PaginationData } from "components/Table";
 import { useState } from "react";
 import { useDebounce } from "usehooks-ts";
 
@@ -24,28 +23,8 @@ type SearchFilters = {
   fade?: number;
 };
 
-const fetchDiscs = async (
-  pageIndex: number,
-  pageSize: number,
-  filters: SearchFilters
-) => {
-  const keys = Object.keys(filters);
-  const searchQuery = keys
-    .map((key) => {
-      if (filters[key as keyof SearchFilters] !== undefined) {
-        return `&${key}=${filters[key as keyof SearchFilters]}`;
-      }
-
-      return "";
-    })
-    .filter((x) => x !== "")
-    .join("&");
-
-  const resp = await axios.get<PaginationData<DiscDetails>>(
-    `${BASE_URL}?pageIndex=${pageIndex}&pageSize=${pageSize}${
-      searchQuery.length > 0 ? searchQuery : ""
-    }`
-  );
+const fetchDiscs = async () => {
+  const resp = await axios.get<DiscDetails[]>(`${BASE_URL}`);
   return resp.data;
 };
 
@@ -54,69 +33,59 @@ const createDisc = async (record: Disc) => {
   return resp.data;
 };
 
+const updateDisc = async ({ id, record }: { id: string; record: Disc }) => {
+  const resp = await axios.put<Disc>(`${BASE_URL}/${id}`, record);
+  return resp.data;
+};
+
+const deleteDisc = async (id: string) => {
+  const resp = await axios.delete<Disc>(`${BASE_URL}/${id}`);
+  return resp.data;
+};
+
 type UseDiscsProps = {
   enabled?: boolean;
-
-  pageIndex?: number;
-  pageSize?: number;
-  filters?: SearchFilters;
-
-  delay?: number;
 };
 
 export default function useDiscs(
-  {
-    enabled,
-    filters: initialFilters,
-    pageIndex: initialPageIndex,
-    pageSize: initialPageSize,
-    delay,
-  }: UseDiscsProps = { enabled: true }
+  { enabled }: UseDiscsProps = { enabled: true }
 ) {
   const queryClient = useQueryClient();
 
-  const [pageIndex, setPageIndex] = useState(initialPageIndex || 0);
-  const [pageSize, setPageSize] = useState(initialPageSize || 20);
-
-  const [filters, setFilters] = useState<SearchFilters>(initialFilters || {});
-  const debouncedFilters = useDebounce(filters, delay || 0);
-
-  const { data, ...rest } = useQuery<PaginationData<DiscDetails>>(
-    ["discs", { pageIndex, pageSize, ...debouncedFilters }],
-    () => fetchDiscs(pageIndex, pageSize, debouncedFilters),
-    {
-      enabled: enabled,
-    }
-  );
+  const { data, ...rest } = useQuery<DiscDetails[]>(["discs"], fetchDiscs, {
+    enabled: enabled,
+  });
 
   const createMutation = useMutation(createDisc, {
     onSuccess() {
-      queryClient.invalidateQueries(["discs"]);
-      queryClient.resetQueries(["data-cleaning"]);
+      queryClient.resetQueries(["discs"]);
+      queryClient.invalidateQueries(["data-cleaning"]);
     },
   });
 
-  const defaultDiscs: PaginationData<DiscDetails> = {
-    rows: [],
-    pageCount: 0,
-    totalCount: 0,
-  };
+  const updateMutation = useMutation(updateDisc, {
+    onSuccess() {
+      queryClient.resetQueries(["discs"]);
+      queryClient.invalidateQueries(["data-cleaning"]);
+    },
+  });
+
+  const deleteMutation = useMutation(deleteDisc, {
+    onSuccess() {
+      queryClient.resetQueries(["discs"]);
+      queryClient.invalidateQueries(["data-cleaning"]);
+    },
+  });
 
   return {
-    discs: data || defaultDiscs,
+    discs: data || [],
 
     ...rest,
 
     mutations: {
       create: createMutation,
+      update: updateMutation,
+      delete: deleteMutation,
     },
-
-    pageIndex,
-    pageSize,
-    filters,
-
-    setPageIndex,
-    setPageSize,
-    setFilters,
   };
 }
