@@ -11,6 +11,7 @@ import React, { useState } from "react";
 type DiscDetails = Disc & {
   brand: Brand;
   products: Product[];
+  lowestPrice: number;
 };
 
 const columnHelper = createColumnHelper<DiscDetails>();
@@ -50,26 +51,11 @@ const defaultColumns = ({ onEdit, onDelete }: DefaultColumnsProps) => {
     }),
     columnHelper.accessor("products", {
       header: () => "Produkter",
-      enableSorting: false,
       cell: (info) => info.getValue().length,
     }),
-    columnHelper.accessor("products", {
-      id: "price",
-      enableSorting: false,
-      header: () => "Lavest Pris",
-      cell: (info) => {
-        const products = info.getValue();
-        const prices = products
-          .map((x) => (x as Product & { prices: ProductPrice[] }).prices)
-          .flat();
-
-        const lowest = prices.reduce((prev, curr) =>
-          Number(prev.amount) < Number(curr.amount) ? prev : curr
-        );
-        const price = Number(lowest.amount.replace(",", "."));
-
-        return `${price.toFixed(2)} NOK`;
-      },
+    columnHelper.accessor("lowestPrice", {
+      header: () => "Lavest Pris (NOK)",
+      cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("id", {
       header: () => "Action",

@@ -1,8 +1,6 @@
 import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
-import { useDebounce } from "usehooks-ts";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 const BASE_URL = `${API_URL}/api/discs`;
@@ -12,15 +10,7 @@ export type DiscDetails = Disc & {
   products: (Product & {
     prices: ProductPrice[];
   })[];
-};
-
-type SearchFilters = {
-  name?: string;
-  brand?: string;
-  speed?: number;
-  glide?: number;
-  turn?: number;
-  fade?: number;
+  lowestPrice: number;
 };
 
 const fetchDiscs = async () => {

@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import DashboardStat from "features/dashboard/components/DashboardStat";
 import useBrands from "hooks/use-brands";
 import useDiscs from "hooks/use-discs";
@@ -11,15 +13,27 @@ import { FaBox, FaBoxOpen, FaStore } from "react-icons/fa";
 
 import { GiFactory, GiFrisbee } from "react-icons/gi";
 
-const DashboardPage = () => {
-  const { discs } = useDiscs();
-  const { brands } = useBrands();
-  const { stores } = useStores();
-  const { products } = useProducts();
+type DashboardStats = {
+  stats: {
+    count: {
+      discs: number;
+      brands: number;
+      stores: number;
+      products: number;
+      unlinkedProducts: number;
+    };
+  };
+};
 
-  const unlinkedProducts = useMemo(
-    () => products.filter((x) => x.discId === null && x.isDisc !== false),
-    [products]
+const DashboardPage = () => {
+  const { data, isLoading } = useQuery<DashboardStats>(
+    ["dashboard", "stats"],
+    async () => {
+      const response = await axios.get(
+        "http://localhost:3000/api/dashboard/stats"
+      );
+      return response.data;
+    }
   );
 
   return (
@@ -29,31 +43,31 @@ const DashboardPage = () => {
       <div className="grid grid-cols-5 gap-5">
         <DashboardStat
           title="Antall discer"
-          value={discs.length}
+          value={data?.stats.count.discs || 0}
           color="sky"
           icon={GiFrisbee}
         />
         <DashboardStat
           title="Antall merker"
-          value={brands.length}
+          value={data?.stats.count.brands || 0}
           color="pink"
           icon={GiFactory}
         />
         <DashboardStat
           title="Antall butikker"
-          value={stores.length}
+          value={data?.stats.count.stores || 0}
           color="amber"
           icon={FaStore}
         />
         <DashboardStat
           title="Antall produkter"
-          value={products.length}
+          value={data?.stats.count.products || 0}
           color="emerald"
           icon={FaBoxOpen}
         />
         <DashboardStat
           title="Ubehandlet producter"
-          value={unlinkedProducts.length}
+          value={data?.stats.count.unlinkedProducts || 0}
           color="red"
           icon={FaBox}
         />

@@ -35,7 +35,10 @@ const DashboardDataCleaingPage = () => {
       const titleWords = product.title.toLowerCase().split(" ");
 
       const extraCheck = (value: string) => {
-        if (product.title.includes(value) && !titleWords.includes(value)) {
+        if (
+          product.title.toLowerCase().includes(value.toLowerCase()) &&
+          !titleWords.includes(value)
+        ) {
           titleWords.push(value);
         }
       };

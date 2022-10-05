@@ -32,7 +32,18 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  res.status(200).json(discs);
+  const result = discs.map((disc) => {
+    return {
+      ...disc,
+      lowestPrice: disc.products
+        .map((product) => product.prices.map((price) => price.amount))
+        .flat()
+        .map((str) => (isNaN(Number(str)) ? 0 : Number(str)))
+        .reduce((prev, curr) => (curr > prev ? curr : prev), 0),
+    };
+  });
+
+  res.status(200).json(result);
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {

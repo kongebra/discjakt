@@ -22,12 +22,26 @@ const SelectDiscDrawer: React.FC<Props> = ({
   onClose,
   defaultValues,
 }) => {
-  const { discs, setFilters } = useDiscs({ delay: 200 });
+  const { discs } = useDiscs();
   const {
     mutations: { update: updateProduct },
   } = useProducts();
 
   const [selectedDisc, setSelectedDisc] = useState<Disc | undefined>();
+  const [value, setValue] = useState<string>("");
+  const debouncedValue = useDebounce(value, 200);
+
+  const filteredDiscs = useMemo(() => {
+    if (value) {
+      return discs.filter(
+        (x) =>
+          x.name.toLowerCase().includes(value.toLowerCase()) ||
+          x.brand.name.toLowerCase().includes(value.toLowerCase())
+      );
+    }
+
+    return discs;
+  }, [discs, value]);
 
   const onSubmit = async () => {
     if (defaultValues && selectedDisc) {
@@ -40,11 +54,9 @@ const SelectDiscDrawer: React.FC<Props> = ({
     }
   };
 
-  const handleOnChange = debounce(
-    (e: React.ChangeEvent<HTMLInputElement>) =>
-      setFilters({ name: e.target.value }),
-    400
-  );
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.currentTarget.value);
+  };
 
   return (
     <Drawer
@@ -55,7 +67,7 @@ const SelectDiscDrawer: React.FC<Props> = ({
       className="flex flex-col justify-between"
     >
       <Autocomplete<DiscDetails>
-        items={discs.rows}
+        items={filteredDiscs}
         onChange={handleOnChange}
         getItemKey={(item) => item.id}
         getDisplayValue={(item?) => {
