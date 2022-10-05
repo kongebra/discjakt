@@ -8,21 +8,6 @@ import brandData from "./data/brands.json";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.upsert({
-    where: {
-      email: "sveindani@gmail.com",
-    },
-    create: {
-      email: "sveindani@gmail.com",
-      image:
-        "https://lh3.googleusercontent.com/a-/ACNPEu9abwtWrnCE66_mvHg9FywDtSRYdsNm18XcOWF1HQ=s96-c",
-      role: "ADMIN",
-    },
-    update: {
-      role: "ADMIN",
-    },
-  });
-
   await prisma.store.createMany({
     data: storeData,
   });

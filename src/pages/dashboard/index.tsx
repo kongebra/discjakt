@@ -1,3 +1,4 @@
+import DashboardStat from "features/dashboard/components/DashboardStat";
 import useBrands from "hooks/use-brands";
 import useDiscs from "hooks/use-discs";
 import useProducts from "hooks/use-products";
@@ -6,6 +7,9 @@ import DashboardLayout from "layout/DashboardLayout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { FaBox, FaBoxOpen, FaStore } from "react-icons/fa";
+
+import { GiFactory, GiFrisbee } from "react-icons/gi";
 
 const DashboardPage = () => {
   const { discs } = useDiscs();
@@ -23,35 +27,36 @@ const DashboardPage = () => {
       <h1 className="text-4xl font-bold mb-3">Dashboard</h1>
 
       <div className="grid grid-cols-5 gap-5">
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-          <span className="text-gray-500 font-medium">Total Discs</span>
-
-          <h3 className="text-4xl font-bold">{discs.totalCount}</h3>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-          <span className="text-gray-500 font-medium">Total Brands</span>
-
-          <h3 className="text-4xl font-bold">{brands.length}</h3>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-          <span className="text-gray-500 font-medium">Total Stores</span>
-
-          <h3 className="text-4xl font-bold">{stores.length}</h3>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-          <span className="text-gray-500 font-medium">Total Products</span>
-
-          <h3 className="text-4xl font-bold">{products.length}</h3>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-          <span className="text-gray-500 font-medium">Unlinked Products</span>
-
-          <h3 className="text-4xl font-bold">{unlinkedProducts.length}</h3>
-        </div>
+        <DashboardStat
+          title="Antall discer"
+          value={discs.length}
+          color="sky"
+          icon={GiFrisbee}
+        />
+        <DashboardStat
+          title="Antall merker"
+          value={brands.length}
+          color="pink"
+          icon={GiFactory}
+        />
+        <DashboardStat
+          title="Antall butikker"
+          value={stores.length}
+          color="amber"
+          icon={FaStore}
+        />
+        <DashboardStat
+          title="Antall produkter"
+          value={products.length}
+          color="emerald"
+          icon={FaBoxOpen}
+        />
+        <DashboardStat
+          title="Ubehandlet producter"
+          value={unlinkedProducts.length}
+          color="red"
+          icon={FaBox}
+        />
       </div>
     </DashboardLayout>
   );
