@@ -6,7 +6,7 @@ import FormLabel from "./FormLabel";
 import Input from "./Input";
 import { FaPlus, FaTimes, FaUpload } from "react-icons/fa";
 import Image from "next/future/image";
-import { uploadFile } from "lib/storage";
+import { uploadFile } from "src/lib/storage";
 
 type Props = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { crawlHelper, SitemapResponse } from "utils/crawl";
+import { crawlHelper, SitemapResponse } from "src/utils/crawl";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,8 +27,13 @@ export default async function handler(
       return result;
     },
     handleProductPage($) {
-      const price =
+      const priceStr =
         $("span.product-price")?.text()?.trim().replace(",-", "") || "";
+
+      let price = Number(priceStr.replace(",", "."));
+      if (isNaN(price)) {
+        price = 0;
+      }
 
       const data = {
         title: $('meta[property="og:title"]').attr("content")?.trim() || "",

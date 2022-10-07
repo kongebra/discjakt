@@ -1,13 +1,13 @@
-import { Brand, Disc, DiscType, Product } from "@prisma/client";
+import { Brand, Disc } from "@prisma/client";
 import clsx from "clsx";
-import Button from "components/Button";
-import FormError from "components/FormError";
-import FormInput from "components/FormInput";
-import FormLabel from "components/FormLabel";
-import FormSelect from "components/FormSelect";
-import FormTextarea from "components/FormTextarea";
-import Input from "components/Input";
-import Select from "components/Select";
+import Button from "src/components/Button";
+import FormError from "src/components/FormError";
+import FormInput from "src/components/FormInput";
+import FormLabel from "src/components/FormLabel";
+import FormSelect from "src/components/FormSelect";
+import FormTextarea from "src/components/FormTextarea";
+import Input from "src/components/Input";
+import Select from "src/components/Select";
 import Image from "next/future/image";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -118,19 +118,19 @@ const EditDiscForm: React.FC<Props> = ({
               label: "---",
             },
             {
-              value: DiscType.PUTTER,
+              value: "putter",
               label: "Putt/Approach",
             },
             {
-              value: DiscType.MIDRAGE,
+              value: "midrage",
               label: "Midrange",
             },
             {
-              value: DiscType.FAIRWAY,
+              value: "fairway",
               label: "Fairway Driver",
             },
             {
-              value: DiscType.DISTANCE,
+              value: "distance",
               label: "Distance Driver",
             },
           ]}

@@ -23,12 +23,12 @@ const createDisc = async (record: Disc) => {
   return resp.data;
 };
 
-const updateDisc = async ({ id, record }: { id: string; record: Disc }) => {
+const updateDisc = async ({ id, record }: { id: number; record: Disc }) => {
   const resp = await axios.put<Disc>(`${BASE_URL}/${id}`, record);
   return resp.data;
 };
 
-const deleteDisc = async (id: string) => {
+const deleteDisc = async (id: number) => {
   const resp = await axios.delete<Disc>(`${BASE_URL}/${id}`);
   return resp.data;
 };

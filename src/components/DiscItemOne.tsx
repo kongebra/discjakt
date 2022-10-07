@@ -4,7 +4,7 @@ import Image from "next/future/image";
 
 type Props = {
   disc: Disc;
-  getBrandName: (id: string) => string;
+  getBrandName: (id: number) => string;
 };
 
 const DiscItemOne: React.FC<Props> = ({ disc, getBrandName }) => {

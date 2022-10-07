@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
 
-import useDiscs from "hooks/use-discs";
+import useDiscs from "src/hooks/use-discs";
 
-import Container from "components/Container";
-import Heading from "components/Heading";
-import DiscFeaturedItem from "components/DiscFeaturedItem";
-import DiscFeaturedItemSkeleton from "components/DiscFeaturedItemSkeleton";
+import Container from "src/components/Container";
+import Heading from "src/components/Heading";
+import DiscFeaturedItem from "src/components/DiscFeaturedItem";
+import DiscFeaturedItemSkeleton from "src/components/DiscFeaturedItemSkeleton";
 
 type Props = {};
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 
-import UserAvatar from "components/UserAvatar";
+import UserAvatar from "src/components/UserAvatar";
 
 const links = [
   {

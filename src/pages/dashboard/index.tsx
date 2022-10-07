@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import DashboardStat from "features/dashboard/components/DashboardStat";
-import useBrands from "hooks/use-brands";
-import useDiscs from "hooks/use-discs";
-import useProducts from "hooks/use-products";
-import useStores from "hooks/use-stores";
-import DashboardLayout from "layout/DashboardLayout";
+import DashboardStat from "src/features/dashboard/components/DashboardStat";
+import useBrands from "src/hooks/use-brands";
+import useDiscs from "src/hooks/use-discs";
+import useProducts from "src/hooks/use-products";
+import useStores from "src/hooks/use-stores";
+import DashboardLayout from "src/layout/DashboardLayout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "lib/prisma";
+import { prisma } from "src/lib/prisma";
+import { getQueryNumberValue } from "src/utils/query";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,7 +15,7 @@ export default async function handler(
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+  const id = getQueryNumberValue("id", req);
   if (!id) {
     return res.status(403).end("bad request");
   }

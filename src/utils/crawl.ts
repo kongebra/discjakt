@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "lib/prisma";
+import { prisma } from "src/lib/prisma";
 import { Store } from "@prisma/client";
-import { StoreDetail } from "types/store";
+import { StoreDetail } from "src/types/store";
 import { CheerioAPI, load } from "cheerio";
 
 export type SitemapResponse = {
@@ -11,7 +11,7 @@ export type SitemapResponse = {
 
 type SitemapHandler = ($: CheerioAPI) => SitemapResponse[];
 type ProductPageHandler = ($: CheerioAPI) => {
-  price: string;
+  price: number;
   title: string;
   description: string;
   imageUrl: string;
@@ -134,6 +134,8 @@ async function crawlProductPage(
         // return it
         return { product: found, price: latestPrice };
       }
+
+      // no prices found, then we crawl for price and stuff
     }
   }
 

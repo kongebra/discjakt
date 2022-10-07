@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 import { FaAd } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
-import { Color } from "types/color";
+import { Color } from "src/types/color";
 
 type Props = {
   title: string;

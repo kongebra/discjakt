@@ -1,140 +1,252 @@
 [
   {
+    "id": "2a5c5ef2-9498-4582-a31e-f5152585eebf",
     "name": "Alfa Discs",
+    "slug": "alfa-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:03.794Z",
+    "updatedAt": "2022-10-07T20:30:35.639Z"
   },
   {
+    "id": "2e93568e-b2d5-4e09-8c3e-efcf0e1f1ca9",
     "name": "Axiom Discs",
+    "slug": "axiom-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:29.410Z",
+    "updatedAt": "2022-10-07T20:30:35.703Z"
   },
   {
+    "id": "01fd8723-e314-4257-aa8a-ada6aad01b98",
     "name": "Dino Discs",
+    "slug": "dino-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:36.508Z",
+    "updatedAt": "2022-10-07T20:30:35.766Z"
   },
   {
+    "id": "8a8e58df-3ac8-4efe-aea1-775b3329a175",
     "name": "Discmania",
+    "slug": "discmania",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:40.747Z",
+    "updatedAt": "2022-10-07T20:30:35.832Z"
   },
   {
+    "id": "e90c07af-98d2-4b44-8ab5-4118e657d9f5",
     "name": "Discraft",
+    "slug": "discraft",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:48.606Z",
+    "updatedAt": "2022-10-07T20:30:35.956Z"
   },
   {
+    "id": "85f860d2-58a0-40d2-9a9a-759fe1040bb0",
     "name": "Divergent Discs",
+    "slug": "divergent-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:54.180Z",
+    "updatedAt": "2022-10-07T20:30:36.020Z"
   },
   {
+    "id": "d4036386-d570-4ef3-a187-57b0bf65fb9c",
     "name": "Dynamic Discs",
+    "slug": "dynamic-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:53:59.451Z",
+    "updatedAt": "2022-10-07T20:30:36.083Z"
   },
   {
+    "id": "c45d3e26-38df-4150-950d-d62d03dbaa20",
     "name": "Elevation Disc Golf",
+    "slug": "elevation-disc-golf",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:09.660Z",
+    "updatedAt": "2022-10-07T20:30:36.147Z"
   },
   {
+    "id": "71dfe8a8-ef37-4868-921d-4efac1bd07ea",
     "name": "EV-7 Disc Golf",
+    "slug": "ev-7-disc-golf",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:17.357Z",
+    "updatedAt": "2022-10-07T20:30:36.273Z"
   },
   {
+    "id": "0274561f-439f-4697-9f7d-4472155e9779",
     "name": "Infinite Discs",
+    "slug": "infinite-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:27.063Z",
+    "updatedAt": "2022-10-07T20:30:36.335Z"
   },
   {
+    "id": "b3928e0c-4ceb-4b56-9edf-f417d3432da4",
     "name": "Innova Disc Golf",
+    "slug": "innova-disc-golf",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:32.206Z",
+    "updatedAt": "2022-10-07T20:30:36.397Z"
   },
   {
+    "id": "9b56b6ef-ca10-4ceb-bb7f-5651260653c6",
     "name": "Kastaplast",
+    "slug": "kastaplast",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:38.586Z",
+    "updatedAt": "2022-10-07T20:30:36.458Z"
   },
   {
+    "id": "3692b628-b194-4b57-bcb0-1168e9ff5ba3",
     "name": "Latitude 64",
+    "slug": "latitude-64",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:45.201Z",
+    "updatedAt": "2022-10-07T20:30:36.569Z"
   },
   {
+    "id": "723d78e6-15ff-4a8c-8293-bb359ac2d456",
     "name": "Løft Discs",
+    "slug": "loft-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:50.477Z",
+    "updatedAt": "2022-10-07T20:30:36.634Z"
   },
   {
+    "id": "58eeefa0-f461-4f00-bd61-bad4c431efe1",
     "name": "Momentum Disc Golf",
+    "slug": "momentum-disc-golf",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:54:59.218Z",
+    "updatedAt": "2022-10-07T20:30:36.697Z"
   },
   {
+    "id": "7847e56d-43ae-44bf-a515-1da2ec4aa65c",
     "name": "MVP Disc Sports",
+    "slug": "mvp-disc-sports",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:04.253Z",
+    "updatedAt": "2022-10-07T20:30:36.761Z"
   },
   {
+    "id": "385aac0e-9af3-49cb-85df-ad523e74caaa",
     "name": "Prodigy Disc",
+    "slug": "prodigy-disc",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:10.712Z",
+    "updatedAt": "2022-10-07T20:30:36.859Z"
   },
   {
+    "id": "aa68ed79-9bcc-4063-a446-b89e16028fd4",
     "name": "Prodiscus",
+    "slug": "prodiscus",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:19.014Z",
+    "updatedAt": "2022-10-07T20:30:36.923Z"
   },
   {
+    "id": "3129bb10-ce38-44f6-98fd-0a6742ecf38d",
     "name": "Streamline Discs",
+    "slug": "streamline-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:23.612Z",
+    "updatedAt": "2022-10-07T20:30:36.985Z"
   },
   {
+    "id": "3a695bca-ce91-4267-b357-cfe2cb11c775",
     "name": "Though Space Athletics",
+    "slug": "though-space-athletics",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:32.286Z",
+    "updatedAt": "2022-10-07T20:30:37.046Z"
   },
   {
+    "id": "7c3ba420-fd38-40ed-a53e-f7dec5291765",
     "name": "Viking Discs",
+    "slug": "viking-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:37.366Z",
+    "updatedAt": "2022-10-07T20:30:37.132Z"
   },
   {
+    "id": "35e108bd-53df-4784-9746-d371ad493b16",
     "name": "Westside Discs",
+    "slug": "westside-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:42.964Z",
+    "updatedAt": "2022-10-07T20:30:37.196Z"
   },
   {
+    "id": "251e03a8-dc0b-4cd7-9e0e-1174a5379d6e",
     "name": "Yikun Discs",
+    "slug": "yikun-discs",
     "description": "",
     "url": "",
-    "imageUrl": ""
+    "imageUrl": "",
+    "createdAt": "2022-10-04T20:55:49.387Z",
+    "updatedAt": "2022-10-07T20:30:37.259Z"
+  },
+  {
+    "id": "bf10678b-6988-4ba7-ade1-4ce1c6b471d7",
+    "name": "Gateway Disc Sports",
+    "slug": "gateway-disc-sports",
+    "description": "",
+    "url": "",
+    "imageUrl": "",
+    "createdAt": "2022-10-05T16:40:09.819Z",
+    "updatedAt": "2022-10-07T20:30:37.323Z"
+  },
+  {
+    "id": "dd2ee1fd-5be5-41fc-84d2-51759ac1e1b0",
+    "name": "Guru",
+    "slug": "guru",
+    "description": "",
+    "url": "",
+    "imageUrl": "",
+    "createdAt": "2022-10-05T17:00:50.731Z",
+    "updatedAt": "2022-10-07T20:30:37.386Z"
   }
 ]

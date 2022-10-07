@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { prisma } from "lib/prisma";
+import { prisma } from "src/lib/prisma";
 import { User } from "@prisma/client";
 
 export default async function handler(

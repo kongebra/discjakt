@@ -1,14 +1,16 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model Store {
-  id         String    @id @default(uuid())
+  id         Int       @id @default(autoincrement())
   name       String    @unique
   baseUrl    String
   sitemapUrl String
@@ -19,15 +21,15 @@ model Store {
 }
 
 model Product {
-  id          String         @id @default(uuid())
+  id          Int            @id @default(autoincrement())
   loc         String         @unique
   lastmod     String
   title       String
-  description String
+  description String         @db.Text
   imageUrl    String
   isDisc      Boolean?
-  storeId     String
-  discId      String?
+  storeId     Int
+  discId      Int?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   disc        Disc?          @relation(fields: [discId], references: [id])
@@ -36,16 +38,16 @@ model Product {
 }
 
 model ProductPrice {
-  id        String   @id @default(uuid())
-  amount    String
+  id        Int      @id @default(autoincrement())
+  amount    Float
   currency  String
-  productId String
+  productId Int
   createdAt DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Brand {
-  id          String   @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
   url         String
@@ -57,26 +59,26 @@ model Brand {
 }
 
 model Disc {
-  id          String    @id @default(uuid())
+  id          Int       @id @default(autoincrement())
   name        String
   description String
   imageUrl    String
-  speed       Decimal
-  glide       Decimal
-  turn        Decimal
-  fade        Decimal
-  brandId     String
+  speed       Float
+  glide       Float
+  turn        Float
+  fade        Float
+  brandId     Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  type        DiscType
+  type        String
   slug        String    @unique
   brand       Brand     @relation(fields: [brandId], references: [id])
   products    Product[]
 }
 
 model Account {
-  id                String  @id @default(uuid())
-  userId            String
+  id                Int     @id @default(autoincrement())
+  userId            Int
   type              String
   provider          String
   providerAccountId String
@@ -93,20 +95,21 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(uuid())
+  id           Int      @id @default(autoincrement())
   sessionToken String   @unique
-  userId       String
+  userId       Int
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            Int       @id @default(autoincrement())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  phone         String?
   image         String?
-  role          Role      @default(USER)
+  role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
 }
@@ -117,17 +120,4 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-enum DiscType {
-  PUTTER
-  MIDRAGE
-  FAIRWAY
-  DISTANCE
-}
-
-enum Role {
-  USER
-  SUBSCRIBER
-  ADMIN
 }

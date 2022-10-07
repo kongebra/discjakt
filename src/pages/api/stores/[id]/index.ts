@@ -1,24 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "lib/prisma";
+import { prisma } from "src/lib/prisma";
+import { getQueryNumberValue } from "src/utils/query";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const id = getQueryNumberValue("id", req);
+
+  if (!id) {
+    return res.status(403).end("bad request");
+  }
+
   switch (req.method) {
     case "GET":
-      return await GET(req, res);
+      return await GET(req, res, id);
     default:
       return res.status(405).end("method not allowed");
   }
 }
 
-async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-  if (!id) {
-    return res.status(403).end("bad request");
-  }
-
+async function GET(req: NextApiRequest, res: NextApiResponse, id: number) {
   const store = await prisma.store.findFirst({
     where: {
       id: id,

@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 
 import Image from "next/future/image";
-import { DiscDetails } from "hooks/use-discs";
+import { DiscDetails } from "src/hooks/use-discs";
 import { FaBoxOpen, FaCoins } from "react-icons/fa";
 import Link from "next/link";
+import { Product, ProductPrice } from "@prisma/client";
 
 type Props = {
   disc: DiscDetails;
@@ -11,12 +12,17 @@ type Props = {
 
 const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
   const lowestPrice = useMemo(() => {
-    const latestPrices = disc.products
-      .map((product) => product.prices.slice(-1))
-      .flat();
-    const lowestPrice = latestPrices
-      .map((x) => Number(x.amount.replace(",", ".")))
-      .reduce((prev, curr) => (curr > prev ? curr : prev), 0);
+    const latestPrices =
+      disc.products
+        ?.map((product: Product & { prices: ProductPrice[] }) =>
+          product.prices.slice(-1)
+        )
+        .flat() || [];
+
+    const lowestPrice =
+      latestPrices
+        ?.map((x) => x.amount)
+        .reduce((prev, curr) => (curr > prev ? curr : prev), 0) || 0;
 
     return lowestPrice;
   }, [disc.products]);

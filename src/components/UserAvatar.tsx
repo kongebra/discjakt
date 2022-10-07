@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { signIn } from "next-auth/react";
 
-import useUser from "hooks/use-user";
+import useUser from "src/hooks/use-user";
 
 import Button from "./Button";
 import PlaceholderUserIcon from "./PlaceholderUserIcon";

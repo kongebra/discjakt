@@ -1,17 +1,17 @@
-import Button from "components/Button";
-import Container from "components/Container";
-import Heading from "components/Heading";
-import PriceHistory from "components/PriceHistory";
+import Button from "src/components/Button";
+import Container from "src/components/Container";
+import Heading from "src/components/Heading";
+import PriceHistory from "src/components/PriceHistory";
 
-import { useDiscDetails } from "hooks/use-disc-details";
-import useStores from "hooks/use-stores";
+import { useDiscDetails } from "src/hooks/use-disc-details";
+import useStores from "src/hooks/use-stores";
 
 import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import React, { useCallback, useMemo } from "react";
-import { discTypeToString } from "utils/discType";
+import { discTypeToString } from "src/utils/discType";
 
 const DiscDetailPage = () => {
   const {
@@ -22,14 +22,14 @@ const DiscDetailPage = () => {
   const { disc, isLoading } = useDiscDetails(slug as string | undefined);
 
   const getStoreName = useCallback(
-    (id: string) => {
+    (id: number) => {
       return stores.find((x) => x.id === id)?.name || "";
     },
     [stores]
   );
 
   const getStore = useCallback(
-    (id: string) => {
+    (id: number) => {
       return stores.find((x) => x.id === id);
     },
     [stores]
@@ -142,11 +142,9 @@ const DiscDetailPage = () => {
                     href={product.loc}
                     target="_blank"
                     rel="noreferrer"
-                    disabled={price.amount === "0"}
+                    disabled={price.amount === 0}
                   >
-                    {`${Number(price.amount.replace(",", ".")).toFixed(0)} ${
-                      price.currency
-                    }`}
+                    {`${price.amount.toFixed(0)} ${price.currency}`}
                   </Button>
                 ) : (
                   <Button disabled>Ikke på lager</Button>

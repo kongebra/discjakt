@@ -1,8 +1,8 @@
 import { Brand } from "@prisma/client";
-import Button from "components/Button";
-import FormFileUpload from "components/FormFileUpload";
-import FormInput from "components/FormInput";
-import FormTextarea from "components/FormTextarea";
+import Button from "src/components/Button";
+import FormFileUpload from "src/components/FormFileUpload";
+import FormInput from "src/components/FormInput";
+import FormTextarea from "src/components/FormTextarea";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 

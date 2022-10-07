@@ -1,6 +1,6 @@
 import { Brand, Disc, Product } from "@prisma/client";
-import Modal from "components/Modal";
-import useBrands from "hooks/use-brands";
+import Modal from "src/components/Modal";
+import useBrands from "src/hooks/use-brands";
 import React from "react";
 import CreateBrandForm from "../forms/CreateBrandForm";
 

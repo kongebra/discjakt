@@ -1,14 +1,14 @@
 import { Disc, Product } from "@prisma/client";
-import Autocomplete from "components/Autocomplete";
-import Button from "components/Button";
-import Drawer from "components/Drawer";
-import FormSelect from "components/FormSelect";
-import useBrands from "hooks/use-brands";
-import useDiscs, { DiscDetails } from "hooks/use-discs";
-import useProducts from "hooks/use-products";
+import Autocomplete from "src/components/Autocomplete";
+import Button from "src/components/Button";
+import Drawer from "src/components/Drawer";
+import FormSelect from "src/components/FormSelect";
+import useBrands from "src/hooks/use-brands";
+import useDiscs, { DiscDetails } from "src/hooks/use-discs";
+import useProducts from "src/hooks/use-products";
 import React, { useMemo, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import { debounce } from "utils/debounce";
+import { debounce } from "src/utils/debounce";
 
 type Props = {
   show: boolean;

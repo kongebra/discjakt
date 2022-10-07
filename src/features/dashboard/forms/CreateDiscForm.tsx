@@ -1,10 +1,10 @@
 import { Brand, Disc, Product } from "@prisma/client";
-import Button from "components/Button";
-import FormInput from "components/FormInput";
-import FormSelect from "components/FormSelect";
-import FormTextarea from "components/FormTextarea";
-import Input from "components/Input";
-import Select from "components/Select";
+import Button from "src/components/Button";
+import FormInput from "src/components/FormInput";
+import FormSelect from "src/components/FormSelect";
+import FormTextarea from "src/components/FormTextarea";
+import Input from "src/components/Input";
+import Select from "src/components/Select";
 import Image from "next/future/image";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";

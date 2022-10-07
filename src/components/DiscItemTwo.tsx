@@ -5,7 +5,7 @@ import Button from "./Button";
 
 type Props = {
   disc: Disc;
-  getBrandName: (id: string) => string;
+  getBrandName: (id: number) => string;
 };
 
 const DiscItemOne: React.FC<Props> = ({ disc, getBrandName }) => {

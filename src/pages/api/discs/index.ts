@@ -1,10 +1,10 @@
 import { Disc } from "@prisma/client";
-import { prisma } from "lib/prisma";
+import { prisma } from "src/lib/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
-import { getQueryNumberValue, getQueryStringValue } from "utils/query";
+import { getQueryNumberValue, getQueryStringValue } from "src/utils/query";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,16 +32,25 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  const result = discs.map((disc) => {
-    return {
-      ...disc,
-      lowestPrice: disc.products
-        .map((product) => product.prices.map((price) => price.amount))
-        .flat()
-        .map((str) => (isNaN(Number(str)) ? 0 : Number(str)))
-        .reduce((prev, curr) => (curr > prev ? curr : prev), 0),
-    };
-  });
+  // const result = discs.map((disc) => {
+  //   return {
+  //     ...disc,
+  //     lowestPrice: disc.products
+  //       .map((product) => product.prices.map((price) => price.amount))
+  //       .flat()
+  //       .map((str) => (isNaN(Number(str)) ? 0 : Number(str)))
+  //       .reduce((prev, curr) => (curr > prev ? curr : prev), 0),
+  //   };
+  // });
+
+  const result = discs.map((disc) => ({
+    ...disc,
+    speed: Number(disc.speed),
+    glide: Number(disc.glide),
+    turn: Number(disc.turn),
+    fade: Number(disc.fade),
+    type: disc.type.toLowerCase(),
+  }));
 
   res.status(200).json(result);
 }

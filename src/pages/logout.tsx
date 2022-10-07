@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import useUser from "hooks/use-user";
+import useUser from "src/hooks/use-user";
 import { signOut } from "next-auth/react";
 import React, { useEffect } from "react";
 
