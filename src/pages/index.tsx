@@ -1,29 +1,54 @@
 import type { NextPage } from "next";
 
-import { useSession } from "next-auth/react";
+import useDiscs from "hooks/use-discs";
 
-import useUser from "hooks/use-user";
-import { prisma } from "lib/prisma";
+import Container from "components/Container";
+import Heading from "components/Heading";
+import DiscFeaturedItem from "components/DiscFeaturedItem";
+import DiscFeaturedItemSkeleton from "components/DiscFeaturedItemSkeleton";
 
 type Props = {};
 
 const HomePage: NextPage<Props> = () => {
+  const { discs, isLoading } = useDiscs();
+
+  if (isLoading) {
+    return (
+      <Container className="py-6">
+        <Heading className="text-center mb-6">Featured discs</Heading>
+
+        <div className="grid grid-cols-4 gap-4 mb-4">
+          {[1, 2, 3, 4].map((item) => (
+            <DiscFeaturedItemSkeleton key={item} />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-5 gap-4 mb-4">
+          {[1, 2, 3, 4, 5].map((item) => (
+            <DiscFeaturedItemSkeleton key={item} />
+          ))}
+        </div>
+      </Container>
+    );
+  }
+
   return (
-    <div className="max-w-7xl mx-auto">
-      <h1>Hello world!</h1>
-    </div>
+    <Container className="py-6">
+      <Heading className="text-center mb-6">Featured discs</Heading>
+
+      <div className="grid grid-cols-4 gap-4 mb-4">
+        {discs.slice(0, 4).map((disc) => (
+          <DiscFeaturedItem key={disc.id} disc={disc} />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-5 gap-4">
+        {discs.slice(5, 10).map((disc) => (
+          <DiscFeaturedItem key={disc.id} disc={disc} />
+        ))}
+      </div>
+    </Container>
   );
-};
-
-export const getServerSideProps = async () => {
-  const items = await prisma.store.findMany();
-  const stores = JSON.parse(JSON.stringify(items));
-
-  return {
-    props: {
-      stores,
-    },
-  };
 };
 
 export default HomePage;

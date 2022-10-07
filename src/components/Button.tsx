@@ -18,8 +18,12 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
-  as?: React.ElementType;
-};
+} & (
+    | ({
+        as?: "a";
+      } & React.AnchorHTMLAttributes<HTMLAnchorElement>)
+    | { as?: React.ElementType; href?: never }
+  );
 
 type ButtonClasses = {
   [c in ButtonColor]: {

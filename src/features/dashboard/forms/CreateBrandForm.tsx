@@ -2,6 +2,7 @@ import { Brand } from "@prisma/client";
 import Button from "components/Button";
 import FormFileUpload from "components/FormFileUpload";
 import FormInput from "components/FormInput";
+import FormTextarea from "components/FormTextarea";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
@@ -48,7 +49,11 @@ const CreateBrandForm: React.FC<Props> = ({
         })}
       />
 
-      <FormInput label="Beskrivelse" {...form.register("description")} />
+      <FormTextarea
+        label="Beskrivelse"
+        {...form.register("description")}
+        rows={3}
+      />
 
       <FormInput label="Bilde" {...form.register("imageUrl")} />
 

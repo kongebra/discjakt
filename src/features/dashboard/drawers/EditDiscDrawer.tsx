@@ -31,6 +31,7 @@ const EditDiscDrawer: React.FC<Props> = ({ show, onClose, defaultValues }) => {
 
     delete (record as any).products;
     delete (record as any).brand;
+    delete (record as any).lowestPrice;
 
     await mutations.update.mutateAsync({ id: defaultValues?.id, record });
 

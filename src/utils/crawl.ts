@@ -60,12 +60,18 @@ async function POST(
     },
     update: {},
     include: {
-      products: true,
+      products: {
+        include: {
+          prices: true,
+        },
+      },
     },
   })) as StoreDetail;
 
+  const { products, ...rest } = store;
+
   // Fire and forget request
-  res.status(200).json(store);
+  res.status(200).json(rest);
 
   const urls = await crawlSitemap(store, handleSitemap);
 
@@ -116,9 +122,19 @@ async function crawlProductPage(
   handleProductPage: ProductPageHandler
 ) {
   const found = store.products.find((product) => product.loc === loc);
-  // Already have product, and no changes
-  if (found && found.lastmod === lastmod) {
-    return null;
+  // already a product
+  if (found) {
+    // no changes
+    if (found.lastmod === lastmod) {
+      // check if we have any prices
+      if (found.prices.length) {
+        // take latest price
+        const latestPrice = found.prices[found.prices.length - 1].amount;
+
+        // return it
+        return { product: found, price: latestPrice };
+      }
+    }
   }
 
   const data = await crawlPageDetails(loc, handleProductPage);

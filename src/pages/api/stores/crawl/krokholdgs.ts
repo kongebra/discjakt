@@ -11,6 +11,7 @@ export default async function handler(
       sitemapUrl: "https://krokholdgs.no/sitemap.xml",
       baseUrl: "https://krokholdgs.no/",
     },
+    debug: { log: true },
     handleSitemap($) {
       const result: SitemapResponse[] = [];
 

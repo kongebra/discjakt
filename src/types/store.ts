@@ -1,5 +1,7 @@
-import { Product, Store } from "@prisma/client";
+import { Product, ProductPrice, Store } from "@prisma/client";
 
 export type StoreDetail = Store & {
-  products: Product[];
+  products: (Product & {
+    prices: ProductPrice[];
+  })[];
 };

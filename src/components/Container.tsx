@@ -5,7 +5,7 @@ type Props = React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement> & {}>;
 
 const Container: React.FC<Props> = ({ children, className, ...rest }) => {
   return (
-    <div className={clsx("max-w-7xl mx-auto")} {...rest}>
+    <div className={clsx("max-w-7xl mx-auto", className)} {...rest}>
       {children}
     </div>
   );

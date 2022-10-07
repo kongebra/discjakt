@@ -1,7 +1,11 @@
-import { Brand, Disc, Product } from "@prisma/client";
+import { Brand, Disc, DiscType, Product } from "@prisma/client";
+import clsx from "clsx";
 import Button from "components/Button";
+import FormError from "components/FormError";
 import FormInput from "components/FormInput";
+import FormLabel from "components/FormLabel";
 import FormSelect from "components/FormSelect";
+import FormTextarea from "components/FormTextarea";
 import Input from "components/Input";
 import Select from "components/Select";
 import Image from "next/future/image";
@@ -50,6 +54,12 @@ const EditDiscForm: React.FC<Props> = ({
     [brands]
   );
 
+  const generateSlug = () => {
+    const name = form.getValues("name").toLowerCase().split(" ").join("-");
+
+    form.setValue("slug", name);
+  };
+
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
@@ -61,7 +71,32 @@ const EditDiscForm: React.FC<Props> = ({
           {...form.register("name", { required: "Feltet er påkrevd" })}
           error={form.formState.errors.name?.message}
         />
-        <FormInput label="Beskrivelse" {...form.register("description")} />
+
+        <div className="flex flex-col mb-3">
+          <FormLabel>Slug</FormLabel>
+
+          <div className="flex">
+            <Input
+              {...form.register("slug", { required: "Feltet er påkrevd" })}
+              className={clsx("rounded-r-none", {
+                "ring-2 ring-red-600":
+                  form.formState.errors.slug?.message !== undefined,
+              })}
+            />
+
+            <Button className="rounded-l-none" onClick={generateSlug}>
+              Generate
+            </Button>
+          </div>
+
+          <FormError>{form.formState.errors.slug?.message}</FormError>
+        </div>
+
+        <FormTextarea
+          label="Beskrivelse"
+          {...form.register("description")}
+          rows={5}
+        />
 
         <FormSelect
           label="Merke"
@@ -69,9 +104,38 @@ const EditDiscForm: React.FC<Props> = ({
           {...form.register("brandId", {
             required: "Feltet er påkrevd",
           })}
+          error={form.formState.errors.brandId?.message}
         />
 
         <FormInput label="Bilde URL" {...form.register("imageUrl")} />
+
+        <FormSelect
+          label="Disc type"
+          {...form.register("type", { required: "Feltet er påkrevd" })}
+          options={[
+            {
+              value: "",
+              label: "---",
+            },
+            {
+              value: DiscType.PUTTER,
+              label: "Putt/Approach",
+            },
+            {
+              value: DiscType.MIDRAGE,
+              label: "Midrange",
+            },
+            {
+              value: DiscType.FAIRWAY,
+              label: "Fairway Driver",
+            },
+            {
+              value: DiscType.DISTANCE,
+              label: "Distance Driver",
+            },
+          ]}
+          error={form.formState.errors.type?.message}
+        />
 
         <div className="flex gap-3">
           <div className="flex-1">
@@ -82,6 +146,7 @@ const EditDiscForm: React.FC<Props> = ({
                 required: "Feltet er påkrevd",
               })}
               step="0.5"
+              error={form.formState.errors.speed?.message}
             />
           </div>
           <div className="flex-1">
@@ -92,6 +157,7 @@ const EditDiscForm: React.FC<Props> = ({
                 required: "Feltet er påkrevd",
               })}
               step="0.5"
+              error={form.formState.errors.glide?.message}
             />
           </div>
           <div className="flex-1">
@@ -102,6 +168,7 @@ const EditDiscForm: React.FC<Props> = ({
                 required: "Feltet er påkrevd",
               })}
               step="0.5"
+              error={form.formState.errors.turn?.message}
             />
           </div>
           <div className="flex-1">
@@ -112,19 +179,22 @@ const EditDiscForm: React.FC<Props> = ({
                 required: "Feltet er påkrevd",
               })}
               step="0.5"
+              error={form.formState.errors.fade?.message}
             />
           </div>
         </div>
 
         <div>
           {defaultValues && (
-            <Image
-              className="max-w-full h-auto rounded-lg mb-2"
-              src={defaultValues?.imageUrl}
-              alt={defaultValues?.name}
-              width={512}
-              height={512}
-            />
+            <div className="bg-teal-500 p-4 rounded-3xl mb-2">
+              <Image
+                className="max-w-full h-auto rounded-2xl"
+                src={defaultValues?.imageUrl}
+                alt={defaultValues?.name}
+                width={512}
+                height={512}
+              />
+            </div>
           )}
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Brand, Disc, Product } from "@prisma/client";
 import Button from "components/Button";
 import FormInput from "components/FormInput";
 import FormSelect from "components/FormSelect";
+import FormTextarea from "components/FormTextarea";
 import Input from "components/Input";
 import Select from "components/Select";
 import Image from "next/future/image";
@@ -70,7 +71,11 @@ const CreateDiscForm: React.FC<Props> = ({
           {...form.register("name", { required: "Feltet er påkrevd" })}
           error={form.formState.errors.name?.message}
         />
-        <FormInput label="Beskrivelse" {...form.register("description")} />
+        <FormTextarea
+          label="Beskrivelse"
+          {...form.register("description")}
+          rows={5}
+        />
 
         <FormSelect
           label="Merke"

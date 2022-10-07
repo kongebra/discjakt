@@ -25,12 +25,18 @@ const defaultColumns = ({ onEdit, onDelete }: DefaultColumnsProps) => {
   const columns = [
     columnHelper.accessor("name", {
       header: () => "Navn",
-      cell: ({ getValue }) => {
-        return getValue();
-      },
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("slug", {
+      header: () => "Slug",
+      cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("brand.name", {
       header: () => "Merke",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("type", {
+      header: () => "Type",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("speed", {
