@@ -54,7 +54,7 @@ model Brand {
   imageUrl    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  slug        String?  @unique
+  slug        String   @unique
   discs       Disc[]
 }
 

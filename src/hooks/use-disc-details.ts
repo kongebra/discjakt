@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import config from "src/config";
 import { DiscDetails } from "./use-discs";
 
+const BASE_URL = `${config.apiUrl}/discs`;
+
 const fetchDisc = async (slug: string) => {
-  const response = await axios.get<DiscDetails>(`/api/discs/${slug}`);
+  const response = await axios.get<DiscDetails>(`${BASE_URL}/${slug}`);
   return response.data;
 };
 

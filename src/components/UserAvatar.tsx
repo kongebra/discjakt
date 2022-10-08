@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 
 import Image from "next/image";
 
-import { signIn } from "next-auth/react";
-
 import useUser from "src/hooks/use-user";
 
 import Button from "./Button";

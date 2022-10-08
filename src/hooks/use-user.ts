@@ -1,9 +1,9 @@
 import { User } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { signIn, signOut, useSession } from "next-auth/react";
+import config from "src/config";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-const BASE_URL = `${API_URL}/api/users/me`;
+const BASE_URL = `${config.apiUrl}/api/users/me`;
 
 const fetchUser = async () => {
   const resp = await fetch(BASE_URL);
@@ -19,9 +19,7 @@ export default function useUser() {
     retry: false,
   });
 
-  const login = () => {
-    signIn("google");
-  };
+  const login = () => signIn();
 
   const logout = () => {
     queryClient.setQueryData(["user"], undefined);

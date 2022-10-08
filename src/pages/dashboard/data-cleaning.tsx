@@ -1,23 +1,14 @@
-import { Disc, Product } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import Button from "src/components/Button";
-import Modal from "src/components/Modal";
 import CreateDiscDrawer from "src/features/dashboard/drawers/CreateDiscDrawer";
 import SelectDiscDrawer from "src/features/dashboard/drawers/SelectDiscDrawer";
-import useBrands from "src/hooks/use-brands";
-import useDiscs from "src/hooks/use-discs";
-import useProducts from "src/hooks/use-products";
 import DashboardLayout from "src/layout/DashboardLayout";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useBoolean } from "usehooks-ts";
-import axios from "axios";
 import DataCleaningProduct from "src/features/dashboard/components/DataCleaningProduct";
+import config from "src/config";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-const BASE_URL = `${API_URL}/api/data`;
+const BASE_URL = `${config.apiUrl}/api/data`;
 
 const fetchData = async () => {
   const resp = await fetch(BASE_URL);

@@ -1,9 +1,9 @@
 import { Store } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import config from "src/config";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-const BASE_URL = `${API_URL}/api/stores`;
+const BASE_URL = `${config.apiUrl}/api/stores`;
 
 const fetchStores = async () => {
   const resp = await axios.get<Store[]>(`${BASE_URL}`);

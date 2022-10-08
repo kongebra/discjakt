@@ -1,9 +1,9 @@
 import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import config from "src/config";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-const BASE_URL = `${API_URL}/api/discs`;
+const BASE_URL = `${config.apiUrl}/api/discs`;
 
 export type DiscDetails = Disc & {
   brand: Brand;

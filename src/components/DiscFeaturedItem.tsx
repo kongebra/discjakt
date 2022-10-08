@@ -1,23 +1,20 @@
 import React, { useMemo } from "react";
 
 import Image from "next/future/image";
-import { DiscDetails } from "src/hooks/use-discs";
 import { FaBoxOpen, FaCoins } from "react-icons/fa";
 import Link from "next/link";
-import { Product, ProductPrice } from "@prisma/client";
+import { DiscDetailsType } from "src/server/routers/disc.router";
 
 type Props = {
-  disc: DiscDetails;
+  disc: DiscDetailsType;
 };
 
 const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
+  console.log({ disc });
+
   const lowestPrice = useMemo(() => {
     const latestPrices =
-      disc.products
-        ?.map((product: Product & { prices: ProductPrice[] }) =>
-          product.prices.slice(-1)
-        )
-        .flat() || [];
+      disc.products?.map((product) => product.prices.slice(-1)).flat() || [];
 
     const lowestPrice =
       latestPrices
