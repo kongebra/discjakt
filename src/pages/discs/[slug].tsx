@@ -6,20 +6,35 @@ import PriceHistory from "src/components/PriceHistory";
 import { useDiscDetails } from "src/hooks/use-disc-details";
 import useStores from "src/hooks/use-stores";
 
+import superjson from "superjson";
+
 import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import React, { useCallback, useMemo } from "react";
 import { discTypeToString } from "src/utils/discType";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextApiRequest,
+  NextPage,
+} from "next";
+import { trpc } from "src/utils/trpc";
+import { getQueryStringValue } from "src/utils/query";
+import { prisma } from "src/lib/prisma";
+import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
+import { DiscDetails } from "src/types/trpc";
 
-const DiscDetailPage = () => {
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const DiscDetailPage: NextPage<Props> = ({ disc }) => {
   const {
     query: { slug },
   } = useRouter();
 
-  const { stores } = useStores();
-  const { disc, isLoading } = useDiscDetails(slug as string | undefined);
+  const { stores, isLoading } = useStores();
+  // const { isLoading } = useDiscDetails(slug as string | undefined);
 
   const getStoreName = useCallback(
     (id: number) => {
@@ -102,7 +117,7 @@ const DiscDetailPage = () => {
         <div className="flex flex-col gap-4">
           <Heading as="h2">Priser</Heading>
 
-          {disc.products.map((product) => {
+          {disc.products.map((product: any) => {
             const price = product.prices.length
               ? product.prices.slice(-1)[0]
               : undefined;
@@ -177,6 +192,41 @@ const DiscDetailPage = () => {
       </Container>
     </>
   );
+};
+
+type ServerProps = {
+  disc: DiscDetails;
+};
+
+export const getServerSideProps: GetServerSideProps<ServerProps> = async ({
+  query,
+}) => {
+  const slug = getQueryStringValue("slug", { query });
+  if (!slug) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const data = await prisma.disc.update({
+    where: {
+      slug,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+    select: detailDiscSelect,
+  });
+
+  const disc = JSON.parse(JSON.stringify(data));
+
+  return {
+    props: {
+      disc,
+    },
+  };
 };
 
 export default DiscDetailPage;

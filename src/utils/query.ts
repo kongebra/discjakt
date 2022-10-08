@@ -1,8 +1,14 @@
 import type { NextApiRequest } from "next";
 
+type Req = {
+  query: Partial<{
+    [key: string]: string | string[];
+  }>;
+};
+
 export const getQueryStringValue = (
   key: string,
-  req: NextApiRequest
+  req: Req
 ): string | undefined => {
   const query = req.query[key];
   const value = Array.isArray(query) ? query[0] : query;
@@ -12,7 +18,7 @@ export const getQueryStringValue = (
 
 export const getQueryNumberValue = (
   key: string,
-  req: NextApiRequest
+  req: Req
 ): number | undefined => {
   const query = req.query[key];
   const value = Array.isArray(query) ? query[0] : query;

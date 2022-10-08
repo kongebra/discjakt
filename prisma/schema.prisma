@@ -59,7 +59,7 @@ model Brand {
 }
 
 model Disc {
-  id          Int       @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   name        String
   description String
   imageUrl    String
@@ -68,12 +68,23 @@ model Disc {
   turn        Float
   fade        Float
   brandId     Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
   type        String
-  slug        String    @unique
-  brand       Brand     @relation(fields: [brandId], references: [id])
+  slug        String              @unique
+  brand       Brand               @relation(fields: [brandId], references: [id])
   products    Product[]
+  users       UserDiscFavorites[]
+  views       Int                 @default(0)
+}
+
+model UserDiscFavorites {
+  disc   Disc   @relation(fields: [discId], references: [id])
+  discId Int
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@id([discId, userId])
 }
 
 model Account {
@@ -104,14 +115,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String              @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?             @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  role          String    @default("user")
+  role          String              @default("user")
+  favorites     UserDiscFavorites[]
 }
 
 model VerificationToken {

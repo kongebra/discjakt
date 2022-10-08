@@ -4,13 +4,17 @@ import { AppRouter } from "src/server/routers/_app";
 export type AppRouterTypes = GetInferenceHelpers<AppRouter>;
 
 type BrandRouter = AppRouterTypes["brand"];
-export type Brand = BrandRouter["list"]["output"];
-export type BrandDetail = BrandRouter["getBySlug"]["output"];
+export type BrandList = BrandRouter["list"]["output"];
+export type BrandDetails = BrandRouter["getBySlug"]["output"];
 
 type DiscRouter = AppRouterTypes["disc"];
-export type Disc = DiscRouter["list"]["output"];
-export type DiscDetail = DiscRouter["getBySlug"]["output"];
+export type DiscList = DiscRouter["list"]["output"];
+export type DiscDetails = DiscRouter["getBySlug"]["output"];
 
 type ProductRouter = AppRouterTypes["product"];
-export type Product = ProductRouter["list"]["output"];
-export type ProductDetail = ProductRouter["getById"]["output"];
+export type ProductList = ProductRouter["list"]["output"];
+export type ProductDetails = ProductRouter["getById"]["output"];
+
+type StoreRouter = AppRouterTypes["store"];
+export type StoreList = StoreRouter["list"]["output"];
+export type StoreDetails = StoreRouter["getBySlug"]["output"];

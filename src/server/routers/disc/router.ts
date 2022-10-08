@@ -101,4 +101,19 @@ export const discRouter = t.router({
 
       return disc;
     }),
+
+  view: t.procedure
+    .input(getDiscBySlugSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.disc.update({
+        where: {
+          slug: input,
+        },
+        data: {
+          views: {
+            increment: 1,
+          },
+        },
+      });
+    }),
 });

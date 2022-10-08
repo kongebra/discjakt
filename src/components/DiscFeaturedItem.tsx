@@ -3,15 +3,13 @@ import React, { useMemo } from "react";
 import Image from "next/future/image";
 import { FaBoxOpen, FaCoins } from "react-icons/fa";
 import Link from "next/link";
-import { DiscDetailsType } from "src/server/routers/disc.router";
+import { DiscDetails } from "src/types/trpc";
 
 type Props = {
-  disc: DiscDetailsType;
+  disc: DiscDetails;
 };
 
 const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
-  console.log({ disc });
-
   const lowestPrice = useMemo(() => {
     const latestPrices =
       disc.products?.map((product) => product.prices.slice(-1)).flat() || [];

@@ -12,7 +12,7 @@ import { trpc } from "src/utils/trpc";
 type Props = {};
 
 const HomePage: NextPage<Props> = () => {
-  const { data: discs, isLoading } = trpc.disc.list.useQuery();
+  const { data, isLoading } = trpc.disc.list.useQuery();
 
   if (isLoading) {
     return (
@@ -38,13 +38,13 @@ const HomePage: NextPage<Props> = () => {
     <Container className="py-6">
       <Heading className="text-center mb-6">Featured discs</Heading>
       <div className="grid grid-cols-4 gap-4 mb-4">
-        {discs?.slice(0, 4).map((disc) => (
+        {data?.slice(0, 4).map((disc) => (
           <DiscFeaturedItem key={disc.id} disc={disc} />
         ))}
       </div>
 
       <div className="grid grid-cols-5 gap-4">
-        {discs?.slice(5, 10).map((disc) => (
+        {data?.slice(5, 10).map((disc) => (
           <DiscFeaturedItem key={disc.id} disc={disc} />
         ))}
       </div>
