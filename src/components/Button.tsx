@@ -161,7 +161,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <>
             <span className="opacity-0">{children}</span>
             <div className="flex items-center absolute text-base leading-normal">
-              <Spinner color={spinnerColor} />
+              <Spinner color={spinnerColor} size={size} />
             </div>
           </>
         ) : (

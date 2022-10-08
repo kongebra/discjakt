@@ -67,7 +67,7 @@ const DashboardLayout: React.FC<Props> = ({ className, children }) => {
     return <div>loading...</div>;
   }
 
-  if (session?.user.role !== "ADMIN") {
+  if (session?.user.role?.toLowerCase() !== "admin") {
     return (
       <div>
         <p>no authorized</p>

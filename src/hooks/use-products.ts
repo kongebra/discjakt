@@ -1,12 +1,16 @@
-import { Product } from "@prisma/client";
+import { Product, ProductPrice } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 const BASE_URL = `${API_URL}/api/products`;
 
+export type ProductDetails = Product & {
+  prices: ProductPrice[];
+};
+
 const fetchProducts = async () => {
-  const resp = await axios.get<Product[]>(BASE_URL);
+  const resp = await axios.get<ProductDetails[]>(BASE_URL);
   return resp.data;
 };
 
@@ -18,14 +22,17 @@ const updateProduct = async (record: Product) => {
 export default function useProducts() {
   const queryClient = useQueryClient();
 
-  const { data, ...rest } = useQuery<Product[]>(["products"], fetchProducts);
+  const { data, ...rest } = useQuery<ProductDetails[]>(
+    ["products"],
+    fetchProducts
+  );
 
   const updateMutation = useMutation(updateProduct, {
     onSuccess(resp) {
       queryClient.invalidateQueries(["products"]);
 
       if ((resp && resp.discId) || resp.isDisc === false) {
-        queryClient.resetQueries(["data-cleaning"]);
+        queryClient.invalidateQueries(["data-cleaning"]);
       }
     },
   });
