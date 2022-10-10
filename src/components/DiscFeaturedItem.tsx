@@ -9,7 +9,9 @@ type Props = {
   disc: DiscDetails;
 };
 
-const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
+const css = { width: "100%", height: "auto" };
+
+const DiscFeaturedItem: React.FC<Props> = ({ disc }: Props) => {
   const lowestPrice = useMemo(() => {
     const latestPrices =
       disc.products?.map((product) => product.prices.slice(-1)).flat() || [];
@@ -28,9 +30,12 @@ const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
         <Image
           src={disc.imageUrl}
           alt={disc.name}
-          width={333}
-          height={333}
+          sizes="100vw"
+          style={css}
+          width={1024}
+          height={1024}
           className="max-w-full h-auto rounded-md aspect-square group-hover:animate-pulse"
+          quality={50}
         />
 
         <div>

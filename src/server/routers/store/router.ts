@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { isAdminMiddleware } from "src/server/middleware";
-import { t } from "src/server/trpc";
+import { router, baseProcedure } from "src/server/trpc";
 
 import { defaultStoreSelect, detailStoreSelect } from "./prismaSelect";
 import { createStoreSchema, getStoreBySlugSchema } from "./validation";
 
-export const storeRouter = t.router({
-  list: t.procedure.query(async ({ ctx }) => {
+export const storeRouter = router({
+  list: baseProcedure.query(async ({ ctx }) => {
     const stores = await ctx.prisma.store.findMany({
       select: defaultStoreSelect,
     });
@@ -14,7 +14,7 @@ export const storeRouter = t.router({
     return stores;
   }),
 
-  getBySlug: t.procedure
+  getBySlug: baseProcedure
     .input(getStoreBySlugSchema)
     .query(async ({ ctx, input }) => {
       const store = await ctx.prisma.store.findFirst({
@@ -34,7 +34,7 @@ export const storeRouter = t.router({
       return store;
     }),
 
-  create: t.procedure
+  create: baseProcedure
     .use(isAdminMiddleware)
     .input(createStoreSchema)
     .mutation(async ({ ctx, input }) => {

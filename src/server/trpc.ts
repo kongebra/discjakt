@@ -1,15 +1,14 @@
-import { GetInferenceHelpers, initTRPC } from "@trpc/server";
-
+import { Context } from "./context";
+import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
-import { Context } from "./context";
-import { AppRouter } from "./routers/_app";
-
-export const t = initTRPC.context<Context>().create({
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
     return shape;
   },
 });
 
-export type InferProcedures = GetInferenceHelpers<AppRouter>;
+export const router = t.router;
+export const baseProcedure = t.procedure;
+export const middleware = t.middleware;

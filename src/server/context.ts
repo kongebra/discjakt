@@ -1,17 +1,38 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 
-import { unstable_getServerSession } from "next-auth";
+import { Session, unstable_getServerSession } from "next-auth";
 
-import { prisma } from "src/lib/prisma";
 import { authOptions } from "src/pages/api/auth/[...nextauth]";
 
-export async function createContext(ctx: trpcNext.CreateNextContextOptions) {
-  const { req, res } = ctx;
+import { prisma } from "src/lib/prisma";
 
-  const session = await unstable_getServerSession(req, res, authOptions);
-
-  return { req, res, prisma, session };
+import { PrismaClient } from "@prisma/client";
+interface CreateContextOptions {
+  session: Session | null;
+  prisma: PrismaClient;
 }
 
-export type Context = trpc.inferAsyncReturnType<typeof createContext>;
+/**
+ * Inner function for `createContext` where we create the context.
+ * This is useful for testing when we don't want to mock Next.js' request/response
+ */
+export async function createContextInner(_opts: CreateContextOptions) {
+  return { ..._opts };
+}
+
+export type Context = trpc.inferAsyncReturnType<typeof createContextInner>;
+
+/**
+ * Creates context for an incoming request
+ * @link https://trpc.io/docs/context
+ */
+export async function createContext(
+  opts: trpcNext.CreateNextContextOptions
+): Promise<Context> {
+  const { req, res } = opts;
+  // for API-response caching see https://trpc.io/docs/caching
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  return await createContextInner({ session, prisma });
+}

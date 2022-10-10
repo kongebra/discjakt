@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import Container from "src/components/Container";
+import Input from "src/components/Input";
 import UserAvatar from "src/components/UserAvatar";
 
 const links = [
@@ -19,6 +21,8 @@ const links = [
 ];
 
 const DesktopNav = () => {
+  const router = useRouter();
+
   return (
     <nav className="hidden md:block bg-teal-500 text-white">
       <Container className="flex items-center justify-between py-4">
@@ -40,7 +44,23 @@ const DesktopNav = () => {
           </ul>
         </div>
 
-        <UserAvatar />
+        <div className="flex items-center gap-4">
+          <Input
+            type="search"
+            placeholder="Søk ..."
+            className="text-black"
+            onKeyUp={(event) => {
+              const { value } = event.currentTarget;
+              const { key } = event;
+
+              if (key === "Enter") {
+                router.push(`/search?q=${encodeURIComponent(value)}`);
+              }
+            }}
+          />
+
+          <UserAvatar />
+        </div>
       </Container>
     </nav>
   );

@@ -1,10 +1,10 @@
-import { GetInferenceHelpers } from "@trpc/server";
+import { GetInferenceHelpers, inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "src/server/routers/_app";
 
 export type AppRouterTypes = GetInferenceHelpers<AppRouter>;
 
 type BrandRouter = AppRouterTypes["brand"];
-export type BrandList = BrandRouter["list"]["output"];
+export type BrandList = BrandRouter["list"];
 export type BrandDetails = BrandRouter["getBySlug"]["output"];
 
 type DiscRouter = AppRouterTypes["disc"];

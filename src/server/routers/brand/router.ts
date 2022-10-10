@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { prisma } from "src/lib/prisma";
 import { isAdminMiddleware } from "src/server/middleware";
-import { t } from "src/server/trpc";
+import { router, baseProcedure } from "src/server/trpc";
 
 import { defaultBrandSelect, detailBrandSelect } from "./prismaSelect";
 import {
@@ -12,8 +12,8 @@ import {
   updateBrandSchema,
 } from "./validation";
 
-export const brandRouter = t.router({
-  list: t.procedure.query(async () => {
+export const brandRouter = router({
+  list: baseProcedure.query(async () => {
     const brands = await prisma.brand.findMany({
       select: defaultBrandSelect,
     });
@@ -21,7 +21,7 @@ export const brandRouter = t.router({
     return brands;
   }),
 
-  getBySlug: t.procedure
+  getBySlug: baseProcedure
     .input(getBrandBySlugSchema)
     .query(async ({ input }) => {
       const brand = await prisma.brand.findFirst({
@@ -41,7 +41,7 @@ export const brandRouter = t.router({
       return brand;
     }),
 
-  create: t.procedure
+  create: baseProcedure
     .use(isAdminMiddleware)
     .input(createBrandSchema)
     .mutation(async ({ input }) => {
@@ -55,7 +55,7 @@ export const brandRouter = t.router({
       return brand;
     }),
 
-  update: t.procedure
+  update: baseProcedure
     .use(isAdminMiddleware)
     .input(updateBrandSchema)
     .mutation(async ({ input: { id, ...rest } }) => {
@@ -77,7 +77,7 @@ export const brandRouter = t.router({
       return brand;
     }),
 
-  delete: t.procedure
+  delete: baseProcedure
     .use(isAdminMiddleware)
     .input(deleteBrandSchema)
     .mutation(async ({ input }) => {

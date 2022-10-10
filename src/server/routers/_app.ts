@@ -1,21 +1,15 @@
-import { initTRPC } from "@trpc/server";
+import { router } from "src/server/trpc";
 
-import superjson from "superjson";
-
-import { brandRouter } from "./brand/router";
 import { discRouter } from "./disc/router";
-import { productRouter } from "./product/router";
+import { brandRouter } from "./brand/router";
 import { storeRouter } from "./store/router";
+import { productRouter } from "./product/router";
 
-const t = initTRPC.create({
-  transformer: superjson,
-});
-
-export const appRouter = t.router({
-  brand: brandRouter,
+export const appRouter = router({
   disc: discRouter,
-  product: productRouter,
+  brand: brandRouter,
   store: storeRouter,
+  product: productRouter,
 });
 
 export type AppRouter = typeof appRouter;

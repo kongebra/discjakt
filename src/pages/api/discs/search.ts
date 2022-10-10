@@ -2,12 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
 import { create, insert, insertBatch, remove, search } from "@lyrasearch/lyra";
 import { prisma } from "src/lib/prisma";
+import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-const q = getQueryStringValue("q", req);
+  const q = getQueryStringValue("q", req);
 
   switch (req.method) {
     case "GET":
@@ -23,41 +24,46 @@ const q = getQueryStringValue("q", req);
   }
 }
 
-async function GET(req: NextApiRequest, res: NextApiResponse, query: string | undefined) {
-    const db = create({
-        schema: {
-            discId: "number",
-            name: "string",
-            brandId: "number",
-            brand: "string",
-        }
-    });
+async function GET(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  query: string | undefined
+) {
+  const db = create({
+    schema: {
+      discId: "number",
+      name: "string",
+      brandId: "number",
+      brand: "string",
+    },
+  });
 
-    const discs = await prisma.disc.findMany({
-        include: {
-            brand: true,
-        }
-    });
+  const discs = await prisma.disc.findMany({
+    select: detailDiscSelect,
+  });
 
-    await insertBatch(db, discs.map(disc => {
-        return {
-            discId: disc.id,
-            name: disc.name,
-            brandId: disc.brandId,
-            brand: disc.brand.name,
-        }
-    }));
+  await insertBatch(
+    db,
+    discs.map((disc) => {
+      return {
+        discId: disc.id,
+        name: disc.name,
+        brandId: disc.brand.id,
+        brand: disc.brand.name,
+      };
+    })
+  );
 
-    console.log('search', {query});
+  console.log("search", { query });
 
-    const searchResult = search(db, {
-        term: query || '',
-        properties: ['name', 'brand'],
-    });
+  const searchResult = search(db, {
+    term: query || "",
+    properties: ["name", "brand"],
+  });
 
-    const { count, hits } = searchResult;
+  const { count, hits } = searchResult;
 
-    res.status(200).json({ hits, count});
+  res.status(200).json({ hits, count });
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {}

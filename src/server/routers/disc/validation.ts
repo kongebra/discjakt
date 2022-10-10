@@ -39,3 +39,5 @@ export const updateDiscSchema = z.object({
 });
 
 export const deleteDiscSchema = z.number().min(1);
+
+export const searchDiscSchema = z.string().nullish();

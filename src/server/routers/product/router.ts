@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 
-import { t } from "src/server/trpc";
+import { router, baseProcedure } from "src/server/trpc";
 
 import { defaultProductSelect, detailProductSelect } from "./prismaSelect";
 import { getProductByIdSchema, updateProductSchema } from "./validation";
 
-export const productRouter = t.router({
-  list: t.procedure.query(async ({ ctx }) => {
+export const productRouter = router({
+  list: baseProcedure.query(async ({ ctx }) => {
     const products = await ctx.prisma.product.findMany({
       select: defaultProductSelect,
     });
@@ -14,7 +14,7 @@ export const productRouter = t.router({
     return products;
   }),
 
-  getById: t.procedure
+  getById: baseProcedure
     .input(getProductByIdSchema)
     .query(async ({ input, ctx }) => {
       const product = await ctx.prisma.product.findFirst({
@@ -34,7 +34,7 @@ export const productRouter = t.router({
       return product;
     }),
 
-  getUnlinkedProducts: t.procedure.query(async ({ ctx }) => {
+  getUnlinkedProducts: baseProcedure.query(async ({ ctx }) => {
     const products = await ctx.prisma.product.findMany({
       where: {
         disc: null,
@@ -46,7 +46,7 @@ export const productRouter = t.router({
     return products;
   }),
 
-  update: t.procedure
+  update: baseProcedure
     .input(updateProductSchema)
     .mutation(async ({ input: { id, ...data }, ctx }) => {
       const product = await ctx.prisma.product.update({
