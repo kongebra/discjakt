@@ -10,6 +10,7 @@ export const defaultDiscSelect = Prisma.validator<Prisma.DiscSelect>()({
   type: true,
   slug: true,
   imageUrl: true,
+  views: true,
 
   brand: {
     select: {
@@ -51,6 +52,7 @@ export const detailDiscSelect = Prisma.validator<Prisma.DiscSelect>()({
   type: true,
   slug: true,
   imageUrl: true,
+  views: true,
 
   brand: {
     select: {
