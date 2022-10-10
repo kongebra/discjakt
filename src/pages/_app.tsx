@@ -15,6 +15,7 @@ import Layout from "src/layout/Layout";
 import "../styles/globals.css";
 
 import { trpc } from "src/utils/trpc";
+import { useScreen } from "usehooks-ts";
 
 type AuthAppProps = AppProps<{
   session: Session;
@@ -37,7 +38,7 @@ function App({
           <Component {...pageProps} />
         </Layout>
 
-        <ReactQueryDevtools />
+        <ReactQueryDevtools position={"top-left"} />
       </QueryClientProvider>
     </SessionProvider>
   );

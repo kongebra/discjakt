@@ -19,14 +19,16 @@ type Props = {
 const HomePage: NextPage<Props> = ({ discs }) => {
   return (
     <Container className="py-6">
-      <Heading className="text-center mb-6">Featured discs</Heading>
-      <div className="grid grid-cols-4 gap-4 mb-4">
+      <Heading className="text-center mb-6" aria-label="Populære disker">
+        Populære disker
+      </Heading>
+      <div className="grid md:grid-cols-4 grid-cols-1 gap-4 mb-4">
         {discs?.slice(0, 4).map((disc) => (
           <DiscFeaturedItem key={disc.id} disc={disc} />
         ))}
       </div>
 
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid md:grid-cols-5 grid-cols-1 gap-4">
         {discs?.slice(5, 10).map((disc) => (
           <DiscFeaturedItem key={disc.id} disc={disc} />
         ))}

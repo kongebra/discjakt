@@ -28,8 +28,8 @@ const DiscFeaturedItem: React.FC<Props> = ({ disc }) => {
         <Image
           src={disc.imageUrl}
           alt={disc.name}
-          width={1024}
-          height={1024}
+          width={333}
+          height={333}
           className="max-w-full h-auto rounded-md aspect-square group-hover:animate-pulse"
         />
 
