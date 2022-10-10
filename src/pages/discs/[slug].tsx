@@ -72,7 +72,7 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
         <Container>
           <ol className="inline-flex items-center space-x-1 md:space-x-3">
             <li className="inline-flex items-center">
-              <Link href={`/brands/${disc.brand.id}`} passHref>
+              <Link href={`/brands/${disc.brand.slug}`} passHref>
                 <a className="ml-1 text-sm font-medium text-white hover:text-gray-300 md:ml-2">
                   {disc.brand.name}
                 </a>
@@ -81,7 +81,7 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
             <li className="inline-flex items-center">
               /
               <Link
-                href={`/brands/${disc.brand.id}/${disc.type.toLowerCase()}`}
+                href={`/brands/${disc.brand.slug}/${disc.type.toLowerCase()}`}
                 passHref
               >
                 <a className="ml-1 text-sm font-medium text-white hover:text-gray-300 md:ml-2">

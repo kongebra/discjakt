@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 
 import useDiscs from "src/hooks/use-discs";
 
@@ -8,6 +8,8 @@ import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import DiscFeaturedItemSkeleton from "src/components/DiscFeaturedItemSkeleton";
 import config from "src/config";
 import { trpc } from "src/utils/trpc";
+import { prisma } from "src/lib/prisma";
+import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
 
 type Props = {};
 
@@ -50,6 +52,25 @@ const HomePage: NextPage<Props> = () => {
       </div>
     </Container>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const data = await prisma.disc.findMany({
+    select: detailDiscSelect,
+    orderBy: {
+      views: "desc",
+    },
+    take: 10,
+  });
+
+  const discs = JSON.parse(JSON.stringify(data));
+
+  return {
+    props: {
+      discs,
+    },
+    revalidate: 60,
+  };
 };
 
 export default HomePage;
