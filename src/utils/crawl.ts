@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "src/lib/prisma";
 import { Store } from "@prisma/client";
-import { StoreDetail } from "src/types/store";
 import { CheerioAPI, load } from "cheerio";
+import { StoreDetails, storeSelect } from "src/types/prisma";
 
 export type SitemapResponse = {
   loc: string;
@@ -59,14 +59,8 @@ async function POST(
       ...storeParam,
     },
     update: {},
-    include: {
-      products: {
-        include: {
-          prices: true,
-        },
-      },
-    },
-  })) as StoreDetail;
+    select: storeSelect,
+  })) as StoreDetails;
 
   const { products, ...rest } = store;
 
@@ -104,7 +98,10 @@ async function POST(
   }
 }
 
-async function crawlSitemap(store: StoreDetail, handleSitemap: SitemapHandler) {
+async function crawlSitemap(
+  store: StoreDetails,
+  handleSitemap: SitemapHandler
+) {
   const response = await fetch(store.sitemapUrl);
   if (response.status !== 200) {
     return [];
@@ -118,7 +115,7 @@ async function crawlSitemap(store: StoreDetail, handleSitemap: SitemapHandler) {
 
 async function crawlProductPage(
   { loc, lastmod }: { loc: string; lastmod: string },
-  store: StoreDetail,
+  store: StoreDetails,
   handleProductPage: ProductPageHandler
 ) {
   const found = store.products.find((product) => product.loc === loc);
@@ -129,7 +126,7 @@ async function crawlProductPage(
       // check if we have any prices
       if (found.prices.length) {
         // take latest price
-        const latestPrice = found.prices[found.prices.length - 1].amount;
+        const latestPrice = found.prices[found.prices.length - 1]!.amount;
 
         // return it
         return { product: found, price: latestPrice };

@@ -1,32 +1,25 @@
 import Button from "src/components/Button";
 import Container from "src/components/Container";
 import Heading from "src/components/Heading";
-import PriceHistory from "src/components/PriceHistory";
 
-import { useDiscDetails } from "src/hooks/use-disc-details";
 import useStores from "src/hooks/use-stores";
-
-import superjson from "superjson";
 
 import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { discTypeToString } from "src/utils/discType";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextApiRequest,
-  NextPage,
-} from "next";
-import { trpc } from "src/utils/trpc";
-import { getQueryStringValue } from "src/utils/query";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { prisma } from "src/lib/prisma";
-import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
-import { DiscDetails } from "src/types/trpc";
+import { FaHeart } from "react-icons/fa";
+import { DiscDetails, discSelect } from "src/types/prisma";
+import Breadcrumbs from "src/components/Breadcrumbs";
+import { serializeDisc } from "src/utils/disc";
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+type Props = {
+  disc: DiscDetails;
+};
 
 const DiscDetailPage: NextPage<Props> = ({ disc }) => {
   const {
@@ -34,7 +27,6 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
   } = useRouter();
 
   const { stores, isLoading } = useStores();
-  // const { isLoading } = useDiscDetails(slug as string | undefined);
 
   const getStoreName = useCallback(
     (id: number) => {
@@ -68,36 +60,30 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
 
   return (
     <>
-      <div className="bg-teal-700 text-white py-2">
-        <Container>
-          <ol className="inline-flex items-center space-x-1 md:space-x-3">
-            <li className="inline-flex items-center">
-              <Link href={`/brands/${disc.brand.slug}`} passHref>
-                <a className="ml-1 text-sm font-medium text-white hover:text-gray-300 md:ml-2">
-                  {disc.brand.name}
-                </a>
-              </Link>
-            </li>
-            <li className="inline-flex items-center">
-              /
-              <Link
-                href={`/brands/${disc.brand.slug}/${disc.type.toLowerCase()}`}
-                passHref
-              >
-                <a className="ml-1 text-sm font-medium text-white hover:text-gray-300 md:ml-2">
-                  {discTypeToString(disc.type)}
-                </a>
-              </Link>
-            </li>
-            <li className="inline-flex items-center">
-              /
-              <span className="ml-1 text-sm font-medium text-gray-300 md:ml-2">
-                {disc.name}
-              </span>
-            </li>
-          </ol>
-        </Container>
-      </div>
+      <Breadcrumbs
+        items={[
+          {
+            label: "Forsiden",
+            href: "/",
+          },
+          {
+            label: "Merker",
+            href: "/brands",
+          },
+          {
+            href: `/brands/${disc.brand.slug}`,
+            label: disc.brand.name,
+          },
+          {
+            href: `/brands/${disc.brand.slug}/${disc.type.toLowerCase()}`,
+            label: discTypeToString(disc.type),
+          },
+          {
+            label: disc.name,
+          },
+        ]}
+      />
+
       <Container className="py-8">
         <div className="flex gap-8">
           <Image
@@ -111,6 +97,11 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
           <div>
             <Heading>{disc.name}</Heading>
             <Heading as="h2">{disc.brand.name}</Heading>
+
+            <Button color="danger" onClick={async () => {}}>
+              <FaHeart className="mr-2" />
+              Favoritt
+            </Button>
           </div>
         </div>
 
@@ -194,14 +185,23 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
   );
 };
 
-type ServerProps = {
-  disc: DiscDetails;
+export const getStaticPaths: GetStaticPaths = async () => {
+  const discs = await prisma.disc.findMany({
+    select: {
+      slug: true,
+    },
+  });
+
+  const paths = discs.map((disc) => ({ params: { slug: disc.slug } }));
+
+  return {
+    paths,
+    fallback: true,
+  };
 };
 
-export const getServerSideProps: GetServerSideProps<ServerProps> = async ({
-  query,
-}) => {
-  const slug = getQueryStringValue("slug", { query });
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const slug = params?.slug as string | undefined;
   if (!slug) {
     return {
       notFound: true,
@@ -217,15 +217,16 @@ export const getServerSideProps: GetServerSideProps<ServerProps> = async ({
         increment: 1,
       },
     },
-    select: detailDiscSelect,
+    select: discSelect,
   });
 
-  const disc = JSON.parse(JSON.stringify(data));
+  const disc = serializeDisc(data);
 
   return {
     props: {
       disc,
     },
+    revalidate: 60,
   };
 };
 

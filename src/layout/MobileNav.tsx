@@ -3,7 +3,6 @@ import React from "react";
 import { FaBars, FaSearch, FaUser } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import Button from "src/components/Button";
-import { string } from "zod";
 
 type MobileNavItem = {
   icon: IconType;

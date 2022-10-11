@@ -1,20 +1,7 @@
-// @ts-check
-
-const { env } = require("./src/server/env");
-
 /**
- * Don't be scared of the generics here.
- * All they do is to give us autocompletion when using this.
- *
- * @template {import('next').NextConfig} T
- * @param {T} config - A generic parameter that flows through to the return type
- * @constraint {{import('next').NextConfig}}
+ * @type {import('next').NextConfig}
  */
-function getConfig(config) {
-  return config;
-}
-
-module.exports = getConfig({
+const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -34,11 +21,10 @@ module.exports = getConfig({
       "frisbeebutikke-i04.mycdn.no",
       "frisbeebutikke-i05.mycdn.no",
       "frisbeebutikke-i06.mycdn.no",
+      "via.placeholder.com",
     ],
     formats: ["image/avif", "image/webp"],
   },
+};
 
-  publicRuntimeConfig: {
-    NODE_ENV: env.NODE_ENV,
-  },
-});
+module.exports = nextConfig;

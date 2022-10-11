@@ -59,7 +59,9 @@ const DesktopNav = () => {
             }}
           />
 
-          <UserAvatar />
+          <div>
+            <UserAvatar />
+          </div>
         </div>
       </Container>
     </nav>

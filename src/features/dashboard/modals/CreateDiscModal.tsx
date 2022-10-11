@@ -3,7 +3,6 @@ import Modal from "src/components/Modal";
 import useBrands from "src/hooks/use-brands";
 import useDiscs from "src/hooks/use-discs";
 import useProducts from "src/hooks/use-products";
-import { uploadFile } from "src/lib/storage";
 import React from "react";
 import CreateDiscForm from "../forms/CreateDiscForm";
 

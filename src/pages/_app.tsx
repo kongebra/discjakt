@@ -14,7 +14,6 @@ import Layout from "src/layout/Layout";
 
 import "../styles/globals.css";
 
-import { trpc } from "src/utils/trpc";
 import { useScreen } from "usehooks-ts";
 
 type AuthAppProps = AppProps<{
@@ -44,4 +43,4 @@ function App({
   );
 }
 
-export default trpc.withTRPC(App);
+export default App;

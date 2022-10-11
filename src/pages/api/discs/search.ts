@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
 import { create, insert, insertBatch, remove, search } from "@lyrasearch/lyra";
 import { prisma } from "src/lib/prisma";
-import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
+import { discSelect } from "src/types/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +39,7 @@ async function GET(
   });
 
   const discs = await prisma.disc.findMany({
-    select: detailDiscSelect,
+    select: discSelect,
   });
 
   await insertBatch(

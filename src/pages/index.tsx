@@ -7,10 +7,8 @@ import Heading from "src/components/Heading";
 import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import DiscFeaturedItemSkeleton from "src/components/DiscFeaturedItemSkeleton";
 import config from "src/config";
-import { trpc } from "src/utils/trpc";
 import { prisma } from "src/lib/prisma";
-import { detailDiscSelect } from "src/server/routers/disc/prismaSelect";
-import { DiscDetails } from "src/types/trpc";
+import { DiscDetails, discSelect } from "src/types/prisma";
 
 type Props = {
   discs: DiscDetails[];
@@ -39,7 +37,7 @@ const HomePage: NextPage<Props> = ({ discs }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const data = await prisma.disc.findMany({
-    select: detailDiscSelect,
+    select: discSelect,
     orderBy: {
       views: "desc",
     },

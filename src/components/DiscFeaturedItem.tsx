@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import Image from "next/future/image";
 import { FaBoxOpen, FaCoins } from "react-icons/fa";
 import Link from "next/link";
-import { DiscDetails } from "src/types/trpc";
+import { DiscDetails } from "src/types/prisma";
 
 type Props = {
   disc: DiscDetails;

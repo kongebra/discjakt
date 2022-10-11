@@ -18,6 +18,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
+import useAuth from "src/hooks/use-auth";
 
 type MenuLinkProps = {
   icon: IconType;
@@ -43,7 +44,8 @@ const MenuLink = ({ icon, href, text }: MenuLinkProps) => {
 };
 
 const UserAvatar = () => {
-  const { user, isFetching, login } = useUser();
+  const { login } = useAuth();
+  const { user, isFetching } = useUser();
 
   if (isFetching && !user) {
     return null;
