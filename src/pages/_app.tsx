@@ -14,8 +14,6 @@ import Layout from "src/layout/Layout";
 
 import "../styles/globals.css";
 
-import { useScreen } from "usehooks-ts";
-
 type AuthAppProps = AppProps<{
   session: Session;
 }>;
@@ -44,3 +42,5 @@ function App({
 }
 
 export default App;
+
+export { reportWebVitals } from "next-axiom";

@@ -29,6 +29,8 @@ const DiscFeaturedItem: React.FC<Props> = ({ disc }: Props) => {
       <a className="flex flex-col gap-4 rounded-lg bg-zinc-100 p-4 hover:shadow transition group">
         <Image
           src={disc.imageUrl}
+          blurDataURL={"/placeholder.png"}
+          placeholder={"blur"}
           alt={disc.name}
           sizes="100vw"
           style={css}
