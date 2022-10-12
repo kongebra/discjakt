@@ -8,6 +8,7 @@ export default async function handler(
   crawlHelper(req, res, {
     store: {
       name: "krokholdgs.no",
+      slug: "krokholdgs",
       sitemapUrl: "https://krokholdgs.no/sitemap.xml",
       baseUrl: "https://krokholdgs.no/",
     },

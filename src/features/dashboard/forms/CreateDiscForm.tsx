@@ -8,6 +8,9 @@ import Select from "src/components/Select";
 import Image from "next/future/image";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import FormLabel from "src/components/FormLabel";
+import FormError from "src/components/FormError";
+import clsx from "clsx";
 
 type Props = {
   brands: Brand[];
@@ -60,6 +63,17 @@ const CreateDiscForm: React.FC<Props> = ({
     [brands]
   );
 
+  const generateSlug = () => {
+    const name = form
+      .getValues("name")
+      .toLowerCase()
+      .split(" ")
+      .join("-")
+      .replace("'", "");
+
+    form.setValue("slug", name);
+  };
+
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
@@ -71,6 +85,27 @@ const CreateDiscForm: React.FC<Props> = ({
           {...form.register("name", { required: "Feltet er påkrevd" })}
           error={form.formState.errors.name?.message}
         />
+
+        <div className="flex flex-col mb-3">
+          <FormLabel>Slug</FormLabel>
+
+          <div className="flex">
+            <Input
+              {...form.register("slug", { required: "Feltet er påkrevd" })}
+              className={clsx("rounded-r-none", {
+                "ring-2 ring-red-600":
+                  form.formState.errors.slug?.message !== undefined,
+              })}
+            />
+
+            <Button className="rounded-l-none" onClick={generateSlug}>
+              Generate
+            </Button>
+          </div>
+
+          <FormError>{form.formState.errors.slug?.message}</FormError>
+        </div>
+
         <FormTextarea
           label="Beskrivelse"
           {...form.register("description")}
@@ -86,6 +121,34 @@ const CreateDiscForm: React.FC<Props> = ({
         />
 
         <FormInput label="Bilde URL" {...form.register("imageUrl")} />
+
+        <FormSelect
+          label="Disc type"
+          {...form.register("type", { required: "Feltet er påkrevd" })}
+          options={[
+            {
+              value: "",
+              label: "---",
+            },
+            {
+              value: "putter",
+              label: "Putt/Approach",
+            },
+            {
+              value: "midrage",
+              label: "Midrange",
+            },
+            {
+              value: "fairway",
+              label: "Fairway Driver",
+            },
+            {
+              value: "distance",
+              label: "Distance Driver",
+            },
+          ]}
+          error={form.formState.errors.type?.message}
+        />
 
         <div className="flex gap-3">
           <div className="flex-1">

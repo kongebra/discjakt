@@ -16,13 +16,13 @@ const createDisc = async (record: Disc) => {
   return resp.data;
 };
 
-const updateDisc = async ({ id, record }: { id: number; record: Disc }) => {
-  const resp = await axios.put<Disc>(`${BASE_URL}/${id}`, record);
+const updateDisc = async ({ slug, record }: { slug: string; record: Disc }) => {
+  const resp = await axios.put<Disc>(`${BASE_URL}/${slug}`, record);
   return resp.data;
 };
 
-const deleteDisc = async (id: number) => {
-  const resp = await axios.delete<Disc>(`${BASE_URL}/${id}`);
+const deleteDisc = async (slug: string) => {
+  const resp = await axios.delete<Disc>(`${BASE_URL}/${slug}`);
   return resp.data;
 };
 

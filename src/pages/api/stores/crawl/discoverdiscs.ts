@@ -8,12 +8,27 @@ export default async function handler(
   crawlHelper(req, res, {
     debug: {
       log: true,
+      // maxCount: 3,
+      // disableCreate: true,
     },
     store: {
-      name: "frisbeebutikken.no",
-      slug: "frisbeebutikken",
-      sitemapUrl: "https://frisbeebutikken.no/sitemap.xml",
-      baseUrl: "https://frisbeebutikken.no/",
+      name: "discoverdiscs.no",
+      slug: "discoverdiscs",
+      baseUrl: "https://www.discoverdiscs.no",
+      sitemapUrl: "https://www.discoverdiscs.no/sitemap.xml",
+    },
+    findSitemapInternal($) {
+      let sitemap = "";
+
+      $("sitemap").each((i, el) => {
+        const loc = $(el).find("loc").text().trim();
+
+        if (loc.includes("sitemap_products_1.xml")) {
+          sitemap = loc;
+        }
+      });
+
+      return sitemap;
     },
     handleSitemap($) {
       const result: SitemapResponse[] = [];
@@ -29,9 +44,13 @@ export default async function handler(
 
       return result;
     },
+
     handleProductPage($) {
       const priceStr =
-        $(".product-price")?.text()?.trim().replace(",-", "") || "";
+        $('meta[property="og:price:amount"]')
+          .attr("content")
+          ?.trim()
+          .replace(",-", "") || "";
 
       let price = Number(priceStr.replace(",", "."));
       if (isNaN(price)) {
@@ -39,10 +58,10 @@ export default async function handler(
       }
 
       const data = {
-        title: $("h1").text()?.trim() || "",
+        title: $('meta[property="og:title"]').attr("content")?.trim() || "",
         description:
           $('meta[name="description"]').attr("content")?.trim() || "",
-        imageUrl: $(".product_image_price_row img").attr("src")?.trim() || "",
+        imageUrl: $('meta[property="og:image"]').attr("content")?.trim() || "",
       };
 
       return {

@@ -10,14 +10,15 @@ datasource db {
 }
 
 model Store {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
-  baseUrl    String
-  sitemapUrl String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  slug       String?   @unique
-  products   Product[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String    @default("") @db.Text
+  baseUrl     String
+  sitemapUrl  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  slug        String?   @unique
+  products    Product[]
 }
 
 model Product {
@@ -49,7 +50,7 @@ model ProductPrice {
 model Brand {
   id          Int      @id @default(autoincrement())
   name        String
-  description String
+  description String   @db.Text
   url         String
   imageUrl    String
   createdAt   DateTime @default(now())
@@ -61,7 +62,7 @@ model Brand {
 model Disc {
   id          Int                 @id @default(autoincrement())
   name        String
-  description String
+  description String              @db.Text
   imageUrl    String
   speed       Float
   glide       Float

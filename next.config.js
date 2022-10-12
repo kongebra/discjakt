@@ -24,6 +24,8 @@ const nextConfig = {
       "frisbeebutikke-i05.mycdn.no",
       "frisbeebutikke-i06.mycdn.no",
       "via.placeholder.com",
+      "cdn.shopify.com",
+      "usercontent.one",
     ],
     formats: ["image/avif", "image/webp"],
   },

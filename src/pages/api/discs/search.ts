@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
-import { create, insert, insertBatch, remove, search } from "@lyrasearch/lyra";
 import { prisma } from "src/lib/prisma";
-import { DiscDetails, discSelect } from "src/types/prisma";
-
-let cache: DiscDetails[] = [];
-let cacheHit: Date | null = null;
+import { discSelect } from "src/types/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,48 +28,25 @@ async function GET(
   res: NextApiResponse,
   query: string | undefined
 ) {
-  const db = create({
-    schema: {
-      discId: "number",
-      name: "string",
-      brandId: "number",
-      brand: "string",
+  const discs = await prisma.disc.findMany({
+    where: {
+      OR: [
+        {
+          name: {
+            contains: query,
+          },
+        },
+        {
+          brand: {
+            name: {
+              contains: query,
+            },
+          },
+        },
+      ],
     },
+    select: discSelect,
   });
-
-  const now = new Date();
-  const diff = (now.getTime() - (cacheHit?.getTime() || 0)) / 1000;
-
-  console.log("search, cache diff", diff);
-
-  if (diff >= 60 * 5) {
-    console.log("DISC_SEARCH :: refresh cache");
-    cacheHit = new Date();
-    cache = await prisma.disc.findMany({
-      select: discSelect,
-    });
-  }
-
-  await insertBatch(
-    db,
-    cache.map((disc) => {
-      return {
-        discId: disc.id,
-        name: disc.name,
-        brandId: disc.brand.id,
-        brand: disc.brand.name,
-      };
-    })
-  );
-
-  const searchResult = search(db, {
-    term: query || "",
-    properties: ["name", "brand"],
-  });
-
-  const { hits } = searchResult;
-
-  const discs = hits.map((hit) => cache.find((disc) => disc.id === hit.discId));
 
   res.status(200).json(discs);
 }

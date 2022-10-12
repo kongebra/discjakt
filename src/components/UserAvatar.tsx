@@ -67,7 +67,9 @@ const UserAvatar = () => {
             {user.image ? (
               <Image
                 className="rounded-full border-2 border-gray-100 shadow-sm w-10 h-10"
-                src={user.image}
+                src={user.image ? user.image : "/placeholder.png"}
+                blurDataURL="/placeholder.png"
+                placeholder="blur"
                 alt={user.name || "Profil bilde"}
                 layout="fixed"
                 width={40}

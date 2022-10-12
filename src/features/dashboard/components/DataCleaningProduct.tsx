@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import useProducts from "src/hooks/use-products";
 import useDiscs from "src/hooks/use-discs";
+import { DiscDetails } from "src/types/prisma";
+import { findMatch } from "../utils/find-match";
 
 type SearchResult = {
   hits: {
@@ -23,12 +25,15 @@ type Props = {
 
   onClickCreateDisc: (product: Product) => void;
   onClickSelectDisc: (product: Product) => void;
+
+  globalLoading: boolean;
 };
 
 const DataCleaningProduct: React.FC<Props> = ({
   product,
   onClickCreateDisc,
   onClickSelectDisc,
+  globalLoading,
 }) => {
   const { discs } = useDiscs();
   const {
@@ -37,37 +42,7 @@ const DataCleaningProduct: React.FC<Props> = ({
 
   const findMatches = useCallback(
     (product: Product) => {
-      const titleWords = product.title.toLowerCase().split(" ");
-
-      const extraCheck = (value: string) => {
-        if (
-          product.title.toLowerCase().includes(value.toLowerCase()) &&
-          !titleWords.includes(value)
-        ) {
-          titleWords.push(value);
-        }
-      };
-
-      extraCheck("v2");
-      extraCheck("swan");
-
-      return discs
-        .filter((disc) => {
-          const discNameWords = disc.name.toLowerCase().split(" ");
-
-          return titleWords.some((word) => discNameWords.includes(word));
-        })
-        .sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          }
-
-          if (a.name < b.name) {
-            return -1;
-          }
-
-          return 0;
-        });
+      return findMatch(product, discs);
     },
     [discs]
   );
@@ -113,7 +88,7 @@ const DataCleaningProduct: React.FC<Props> = ({
               size="xs"
               color="success"
               onClick={() => onClickCreateDisc(product)}
-              isLoading={updateProduct.isLoading}
+              isLoading={updateProduct.isLoading || globalLoading}
             >
               Lag disc
             </Button>
@@ -122,7 +97,7 @@ const DataCleaningProduct: React.FC<Props> = ({
               size="xs"
               color="primary"
               onClick={() => onClickSelectDisc(product)}
-              isLoading={updateProduct.isLoading}
+              isLoading={updateProduct.isLoading || globalLoading}
             >
               Velg disc
             </Button>
@@ -133,7 +108,7 @@ const DataCleaningProduct: React.FC<Props> = ({
               onClick={async () => {
                 await onNoDiscClicked(product);
               }}
-              isLoading={updateProduct.isLoading}
+              isLoading={updateProduct.isLoading || globalLoading}
             >
               Ikke disc
             </Button>
@@ -149,7 +124,7 @@ const DataCleaningProduct: React.FC<Props> = ({
             onClick={async () => {
               await onMatchClicked(product, disc.id);
             }}
-            isLoading={updateProduct.isLoading}
+            isLoading={updateProduct.isLoading || globalLoading}
           >
             {disc.name}
           </Button>

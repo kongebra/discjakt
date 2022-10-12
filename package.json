@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.2",
-    "@lyrasearch/lyra": "^0.2.5",
     "@next-auth/prisma-adapter": "^1.0.4",
     "@prisma/client": "^4.4.0",
     "@tanstack/match-sorter-utils": "^8.5.14",

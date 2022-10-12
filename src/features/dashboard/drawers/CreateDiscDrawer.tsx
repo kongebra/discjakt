@@ -27,10 +27,24 @@ const CreateDiscDrawer: React.FC<Props> = ({
   } = useProducts();
 
   const onSubmit = async (data: Disc) => {
-    data.name = data.name.trim();
-    data.description = data.description.trim();
+    const record = {
+      ...data,
+      name: data.name.trim(),
+      description: data.description.trim(),
 
-    const disc = await createDisc.mutateAsync(data);
+      speed: Number(data.speed),
+      glide: Number(data.glide),
+      turn: Number(data.turn),
+      fade: Number(data.fade),
+
+      brandId: Number(data.brandId),
+    };
+
+    delete (record as any).products;
+    delete (record as any).brand;
+    delete (record as any).lowestPrice;
+
+    const disc = await createDisc.mutateAsync(record);
 
     if (defaultValues && disc) {
       await updateProduct.mutateAsync({
