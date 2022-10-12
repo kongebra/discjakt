@@ -6,12 +6,13 @@ import useProducts from "src/hooks/use-products";
 import React from "react";
 import CreateDiscForm from "../forms/CreateDiscForm";
 import EditDiscForm from "../forms/EditDiscForm";
+import { DiscDetails } from "src/types/prisma";
 
 type Props = {
   show: boolean;
   onClose: () => void;
 
-  defaultValues?: Disc;
+  defaultValues?: DiscDetails;
 };
 
 const EditDiscDrawer: React.FC<Props> = ({ show, onClose, defaultValues }) => {

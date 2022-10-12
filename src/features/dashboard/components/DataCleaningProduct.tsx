@@ -52,7 +52,7 @@ const DataCleaningProduct: React.FC<Props> = ({
       extraCheck("swan");
 
       return discs
-        .filter((disc: Disc) => {
+        .filter((disc) => {
           const discNameWords = disc.name.toLowerCase().split(" ");
 
           return titleWords.some((word) => discNameWords.includes(word));
@@ -142,7 +142,7 @@ const DataCleaningProduct: React.FC<Props> = ({
       </div>
 
       <div className="flex gap-1">
-        {findMatches(product).map((disc: Disc) => (
+        {findMatches(product).map((disc) => (
           <Button
             key={disc.id}
             size="xs"

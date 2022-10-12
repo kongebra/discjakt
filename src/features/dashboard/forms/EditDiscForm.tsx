@@ -11,11 +11,12 @@ import Select from "src/components/Select";
 import Image from "next/future/image";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { DiscDetails } from "src/types/prisma";
 
 type Props = {
   brands: Brand[];
 
-  defaultValues?: Disc;
+  defaultValues?: DiscDetails;
 
   onSubmit: (data: Disc) => void;
   onCancel?: () => void;
@@ -28,7 +29,10 @@ const EditDiscForm: React.FC<Props> = ({
   onCancel,
 }) => {
   const form = useForm<Disc>({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      brandId: defaultValues?.brand.id,
+    },
   });
 
   const brandOptions = useMemo(

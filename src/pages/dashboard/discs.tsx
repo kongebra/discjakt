@@ -13,11 +13,7 @@ import useDiscs from "src/hooks/use-discs";
 
 import DashboardLayout from "src/layout/DashboardLayout";
 
-type DiscDetails = Disc & {
-  brand: Brand;
-  products: Product[];
-  lowestPrice: number;
-};
+import { DiscDetails } from "src/types/prisma";
 
 const columnHelper = createColumnHelper<DiscDetails>();
 
@@ -64,10 +60,11 @@ const defaultColumns = ({ onEdit, onDelete }: DefaultColumnsProps) => {
       header: () => "Produkter",
       cell: (info) => info.getValue().length,
     }),
-    columnHelper.accessor("lowestPrice", {
-      header: () => "Lavest Pris (NOK)",
-      cell: (info) => info.getValue(),
-    }),
+    // TODO: få tilbake denne
+    // columnHelper.accessor("lowestPrice", {
+    //   header: () => "Lavest Pris (NOK)",
+    //   cell: (info) => info.getValue(),
+    // }),
     columnHelper.accessor("id", {
       header: () => "Action",
       enableSorting: false,
