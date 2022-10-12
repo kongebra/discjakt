@@ -7,6 +7,8 @@ import Container from "src/components/Container";
 import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import Heading from "src/components/Heading";
 import Select from "src/components/Select";
+import SelectDiscSort from "src/components/SelectDiscSort";
+import useSortDiscs from "src/hooks/use-sort-discs";
 import { prisma } from "src/lib/prisma";
 import {
   BrandDetails,
@@ -23,35 +25,7 @@ type Props = {
 };
 
 const BrandDetailsPage: NextPage<Props> = ({ brand, discs }) => {
-  const [sort, setSort] = useState<string>("name");
-
-  const sortFn = useMemo<(a: DiscDetails, b: DiscDetails) => number>(() => {
-    switch (sort) {
-      case "speed-asc":
-        return (a, b) => a.speed - b.speed;
-      case "speed-desc":
-        return (a, b) => b.speed - a.speed;
-
-      case "glide-asc":
-        return (a, b) => a.glide - b.glide;
-      case "glide-desc":
-        return (a, b) => b.glide - a.glide;
-
-      case "turn-asc":
-        return (a, b) => a.turn - b.turn;
-      case "turn-desc":
-        return (a, b) => b.turn - a.turn;
-
-      case "fade-asc":
-        return (a, b) => a.fade - b.fade;
-      case "fade-desc":
-        return (a, b) => b.fade - a.fade;
-
-      case "name":
-      default:
-        return (a, b) => a.name.localeCompare(b.name);
-    }
-  }, [sort]);
+  const { sort, setSort, sortFn } = useSortDiscs();
 
   return (
     <>
@@ -76,49 +50,7 @@ const BrandDetailsPage: NextPage<Props> = ({ brand, discs }) => {
           <Heading className="mb-4">{brand.name}</Heading>
 
           <div>
-            <Select
-              placeholder="Sorter"
-              value={sort}
-              options={[
-                {
-                  value: "name",
-                  label: "Navn",
-                },
-                {
-                  value: "speed-asc",
-                  label: "Speed lav-høy",
-                },
-                {
-                  value: "speed-desc",
-                  label: "Speed høy-lav",
-                },
-                {
-                  value: "glide-asc",
-                  label: "Glide lav-høy",
-                },
-                {
-                  value: "glide-desc",
-                  label: "Glide høy-lav",
-                },
-                {
-                  value: "turn-asc",
-                  label: "Turn lav-høy",
-                },
-                {
-                  value: "turn-desc",
-                  label: "Turn høy-lav",
-                },
-                {
-                  value: "fade-asc",
-                  label: "Fade lav-høy",
-                },
-                {
-                  value: "fade-desc",
-                  label: "Fade høy-lav",
-                },
-              ]}
-              onChange={(event) => setSort(event.currentTarget.value)}
-            />
+            <SelectDiscSort value={sort} onChange={setSort} />
           </div>
         </div>
 

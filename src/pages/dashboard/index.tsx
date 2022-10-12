@@ -1,17 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import DashboardStat from "src/features/dashboard/components/DashboardStat";
-import useBrands from "src/hooks/use-brands";
-import useDiscs from "src/hooks/use-discs";
-import useProducts from "src/hooks/use-products";
-import useStores from "src/hooks/use-stores";
-import DashboardLayout from "src/layout/DashboardLayout";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useMemo } from "react";
-import { FaBox, FaBoxOpen, FaStore } from "react-icons/fa";
 
 import { GiFactory, GiFrisbee } from "react-icons/gi";
+import { FaBox, FaBoxOpen, FaStore } from "react-icons/fa";
+
+import DashboardStat from "src/features/dashboard/components/DashboardStat";
+import DashboardLayout from "src/layout/DashboardLayout";
 
 type DashboardStats = {
   stats: {
@@ -25,15 +18,15 @@ type DashboardStats = {
   };
 };
 
+const fetchStats = async () => {
+  const response = await fetch("http://localhost:3000/api/dashboard/stats");
+  return (await response.json()) as DashboardStats;
+};
+
 const DashboardPage = () => {
   const { data, isLoading } = useQuery<DashboardStats>(
     ["dashboard", "stats"],
-    async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/dashboard/stats"
-      );
-      return response.data;
-    }
+    fetchStats
   );
 
   return (

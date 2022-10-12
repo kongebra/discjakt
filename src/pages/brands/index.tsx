@@ -38,7 +38,6 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
                 <a className="flex flex-col gap-4 rounded-lg bg-zinc-100 p-4 hover:shadow transition group">
                   <Image
                     src={brand.imageUrl ? brand.imageUrl : "/placeholder.png"}
-                    placeholder={"empty"}
                     alt={brand.name}
                     sizes="100vw"
                     width={1024}

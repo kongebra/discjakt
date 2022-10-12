@@ -2,7 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
 import { create, insert, insertBatch, remove, search } from "@lyrasearch/lyra";
 import { prisma } from "src/lib/prisma";
-import { discSelect } from "src/types/prisma";
+import { DiscDetails, discSelect } from "src/types/prisma";
+
+let cache: DiscDetails[] = [];
+let cacheHit: Date | null = null;
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,13 +41,22 @@ async function GET(
     },
   });
 
-  const discs = await prisma.disc.findMany({
-    select: discSelect,
-  });
+  const now = new Date();
+  const diff = (now.getTime() - (cacheHit?.getTime() || 0)) / 1000;
+
+  console.log("search, cache diff", diff);
+
+  if (diff >= 60 * 5) {
+    console.log("DISC_SEARCH :: refresh cache");
+    cacheHit = new Date();
+    cache = await prisma.disc.findMany({
+      select: discSelect,
+    });
+  }
 
   await insertBatch(
     db,
-    discs.map((disc) => {
+    cache.map((disc) => {
       return {
         discId: disc.id,
         name: disc.name,
@@ -54,16 +66,16 @@ async function GET(
     })
   );
 
-  console.log("search", { query });
-
   const searchResult = search(db, {
     term: query || "",
     properties: ["name", "brand"],
   });
 
-  const { count, hits } = searchResult;
+  const { hits } = searchResult;
 
-  res.status(200).json({ hits, count });
+  const discs = hits.map((hit) => cache.find((disc) => disc.id === hit.discId));
+
+  res.status(200).json(discs);
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {}

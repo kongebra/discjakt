@@ -1,12 +1,17 @@
-import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
+import React, { useState } from "react";
+import { Brand, Disc, Product } from "@prisma/client";
+
 import { createColumnHelper } from "@tanstack/react-table";
+
 import Button from "src/components/Button";
 import Drawer from "src/components/Drawer";
 import Table from "src/components/Table";
+
 import EditDiscDrawer from "src/features/dashboard/drawers/EditDiscDrawer";
+
 import useDiscs from "src/hooks/use-discs";
+
 import DashboardLayout from "src/layout/DashboardLayout";
-import React, { useState } from "react";
 
 type DiscDetails = Disc & {
   brand: Brand;

@@ -1,11 +1,15 @@
-import { Product } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import CreateDiscDrawer from "src/features/dashboard/drawers/CreateDiscDrawer";
-import SelectDiscDrawer from "src/features/dashboard/drawers/SelectDiscDrawer";
-import DashboardLayout from "src/layout/DashboardLayout";
 import React, { useState } from "react";
 import { useBoolean } from "usehooks-ts";
+
+import { Product } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+
+import CreateDiscDrawer from "src/features/dashboard/drawers/CreateDiscDrawer";
+import SelectDiscDrawer from "src/features/dashboard/drawers/SelectDiscDrawer";
 import DataCleaningProduct from "src/features/dashboard/components/DataCleaningProduct";
+
+import DashboardLayout from "src/layout/DashboardLayout";
+
 import config from "src/config";
 
 const BASE_URL = `${config.apiUrl}/api/data`;

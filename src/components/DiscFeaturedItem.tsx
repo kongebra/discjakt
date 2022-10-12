@@ -48,25 +48,25 @@ const DiscFeaturedItem: React.FC<Props> = ({ disc }: Props) => {
         <div className="flex items-center justify-between gap-4">
           <span
             title="Speed"
-            className="group-hover:animate-pulse select-none p-2 bg-green-200 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
+            className="group-hover:animate-pulse select-none p-2 bg-lime-300 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
           >
             {disc.speed.toString()}
           </span>
           <span
             title="Glide"
-            className="group-hover:animate-pulse select-none p-2 bg-amber-200 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
+            className="group-hover:animate-pulse select-none p-2 bg-orange-300 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
           >
             {disc.glide.toString()}
           </span>
           <span
             title="Turn"
-            className="group-hover:animate-pulse select-none p-2 bg-sky-200 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
+            className="group-hover:animate-pulse select-none p-2 bg-sky-300 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
           >
             {disc.turn.toString()}
           </span>
           <span
             title="Fade"
-            className="group-hover:animate-pulse select-none p-2 bg-yellow-200 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
+            className="group-hover:animate-pulse select-none p-2 bg-yellow-300 flex items-center justify-center rounded-md text-sky-900 font-bold text-lg aspect-square w-full"
           >
             {disc.fade.toString()}
           </span>

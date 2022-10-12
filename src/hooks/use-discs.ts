@@ -2,16 +2,9 @@ import { Brand, Disc, Product, ProductPrice } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import config from "src/config";
+import { DiscDetails } from "src/types/prisma";
 
 const BASE_URL = `${config.apiUrl}/api/discs`;
-
-export type DiscDetails = Disc & {
-  brand: Brand;
-  products: (Product & {
-    prices: ProductPrice[];
-  })[];
-  lowestPrice: number;
-};
 
 const fetchDiscs = async () => {
   const resp = await axios.get<DiscDetails[]>(`${BASE_URL}`);
