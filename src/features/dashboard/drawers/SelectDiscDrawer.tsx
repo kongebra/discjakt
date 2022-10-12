@@ -1,14 +1,12 @@
-import { Disc, Product } from "@prisma/client";
+import { Product } from "@prisma/client";
 import Autocomplete from "src/components/Autocomplete";
 import Button from "src/components/Button";
 import Drawer from "src/components/Drawer";
-import FormSelect from "src/components/FormSelect";
-import useBrands from "src/hooks/use-brands";
-import useDiscs, { DiscDetails } from "src/hooks/use-discs";
+import useDiscs from "src/hooks/use-discs";
 import useProducts from "src/hooks/use-products";
 import React, { useMemo, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import { debounce } from "src/utils/debounce";
+import { DiscDetails } from "src/types/prisma";
 
 type Props = {
   show: boolean;
@@ -27,7 +25,7 @@ const SelectDiscDrawer: React.FC<Props> = ({
     mutations: { update: updateProduct },
   } = useProducts();
 
-  const [selectedDisc, setSelectedDisc] = useState<Disc | undefined>();
+  const [selectedDisc, setSelectedDisc] = useState<DiscDetails | undefined>();
   const [value, setValue] = useState<string>("");
   const debouncedValue = useDebounce(value, 200);
 

@@ -1,7 +1,6 @@
 import React from "react";
 
 import Image from "next/future/image";
-import { DiscDetails } from "src/hooks/use-discs";
 
 type Props = {};
 
