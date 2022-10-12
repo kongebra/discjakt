@@ -34,6 +34,7 @@ export const discSelect = Prisma.validator<Prisma.DiscSelect>()({
       title: true,
       description: true,
       imageUrl: true,
+      storeId: true,
 
       prices: {
         select: {

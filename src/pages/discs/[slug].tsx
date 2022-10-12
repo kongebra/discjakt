@@ -8,7 +8,7 @@ import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { discTypeToString } from "src/utils/discType";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { prisma } from "src/lib/prisma";
@@ -41,6 +41,39 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
     },
     [stores]
   );
+
+  const allProducts = useMemo(() => {
+    return disc.products
+      .map((product) => ({
+        ...product,
+        latestPrice: product.prices.length
+          ? product.prices[product.prices.length - 1]
+          : undefined,
+      }))
+      .sort((a, b) => {
+        if (a.latestPrice && b.latestPrice) {
+          if (a.latestPrice?.amount === 0) {
+            return 1;
+          }
+
+          if (b.latestPrice.amount === 0) {
+            return -1;
+          }
+
+          return a.latestPrice.amount - b.latestPrice.amount;
+        }
+
+        if (a.latestPrice && !b.latestPrice) {
+          return -1;
+        }
+
+        if (!a.latestPrice && b.latestPrice) {
+          return 1;
+        }
+
+        return 0;
+      });
+  }, [disc.products]);
 
   if (isLoading) {
     return (
@@ -108,10 +141,8 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
         <div className="flex flex-col gap-4">
           <Heading as="h2">Priser</Heading>
 
-          {disc.products.map((product: any) => {
-            const price = product.prices.length
-              ? product.prices.slice(-1)[0]
-              : undefined;
+          {allProducts.map((product) => {
+            const price = product.latestPrice;
 
             return (
               <div
