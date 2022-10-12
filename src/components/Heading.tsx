@@ -10,12 +10,12 @@ type Props = React.HTMLAttributes<HTMLElement> & {
 type HeadingClasses = Record<HeadingElementType, string>;
 
 const headingClasses: HeadingClasses = {
-  h1: "text-6xl",
-  h2: "text-5xl",
-  h3: "text-4xl",
-  h4: "text-3xl",
-  h5: "text-2xl",
-  h6: "text-xl",
+  h1: "text-4xl md:text-6xl",
+  h2: "text-3xl md:text-5xl",
+  h3: "text-2xl md:text-4xl",
+  h4: "text-xl md:text-3xl",
+  h5: "text-lg md:text-2xl",
+  h6: "text-base md:text-xl",
 };
 
 const Heading: React.FC<Props> = ({

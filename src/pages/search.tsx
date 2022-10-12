@@ -4,6 +4,7 @@ import React from "react";
 import Container from "src/components/Container";
 import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import Heading from "src/components/Heading";
+import Input from "src/components/Input";
 import SelectDiscSort from "src/components/SelectDiscSort";
 import config from "src/config";
 import useSortDiscs from "src/hooks/use-sort-discs";
@@ -32,7 +33,7 @@ const SearchPage = () => {
     }
   );
 
-  if (isLoading) {
+  if (isLoading && query) {
     return (
       <Container className="py-4">
         <Heading className="mb-4">Søker ...</Heading>
@@ -42,7 +43,7 @@ const SearchPage = () => {
 
   return (
     <Container className="py-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-4">
         <Heading className="mb-4">Søkeresultat: {query}</Heading>
 
         <div>
@@ -50,7 +51,7 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {data?.sort(sortFn).map((disc: DiscDetails) => (
           <DiscFeaturedItem key={disc.id} disc={disc} />
         ))}

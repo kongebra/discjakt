@@ -59,7 +59,7 @@ const DesktopNav = () => {
             }}
           />
 
-          <div>
+          <div className="flex items-center">
             <UserAvatar />
           </div>
         </div>

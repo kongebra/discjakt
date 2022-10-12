@@ -7,7 +7,7 @@ type Props = React.PropsWithChildren<{}>;
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-6 md:pb-0">
       <Navbar />
 
       <div className="flex-auto">{children}</div>

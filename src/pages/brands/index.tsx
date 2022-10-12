@@ -30,7 +30,7 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
       <Container className="py-4">
         <Heading className="mb-4">Merker</Heading>
 
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {brands
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((brand) => (

@@ -54,17 +54,17 @@ const BrandDetailsPage: NextPage<Props> = ({ brand, discs }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           {["putter", "midrage", "fairway", "distance"].map((type) => (
             <Link key={type} href={`/brands/${brand.slug}/${type}`} passHref>
-              <a className="bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-white flex items-center justify-center rounded-md h-32 text-2xl font-semibold">
+              <a className="bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-white text-center flex items-center justify-center rounded-md h-32 text-2xl font-semibold">
                 {discTypeToString(type)}
               </a>
             </Link>
           ))}
         </div>
 
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {discs.sort(sortFn).map((disc) => (
             <DiscFeaturedItem key={disc.id} disc={disc} />
           ))}
