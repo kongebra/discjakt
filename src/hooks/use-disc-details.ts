@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "src/config";
 import { DiscDetails } from "src/types/prisma";
 
-const BASE_URL = `${config.apiUrl}/discs`;
+const BASE_URL = `${config.baseUrl}/discs`;
 
 const fetchDisc = async (slug: string) => {
   const response = await axios.get<DiscDetails>(`${BASE_URL}/${slug}`);

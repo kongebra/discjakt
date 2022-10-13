@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import config from "src/config";
 
-const BASE_URL = `${config.apiUrl}/api/stores`;
+const BASE_URL = `${config.baseUrl}/api/stores`;
 
 const fetchStores = async () => {
   const resp = await axios.get<Store[]>(`${BASE_URL}`);

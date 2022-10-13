@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import config from "src/config";
 
-const BASE_URL = `${config.apiUrl}/api/products`;
+const BASE_URL = `${config.baseUrl}/api/products`;
 
 export type ProductDetails = Product & {
   prices: ProductPrice[];

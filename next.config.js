@@ -9,6 +9,7 @@ const nextConfig = {
   images: {
     domains: [
       "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
       "aceshopas-i01.mycdn.no",
       "aceshopas-i02.mycdn.no",
       "aceshopas-i03.mycdn.no",

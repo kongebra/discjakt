@@ -1,6 +1,6 @@
 const config = {
   // TODO: legg på /api
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+  baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
   environment: process.env.NEXT_PUBLIC_ENVIRONMENT || "development",
 };
 

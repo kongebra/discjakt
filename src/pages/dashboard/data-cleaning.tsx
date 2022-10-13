@@ -16,7 +16,7 @@ import { findMatch } from "src/features/dashboard/utils/find-match";
 import useDiscs from "src/hooks/use-discs";
 import useProducts from "src/hooks/use-products";
 
-const BASE_URL = `${config.apiUrl}/api/data`;
+const BASE_URL = `${config.baseUrl}/api/data`;
 
 const fetchData = async () => {
   const resp = await fetch(BASE_URL);
