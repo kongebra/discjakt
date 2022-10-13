@@ -1,6 +1,33 @@
 import { Prisma } from "@prisma/client";
 
-export const discSelect = Prisma.validator<Prisma.DiscSelect>()({
+export const discWithBrandSelect = Prisma.validator<Prisma.DiscSelect>()({
+  id: true,
+  name: true,
+  description: true,
+  imageUrl: true,
+  slug: true,
+  type: true,
+
+  speed: true,
+  glide: true,
+  turn: true,
+  fade: true,
+
+  views: true,
+
+  brand: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      imageUrl: true,
+      slug: true,
+      url: true,
+    },
+  },
+});
+
+export const discDetailsSelect = Prisma.validator<Prisma.DiscSelect>()({
   id: true,
   name: true,
   description: true,
@@ -47,11 +74,14 @@ export const discSelect = Prisma.validator<Prisma.DiscSelect>()({
   },
 });
 
+export type DiscWithBrand = Prisma.DiscGetPayload<{
+  select: typeof discWithBrandSelect;
+}>;
 export type DiscDetails = Prisma.DiscGetPayload<{
-  select: typeof discSelect;
+  select: typeof discDetailsSelect;
 }>;
 
-export const storeSelect = Prisma.validator<Prisma.StoreSelect>()({
+export const storeDetailsSelect = Prisma.validator<Prisma.StoreSelect>()({
   id: true,
   name: true,
   slug: true,
@@ -90,10 +120,10 @@ export const storeSelect = Prisma.validator<Prisma.StoreSelect>()({
 });
 
 export type StoreDetails = Prisma.StoreGetPayload<{
-  select: typeof storeSelect;
+  select: typeof storeDetailsSelect;
 }>;
 
-export const brandSelect = Prisma.validator<Prisma.BrandSelect>()({
+export const brandDetailsSelect = Prisma.validator<Prisma.BrandSelect>()({
   id: true,
   name: true,
   description: true,
@@ -121,10 +151,10 @@ export const brandSelect = Prisma.validator<Prisma.BrandSelect>()({
 });
 
 export type BrandDetails = Prisma.BrandGetPayload<{
-  select: typeof brandSelect;
+  select: typeof brandDetailsSelect;
 }>;
 
-export const productSelect = Prisma.validator<Prisma.ProductSelect>()({
+export const productDetailsSelect = Prisma.validator<Prisma.ProductSelect>()({
   id: true,
   loc: true,
   lastmod: true,
@@ -150,8 +180,18 @@ export const productSelect = Prisma.validator<Prisma.ProductSelect>()({
       createdAt: true,
     },
   },
+
+  store: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      baseUrl: true,
+      sitemapUrl: true,
+    },
+  },
 });
 
 export type ProductDetails = Prisma.ProductGetPayload<{
-  select: typeof productSelect;
+  select: typeof productDetailsSelect;
 }>;

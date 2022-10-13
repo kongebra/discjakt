@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "src/lib/prisma";
 import { Store } from "@prisma/client";
 import { CheerioAPI, load } from "cheerio";
-import { StoreDetails, storeSelect } from "src/types/prisma";
+import { StoreDetails, storeDetailsSelect } from "src/types/prisma";
 
 export type SitemapResponse = {
   loc: string;
@@ -88,7 +88,7 @@ async function POST(
       ...storeParam,
     },
     update: {},
-    select: storeSelect,
+    select: storeDetailsSelect,
   })) as StoreDetails;
 
   const { products, ...rest } = store;

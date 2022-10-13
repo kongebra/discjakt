@@ -10,9 +10,9 @@ import Select from "src/components/Select";
 import { prisma } from "src/lib/prisma";
 import {
   BrandDetails,
-  brandSelect,
+  brandDetailsSelect,
   DiscDetails,
-  discSelect,
+  discDetailsSelect,
 } from "src/types/prisma";
 import { serializeDisc } from "src/utils/disc";
 import { discTypeToString } from "src/utils/discType";
@@ -173,7 +173,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     where: {
       slug,
     },
-    select: brandSelect,
+    select: brandDetailsSelect,
   });
 
   if (!brand) {
@@ -187,7 +187,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       type,
       brandId: brand.id,
     },
-    select: discSelect,
+    select: discDetailsSelect,
   });
 
   const discs = discsRaw.map(serializeDisc);

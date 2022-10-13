@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
 import { prisma } from "src/lib/prisma";
-import { productSelect } from "src/types/prisma";
+import { productDetailsSelect } from "src/types/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -45,7 +45,7 @@ async function GET(
         },
       ],
     },
-    select: productSelect,
+    select: productDetailsSelect,
   });
 
   res.status(200).json(products);

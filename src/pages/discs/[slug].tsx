@@ -13,7 +13,7 @@ import { discTypeToString } from "src/utils/discType";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { prisma } from "src/lib/prisma";
 import { FaHeart } from "react-icons/fa";
-import { DiscDetails, discSelect } from "src/types/prisma";
+import { DiscDetails, discDetailsSelect } from "src/types/prisma";
 import Breadcrumbs from "src/components/Breadcrumbs";
 import { serializeDisc } from "src/utils/disc";
 
@@ -248,7 +248,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         increment: 1,
       },
     },
-    select: discSelect,
+    select: discDetailsSelect,
   });
 
   const disc = serializeDisc(data);

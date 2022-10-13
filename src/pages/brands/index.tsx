@@ -6,7 +6,7 @@ import Breadcrumbs from "src/components/Breadcrumbs";
 import Container from "src/components/Container";
 import Heading from "src/components/Heading";
 import { prisma } from "src/lib/prisma";
-import { BrandDetails, brandSelect } from "src/types/prisma";
+import { BrandDetails, brandDetailsSelect } from "src/types/prisma";
 
 type Props = {
   brands: BrandDetails[];
@@ -63,7 +63,7 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const brands = await prisma.brand.findMany({
-    select: brandSelect,
+    select: brandDetailsSelect,
   });
 
   return {
