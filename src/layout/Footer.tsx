@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-teal-500 text-white py-4">
+    <footer className="bg-white border-t py-4">
       <div className="max-w-7xl mx-auto text-center">
         <p>
           Copyright &copy; {new Date().getFullYear()} -{" "}
@@ -8,7 +8,7 @@ const Footer = () => {
             href="https://kongebra.net"
             target="_blank"
             rel="noreferrer"
-            className="underline hover:no-underline"
+            className="underline hover:no-underline text-gray-500 hover:text-black"
           >
             kongebra.net
           </a>

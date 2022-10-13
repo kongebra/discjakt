@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-import Image from "next/image";
+import Image from "next/future/image";
 
 import useUser from "src/hooks/use-user";
 
@@ -33,7 +33,7 @@ const MenuLink = ({ icon, href, text }: MenuLinkProps) => {
     <Link href={href} passHref>
       <a
         className={clsx(
-          "group flex w-full items-center rounded-md px-2 py-2 text-sm hover:bg-teal-100 text-gray-900"
+          "group flex w-full items-center rounded-md px-2 py-2 text-sm hover:bg-gray-100 text-gray-900"
         )}
       >
         <Icon className="mr-2" />
@@ -44,7 +44,6 @@ const MenuLink = ({ icon, href, text }: MenuLinkProps) => {
 };
 
 const UserAvatar = () => {
-  const { login } = useAuth();
   const { user, isFetching } = useUser();
 
   if (isFetching && !user) {
@@ -53,9 +52,9 @@ const UserAvatar = () => {
 
   if (!user) {
     return (
-      <Button type="button" onClick={login}>
-        Logg inn
-      </Button>
+      <Link href="/login" passHref>
+        <Button as="a">Logg inn</Button>
+      </Link>
     );
   }
 
@@ -63,17 +62,14 @@ const UserAvatar = () => {
     <div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex justify-center w-10 h-10">
+          <Menu.Button className="inline-flex justify-center w-12 h-12">
             {user.image ? (
               <Image
-                className="rounded-full border-2 border-gray-100 shadow-sm w-10 h-10"
+                className="max-w-full h-auto aspect-square rounded-full border-4 border-gray-300 shadow-sm"
                 src={user.image ? user.image : "/placeholder.png"}
-                blurDataURL="/placeholder.png"
-                placeholder="blur"
                 alt={user.name || "Profil bilde"}
-                layout="fixed"
-                width={40}
-                height={40}
+                width={64}
+                height={64}
               />
             ) : (
               <PlaceholderUserIcon />

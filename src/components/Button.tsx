@@ -9,7 +9,8 @@ export type ButtonColor =
   | "danger"
   | "warning"
   | "black"
-  | "white";
+  | "white"
+  | "sky";
 export type ButtonVariant = "solid" | "outline" | "ghost" | "link";
 export type ButtonSize = "xs" | "sm" | "md" | "lg";
 
@@ -106,6 +107,15 @@ const buttonClasses: ButtonClasses = {
     ghost:
       "text-white hover:bg-gray-50 active:bg-gray-200 hover:text-black disabled:hover:bg-transparent",
     link: "text-white hover:underline active:text-gray-200 disabled:hover:no-underline",
+  },
+  sky: {
+    solid:
+      "bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white disabled:hover:bg-sky-600",
+    outline:
+      "border border-sky-600 text-sky-600 hover:bg-sky-50 active:bg-sky-100 disabled:hover:bg-transparent",
+    ghost:
+      "text-sky-600 hover:bg-sky-50 active:bg-sky-100 disabled:hover:bg-transparent",
+    link: "text-sky-500 hover:underline active:text-sky-700 disabled:hover:no-underline",
   },
 };
 

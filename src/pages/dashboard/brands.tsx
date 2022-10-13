@@ -47,22 +47,18 @@ const DashboardBrandsPage = () => {
           <Button onClick={createModal.setTrue}>Lag nytt brand</Button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
           {brands.sort(sortBrand).map((brand) => (
             <div key={brand.id} className="bg-slate-100 p-3 rounded">
               <div className="flex gap-3">
                 <div>
-                  {brand.imageUrl ? (
-                    <Image
-                      className="rounded"
-                      src={brand.imageUrl}
-                      alt={brand.name}
-                      width={128}
-                      height={128}
-                    />
-                  ) : (
-                    <div className="w-32 h-32 rounded bg-slate-300"></div>
-                  )}
+                  <Image
+                    className="rounded max-w-full h-auto"
+                    src={brand.imageUrl ? brand.imageUrl : "/placeholder.png"}
+                    alt={brand.name}
+                    width={128}
+                    height={128}
+                  />
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between">

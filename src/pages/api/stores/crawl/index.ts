@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
+import fs from "fs";
 
 const cors = Cors({
   methods: ["POST"],
@@ -33,7 +34,14 @@ export default async function handler(
     return res.status(401).end("unauthorized");
   }
 
-  const stores = ["aceshop", "frisbeebutikken", "krokholdgs"];
+  const stores = [
+    "aceshop",
+    "discgolfdynasty",
+    "discoverdiscs",
+    "frisbeebutikken",
+    "frisbeesor",
+    "krokholdgs",
+  ];
 
   res.status(200).json({ message: "crawl started" });
 

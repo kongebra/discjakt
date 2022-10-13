@@ -142,7 +142,7 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
           <Heading as="h2">Priser</Heading>
 
           {allProducts.map((product) => {
-            const price = product.latestPrice;
+            const price = [...product.prices].pop();
 
             return (
               <div
@@ -151,11 +151,13 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
               >
                 <div className="flex gap-4">
                   <Image
-                    src={product.imageUrl}
+                    src={
+                      product.imageUrl ? product.imageUrl : "/placeholder.png"
+                    }
                     alt={product.title}
                     width={128}
                     height={128}
-                    className="max-w-full h-auto rounded-md"
+                    className="max-w-full h-auto aspect-square rounded-md"
                   />
 
                   <div className="flex flex-col justify-between">
@@ -181,10 +183,20 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
                     rel="noreferrer"
                     disabled={price.amount === 0}
                   >
-                    {`${price.amount.toFixed(0)} ${price.currency}`}
+                    {price.amount > 0
+                      ? `${price.amount.toFixed(0)} ${price.currency}`
+                      : "Ikke på lager"}
                   </Button>
                 ) : (
-                  <Button disabled>Ikke på lager</Button>
+                  <Button
+                    as="a"
+                    href={product.loc}
+                    target="_blank"
+                    rel="noreferrer"
+                    disabled
+                  >
+                    Ikke på lager
+                  </Button>
                 )}
               </div>
             );

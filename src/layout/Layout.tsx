@@ -10,7 +10,7 @@ const Layout: React.FC<Props> = ({ children }) => {
     <div className="min-h-screen flex flex-col pb-6 md:pb-0">
       <Navbar />
 
-      <div className="flex-auto">{children}</div>
+      <div className="flex-auto flex flex-col">{children}</div>
 
       <Footer />
     </div>

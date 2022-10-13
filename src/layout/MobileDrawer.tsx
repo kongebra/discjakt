@@ -46,7 +46,7 @@ const MobileDrawer: React.FC<Props> = ({ title, show, onClose }) => {
           leaveFrom="translate-x-0"
           leaveTo="-translate-x-full"
         >
-          <div className="fixed inset-x-0 top-0 bottom-[76px] bg-white ">
+          <div className="fixed inset-x-0 top-0 bottom-[76px] bg-white border-b">
             <div className="flex p-2 items-center justify-end border-b bg-gray-50">
               <button className="p-2" onClick={onClose}>
                 <FaTimes className="text-2xl" />
@@ -64,8 +64,8 @@ const MobileDrawer: React.FC<Props> = ({ title, show, onClose }) => {
                       className={clsx(
                         "rounded p-4 flex gap-2 items-center text-2xl",
                         router.asPath === item.href
-                          ? "bg-teal-500 text-white font-bold"
-                          : "bg-teal-100 font-semibold"
+                          ? "bg-gray-500 text-white font-bold"
+                          : "bg-gray-100 font-semibold"
                       )}
                     >
                       <item.icon />

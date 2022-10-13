@@ -8,8 +8,6 @@ export default async function handler(
   crawlHelper(req, res, {
     debug: {
       log: true,
-      // maxCount: 3,
-      // disableCreate: true,
     },
     store: {
       name: "discoverdiscs.no",

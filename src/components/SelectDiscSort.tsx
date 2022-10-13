@@ -10,6 +10,7 @@ const SelectDiscSort: React.FC<Props> = ({ value = "name", onChange }) => {
   return (
     <Select
       placeholder="Sorter"
+      aria-label="Sorter disker"
       value={value}
       options={[
         {

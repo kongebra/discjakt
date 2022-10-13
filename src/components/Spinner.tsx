@@ -9,7 +9,8 @@ type SpinnerColor =
   | "danger"
   | "warning"
   | "white"
-  | "black";
+  | "black"
+  | "sky";
 
 export type SpinnerProps = {
   size?: SpinnerSize;
@@ -36,6 +37,7 @@ const spinnerColorClasses: SpinnerColorClasses = {
   warning: "border-yellow-500",
   white: "border-white",
   black: "border-black",
+  sky: "border-sky-500",
 };
 
 const Spinner: React.FC<SpinnerProps> = ({

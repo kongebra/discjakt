@@ -4,6 +4,7 @@ import React, { useEffect, useMemo } from "react";
 import { FaBars, FaHeart, FaSearch, FaUser } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import Button from "src/components/Button";
+import SearchBar from "src/components/SearchBar";
 import useUser from "src/hooks/use-user";
 import MobileDrawer from "src/layout/MobileDrawer";
 import { useBoolean } from "usehooks-ts";
@@ -86,7 +87,11 @@ const MobileNav = () => {
 
   return (
     <>
-      <nav className="md:hidden fixed inset-x-0 bottom-0 bg-teal-500 text-white z-10">
+      <div className="relative">
+        <SearchBar show={searchBar.value} onClose={searchBar.setFalse} />
+      </div>
+
+      <nav className="md:hidden fixed inset-x-0 bottom-0 bg-white border-t z-10">
         <div className="flex py-4">
           {mobileNavItems.map((item) => (
             <React.Fragment key={item.label}>
@@ -116,7 +121,6 @@ const MobileNav = () => {
         show={menuDrawer.value}
         onClose={menuDrawer.setFalse}
       />
-      <MobileSearch show={searchBar.value} onClose={searchBar.setFalse} />
     </>
   );
 };

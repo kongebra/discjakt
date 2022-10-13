@@ -9,46 +9,93 @@ import DiscFeaturedItemSkeleton from "src/components/DiscFeaturedItemSkeleton";
 import config from "src/config";
 import { prisma } from "src/lib/prisma";
 import { DiscDetails, discDetailsSelect } from "src/types/prisma";
+import { LoadingPage } from "src/components";
+import SimpleProduct from "src/components/SimpleProduct";
 
 type Props = {
-  discs: DiscDetails[];
+  trending: DiscDetails[];
+  latest: DiscDetails[];
 };
 
-const HomePage: NextPage<Props> = ({ discs }) => {
+const HomePage: NextPage<Props> = ({ trending, latest }) => {
   return (
-    <Container className="py-6">
-      <Heading className="text-center mb-6" aria-label="Populære disker">
-        Populære disker
-      </Heading>
-      <div className="grid md:grid-cols-4 grid-cols-1 gap-4 mb-4">
-        {discs?.slice(0, 4).map((disc) => (
-          <DiscFeaturedItem key={disc.id} disc={disc} />
-        ))}
-      </div>
+    <>
+      <section className="py-16">
+        <Container className="text-center mb-8">
+          <Heading className="mb-4" aria-label="Populære disker">
+            Trendende disker
+          </Heading>
+          <p className="text-gray-500 mb-8">
+            Dette er de diskene som blir sett på mest av våre brukere.
+          </p>
+        </Container>
 
-      <div className="grid md:grid-cols-5 grid-cols-1 gap-4">
-        {discs?.slice(5, 10).map((disc) => (
-          <DiscFeaturedItem key={disc.id} disc={disc} />
-        ))}
-      </div>
-    </Container>
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-4 mb-4 px-8">
+          {trending.map((disc) => (
+            <SimpleProduct key={disc.id} disc={disc} featured />
+          ))}
+        </div>
+      </section>
+
+      <hr />
+
+      <section className="py-16">
+        <Container className="text-center mb-8">
+          <Heading as="h2" className="mb-8" aria-label="Sist oppdaterte disckr">
+            Sist oppdatert disker
+          </Heading>
+          <p className="text-gray-500 mb-8">
+            Disse diskene er de som sist har hatt en oppdatering på lagerstatus
+            eller pris!
+          </p>
+
+          <div className="grid grid-cols-2 gap-8 lg:grid-cols-6 lg:gap-4">
+            {latest.map((disc) => (
+              <SimpleProduct key={disc.id} disc={disc} />
+            ))}
+          </div>
+        </Container>
+      </section>
+    </>
   );
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const data = await prisma.disc.findMany({
+  const trendingData = await prisma.disc.findMany({
     select: discDetailsSelect,
     orderBy: {
       views: "desc",
     },
-    take: 10,
+    take: 4,
   });
 
-  const discs = JSON.parse(JSON.stringify(data)) as DiscDetails[];
+  const latestData = await prisma.product.findMany({
+    select: {
+      disc: {
+        select: discDetailsSelect,
+      },
+    },
+    where: {
+      isDisc: true,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+    take: 24,
+  });
+
+  const trendingDiscs = JSON.parse(
+    JSON.stringify(trendingData)
+  ) as DiscDetails[];
+
+  const latestDiscs = JSON.parse(
+    JSON.stringify(latestData.map((product) => product.disc))
+  ) as DiscDetails[];
 
   return {
     props: {
-      discs: discs || [],
+      trending: trendingDiscs || [],
+      latest: latestDiscs || [],
     },
     revalidate: 60,
   };

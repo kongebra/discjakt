@@ -70,7 +70,7 @@ const DashboardDataCleaingPage = () => {
         <div className="flex justify-end mb-3">
           <Button
             type="button"
-            disabled={!allOneMatch}
+            disabled={!allOneMatch || data?.length === 0 || !data}
             onClick={async () => {
               await superpower();
               queryClient.resetQueries(["data-cleaning"]);

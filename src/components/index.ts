@@ -24,3 +24,4 @@ export { default as Spinner } from "./Spinner";
 export { default as Table } from "./Table";
 export { default as Textarea } from "./Textarea";
 export { default as UserAvatar } from "./UserAvatar";
+export { default as LoadingPage } from "./LoadingPage";

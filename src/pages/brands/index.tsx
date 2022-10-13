@@ -27,36 +27,61 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
         ]}
       />
 
-      <Container className="py-4">
-        <Heading className="mb-4">Merker</Heading>
+      <section className="py-16">
+        <Container className="text-center">
+          <Heading className="mb-8 font-bold">Merker</Heading>
+          <p className="text-gray-500">
+            Her er en oversikt over alle merkene som det finnes disker
+            tilgjengelig på markedet.
+          </p>
+        </Container>
+      </section>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {brands
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((brand) => (
-              <Link key={brand.id} href={`/brands/${brand.slug}`} passHref>
-                <a className="flex flex-col gap-4 rounded-lg bg-zinc-100 p-4 hover:shadow transition group">
-                  <Image
-                    src={brand.imageUrl ? brand.imageUrl : "/placeholder.png"}
-                    alt={brand.name}
-                    sizes="100vw"
-                    width={1024}
-                    height={1024}
-                    className="max-w-full h-auto rounded-md aspect-square group-hover:animate-pulse"
-                    quality={50}
-                  />
+      <hr />
 
-                  <div>
-                    <h2 className="text-2xl font-semibold group-hover:underline">
-                      {brand.name}
-                    </h2>
-                    <h3 className="text-lg">{brand.discs.length} disker</h3>
-                  </div>
-                </a>
-              </Link>
-            ))}
-        </div>
-      </Container>
+      <section className="py-16">
+        <Container>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {brands
+              .filter((brand) => brand.discs.length > 0)
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((brand) => (
+                <Link key={brand.id} href={`/brands/${brand.slug}`} passHref>
+                  <a className="group" title={brand.name}>
+                    <div className="flex flex-col items-center">
+                      <Image
+                        src={
+                          brand.imageUrl ? brand.imageUrl : "/placeholder.png"
+                        }
+                        alt={brand.name}
+                        width={512}
+                        height={512}
+                        className="max-w-full h-auto rounded-md border-4 mb-4 group-hover:ring-4"
+                      />
+
+                      <div className="flex flex-col items-center">
+                        {/* <span
+                          className="font-light text-gray-500"
+                          aria-label={brand.brand.name}
+                        >
+                          {brand.brand.name}
+                        </span> */}
+                        <span
+                          className="font-semibold text-lg group-hover:underline"
+                          aria-label={brand.name}
+                        >
+                          {brand.name}
+                        </span>
+                      </div>
+
+                      <span>{`${brand.discs.length} disker`}</span>
+                    </div>
+                  </a>
+                </Link>
+              ))}
+          </div>
+        </Container>
+      </section>
     </>
   );
 };

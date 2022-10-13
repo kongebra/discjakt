@@ -60,11 +60,48 @@ const defaultColumns = ({ onEdit, onDelete }: DefaultColumnsProps) => {
       header: () => "Produkter",
       cell: (info) => info.getValue().length,
     }),
-    // TODO: få tilbake denne
-    // columnHelper.accessor("lowestPrice", {
-    //   header: () => "Lavest Pris (NOK)",
-    //   cell: (info) => info.getValue(),
-    // }),
+    columnHelper.accessor("products", {
+      id: "price",
+      header: () => "Minste pris",
+      cell: (info) => {
+        const products = [...info.getValue()];
+        const prices = products
+          .filter((product) => product.prices.length)
+          .map((product) => product.prices[product.prices.length - 1]?.amount!)
+          .filter((price) => price > 0);
+
+        const lowest = Math.min(...prices);
+
+        if (lowest === Infinity) {
+          return "Ikke på lager";
+        }
+
+        return `${lowest} NOK`;
+      },
+      sortingFn: (a, b) => {
+        const aP = a.original.products
+          .filter((product) => product.prices.length)
+          .map((product) => product.prices[product.prices.length - 1]?.amount!)
+          .filter((price) => price > 0);
+        const bP = b.original.products
+          .filter((product) => product.prices.length)
+          .map((product) => product.prices[product.prices.length - 1]?.amount!)
+          .filter((price) => price > 0);
+
+        const A = Math.min(...aP);
+        const B = Math.min(...bP);
+
+        if (A === Infinity) {
+          return -1;
+        }
+
+        if (B === Infinity) {
+          return 1;
+        }
+
+        return A - B;
+      },
+    }),
     columnHelper.accessor("id", {
       header: () => "Action",
       enableSorting: false,

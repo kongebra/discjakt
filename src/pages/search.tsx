@@ -7,6 +7,7 @@ import {
   DiscFeaturedItem,
   SelectDiscSort,
   Heading,
+  Breadcrumbs,
 } from "src/components";
 
 import config from "src/config";
@@ -16,6 +17,9 @@ import useSortDiscs from "src/hooks/use-sort-discs";
 import { DiscDetails } from "src/types/prisma";
 
 import { getQueryStringValue } from "src/utils/query";
+import SimpleProduct from "src/components/SimpleProduct";
+import Section from "src/components/Section";
+import Image from "next/future/image";
 
 const fetchSearch = async (query?: string) => {
   const url = `${config.baseUrl}/api/discs/search?q=${query || ""}`;
@@ -41,28 +45,79 @@ const SearchPage = () => {
 
   if (isLoading && query) {
     return (
-      <Container className="py-4">
-        <Heading className="mb-4">Søker ...</Heading>
-      </Container>
+      <>
+        <Breadcrumbs
+          items={[
+            {
+              label: "Forsiden",
+              href: "/",
+            },
+            {
+              label: `Søk: ${query}`,
+            },
+          ]}
+        />
+
+        <Section>
+          <Container>
+            <Heading className="mb-8">Søker ...</Heading>
+
+            <Image
+              src="/illustrations/loading.svg"
+              alt="Laster inn"
+              width={1024}
+              height={1024}
+            />
+          </Container>
+        </Section>
+      </>
     );
   }
 
   return (
-    <Container className="py-4">
-      <div className="flex flex-col md:flex-row justify-between md:items-center mb-4">
-        <Heading className="mb-4">Søkeresultat: {query}</Heading>
+    <>
+      <Breadcrumbs
+        items={[
+          {
+            label: "Forsiden",
+            href: "/",
+          },
+          {
+            label: `Søk: ${query}`,
+          },
+        ]}
+      />
 
-        <div>
-          <SelectDiscSort value={sort} onChange={setSort} />
-        </div>
-      </div>
+      <Section>
+        <Container className="flex flex-col lg:flex-row lg:items-center justify-between">
+          <div>
+            <Heading className="">
+              Søkeresultat: <em>{query}</em>
+            </Heading>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {data?.sort(sortFn).map((disc: DiscDetails) => (
-          <DiscFeaturedItem key={disc.id} disc={disc} />
-        ))}
-      </div>
-    </Container>
+            <p className="text-gray-700 font-semibold text-lg mb-4 lg:mb-0">
+              {data?.length} treff
+            </p>
+          </div>
+
+          <div>
+            <SelectDiscSort value={sort} onChange={setSort} />
+          </div>
+        </Container>
+      </Section>
+
+      <hr />
+
+      <Section>
+        <Container>
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-4">
+            {data?.sort(sortFn).map((disc: DiscDetails) => (
+              <SimpleProduct key={disc.id} disc={disc} />
+            ))}
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 };
 

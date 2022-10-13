@@ -13,15 +13,18 @@ const css = { width: "100%", height: "auto" };
 
 const DiscFeaturedItem: React.FC<Props> = ({ disc }: Props) => {
   const lowestPrice = useMemo(() => {
-    const latestPrices =
-      disc.products?.map((product) => product.prices.slice(-1)).flat() || [];
+    const prices = disc.products
+      ?.filter((product) => product.prices.length)
+      .map((product) => product.prices[product.prices.length - 1]?.amount!)
+      .filter((price) => price > 0);
 
-    const lowestPrice =
-      latestPrices
-        ?.map((x) => x.amount)
-        .reduce((prev, curr) => (curr > prev ? curr : prev), 0) || 0;
+    const lowest = Math.min(...prices);
 
-    return lowestPrice;
+    if (lowest === Infinity) {
+      return 0;
+    }
+
+    return lowest;
   }, [disc.products]);
 
   return (
@@ -79,7 +82,8 @@ const DiscFeaturedItem: React.FC<Props> = ({ disc }: Props) => {
             className="flex items-center gap-1 font-semibold text-lg"
             title="Minste pris (NOK)"
           >
-            <FaCoins className="text-amber-600" /> {lowestPrice}
+            <FaCoins className="text-amber-600" />{" "}
+            {lowestPrice === 0 ? "Ikke på lager" : lowestPrice}
           </span>
           <span
             className="flex items-center gap-1 font-semibold text-lg"
