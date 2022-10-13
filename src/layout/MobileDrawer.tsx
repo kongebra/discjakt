@@ -22,11 +22,11 @@ const MobileDrawer: React.FC<Props> = ({ title, show, onClose }) => {
       label: "Forsiden",
       icon: FaHome,
     },
-    {
-      href: "/discs",
-      label: "Disker",
-      icon: FaAccusoft,
-    },
+    // {
+    //   href: "/discs",
+    //   label: "Disker",
+    //   icon: FaAccusoft,
+    // },
     {
       label: "Merker",
       href: "/brands",

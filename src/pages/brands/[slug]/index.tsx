@@ -1,3 +1,4 @@
+import { Brand } from "@prisma/client";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/future/image";
 import Link from "next/link";
@@ -6,8 +7,11 @@ import Breadcrumbs from "src/components/Breadcrumbs";
 import Container from "src/components/Container";
 import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import Heading from "src/components/Heading";
+import Section from "src/components/Section";
 import Select from "src/components/Select";
 import SelectDiscSort from "src/components/SelectDiscSort";
+import SimpleProduct from "src/components/SimpleProduct";
+import useDiscs from "src/hooks/use-discs";
 import useSortDiscs from "src/hooks/use-sort-discs";
 import { prisma } from "src/lib/prisma";
 import {
@@ -20,12 +24,14 @@ import { serializeDisc } from "src/utils/disc";
 import { discTypeToString } from "src/utils/discType";
 
 type Props = {
-  brand: BrandDetails;
-  discs: DiscDetails[];
+  brand: Brand;
 };
 
-const BrandDetailsPage: NextPage<Props> = ({ brand, discs }) => {
+const BrandDetailsPage: NextPage<Props> = ({ brand }) => {
   const { sort, setSort, sortFn } = useSortDiscs();
+
+  const { discs: allDiscs, isLoading } = useDiscs();
+  const discs = allDiscs.filter((x) => x.brand.id === brand.id) || [];
 
   return (
     <>
@@ -45,31 +51,42 @@ const BrandDetailsPage: NextPage<Props> = ({ brand, discs }) => {
         ]}
       />
 
-      <Container className="py-4">
-        <div className="flex justify-between items-center">
-          <Heading className="mb-4">{brand.name}</Heading>
-
+      <Section>
+        <Container className="flex flex-col lg:flex-row justify-between lg:items-center mb-4 lg:mb-16">
+          <Heading className="mb-2 lg:mb-0">{brand.name}</Heading>
           <div>
             <SelectDiscSort value={sort} onChange={setSort} />
           </div>
-        </div>
+        </Container>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <Container className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {["putter", "midrage", "fairway", "distance"].map((type) => (
             <Link key={type} href={`/brands/${brand.slug}/${type}`} passHref>
-              <a className="bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-white text-center flex items-center justify-center rounded-md h-32 text-2xl font-semibold">
+              <a className="border hover:ring-4 text-center flex items-center justify-center rounded-md text-lg lg:text-2xl font-semibold py-4 lg:py-8">
                 {discTypeToString(type)}
               </a>
             </Link>
           ))}
-        </div>
+        </Container>
+      </Section>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {discs.sort(sortFn).map((disc) => (
-            <DiscFeaturedItem key={disc.id} disc={disc} />
-          ))}
-        </div>
-      </Container>
+      <hr />
+
+      <Section>
+        <Container>
+          {isLoading ? (
+            <div>
+              <p>Laster ...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+              {discs.sort(sortFn).map((disc) => (
+                <SimpleProduct key={disc.id} disc={disc} />
+              ))}
+            </div>
+          )}
+        </Container>
+      </Section>
     </>
   );
 };
@@ -101,7 +118,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     where: {
       slug,
     },
-    select: brandDetailsSelect,
   });
 
   if (!brand) {
@@ -110,19 +126,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const discsRaw = await prisma.disc.findMany({
-    where: {
-      brandId: brand.id,
-    },
-    select: discDetailsSelect,
-  });
-
-  const discs = discsRaw.map(serializeDisc);
-
   return {
     props: {
-      brand,
-      discs,
+      brand: JSON.parse(JSON.stringify(brand)),
     },
     revalidate: 60,
   };

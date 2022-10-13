@@ -13,7 +13,7 @@ const Breadcrumbs: React.FC<Props> = ({ items }) => {
   return (
     <div className="bg-white border-b py-2">
       <Container>
-        <ol className="flex items-center gap-2 lg:gap-4">
+        <ol className="flex flex-wrap items-center gap-2 lg:gap-4">
           {items.map((item, index) => (
             <li key={item.href} className="flex items-center">
               {index !== 0 && (

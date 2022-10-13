@@ -2,11 +2,15 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/future/image";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
+import { SelectDiscSort } from "src/components";
 import Breadcrumbs from "src/components/Breadcrumbs";
 import Container from "src/components/Container";
 import DiscFeaturedItem from "src/components/DiscFeaturedItem";
 import Heading from "src/components/Heading";
+import Section from "src/components/Section";
 import Select from "src/components/Select";
+import SimpleProduct from "src/components/SimpleProduct";
+import useSortDiscs from "src/hooks/use-sort-discs";
 import { prisma } from "src/lib/prisma";
 import {
   BrandDetails,
@@ -24,35 +28,7 @@ type Props = {
 };
 
 const BrandTypesPage: NextPage<Props> = ({ brand, discs, type }) => {
-  const [sort, setSort] = useState<string>("name");
-
-  const sortFn = useMemo<(a: DiscDetails, b: DiscDetails) => number>(() => {
-    switch (sort) {
-      case "speed-asc":
-        return (a, b) => a.speed - b.speed;
-      case "speed-desc":
-        return (a, b) => b.speed - a.speed;
-
-      case "glide-asc":
-        return (a, b) => a.glide - b.glide;
-      case "glide-desc":
-        return (a, b) => b.glide - a.glide;
-
-      case "turn-asc":
-        return (a, b) => a.turn - b.turn;
-      case "turn-desc":
-        return (a, b) => b.turn - a.turn;
-
-      case "fade-asc":
-        return (a, b) => a.fade - b.fade;
-      case "fade-desc":
-        return (a, b) => b.fade - a.fade;
-
-      case "name":
-      default:
-        return (a, b) => a.name.localeCompare(b.name);
-    }
-  }, [sort]);
+  const { sort, setSort, sortFn } = useSortDiscs();
 
   return (
     <>
@@ -76,65 +52,28 @@ const BrandTypesPage: NextPage<Props> = ({ brand, discs, type }) => {
         ]}
       />
 
-      <Container className="py-4">
-        <div className="flex justify-between items-center">
-          <Heading className="mb-4">
+      <Section>
+        <Container className="flex flex-col lg:flex-row justify-between lg:items-center">
+          <Heading className="mb-4 lg:mb-0">
             {brand.name} ({discTypeToString(type)})
           </Heading>
-
           <div>
-            <Select
-              placeholder="Sorter"
-              value={sort}
-              options={[
-                {
-                  value: "name",
-                  label: "Navn",
-                },
-                {
-                  value: "speed-asc",
-                  label: "Speed lav-høy",
-                },
-                {
-                  value: "speed-desc",
-                  label: "Speed høy-lav",
-                },
-                {
-                  value: "glide-asc",
-                  label: "Glide lav-høy",
-                },
-                {
-                  value: "glide-desc",
-                  label: "Glide høy-lav",
-                },
-                {
-                  value: "turn-asc",
-                  label: "Turn lav-høy",
-                },
-                {
-                  value: "turn-desc",
-                  label: "Turn høy-lav",
-                },
-                {
-                  value: "fade-asc",
-                  label: "Fade lav-høy",
-                },
-                {
-                  value: "fade-desc",
-                  label: "Fade høy-lav",
-                },
-              ]}
-              onChange={(event) => setSort(event.currentTarget.value)}
-            />
+            <SelectDiscSort value={sort} onChange={setSort} />
           </div>
-        </div>
+        </Container>
+      </Section>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {discs.sort(sortFn).map((disc) => (
-            <DiscFeaturedItem key={disc.id} disc={disc} />
-          ))}
-        </div>
-      </Container>
+      <hr />
+
+      <Section>
+        <Container>
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+            {discs.sort(sortFn).map((disc) => (
+              <SimpleProduct key={disc.id} disc={disc} />
+            ))}
+          </div>
+        </Container>
+      </Section>
     </>
   );
 };

@@ -27,6 +27,7 @@ const nextConfig = {
       "via.placeholder.com",
       "cdn.shopify.com",
       "usercontent.one",
+      "www.dgshop.no",
     ],
     formats: ["image/avif", "image/webp"],
   },

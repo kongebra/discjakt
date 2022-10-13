@@ -11,18 +11,18 @@ import UserAvatar from "src/components/UserAvatar";
 import { useBoolean } from "usehooks-ts";
 
 const links = [
-  {
-    label: "Discer",
-    href: "/discs",
-  },
+  // {
+  //   label: "Discer",
+  //   href: "/discs",
+  // },
   {
     label: "Merker",
     href: "/brands",
   },
-  {
-    label: "Nettbutikker",
-    href: "/stores",
-  },
+  // {
+  //   label: "Nettbutikker",
+  //   href: "/stores",
+  // },
 ];
 
 const NavLink = ({ href, label }: { href: string; label: string }) => {
