@@ -131,7 +131,7 @@ const DashboardDiscsPage = () => {
           color="danger"
           onClick={async () => {
             if (deleteDisc) {
-              await mutations.delete.mutateAsync(deleteDisc.id);
+              await mutations.delete.mutateAsync(deleteDisc.slug);
               setDeleteDisc(undefined);
             }
           }}
