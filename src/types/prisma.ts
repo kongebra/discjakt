@@ -123,3 +123,35 @@ export const brandSelect = Prisma.validator<Prisma.BrandSelect>()({
 export type BrandDetails = Prisma.BrandGetPayload<{
   select: typeof brandSelect;
 }>;
+
+export const productSelect = Prisma.validator<Prisma.ProductSelect>()({
+  id: true,
+  loc: true,
+  lastmod: true,
+  title: true,
+  description: true,
+  imageUrl: true,
+  isDisc: true,
+
+  disc: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      imageUrl: true,
+      slug: true,
+    },
+  },
+
+  prices: {
+    select: {
+      amount: true,
+      currency: true,
+      createdAt: true,
+    },
+  },
+});
+
+export type ProductDetails = Prisma.ProductGetPayload<{
+  select: typeof productSelect;
+}>;

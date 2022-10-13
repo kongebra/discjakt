@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getQueryStringValue } from "src/utils/query";
-import { create, insert, insertBatch, remove, search } from "@lyrasearch/lyra";
 import { prisma } from "src/lib/prisma";
+import { productSelect } from "src/types/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,35 +28,27 @@ async function GET(
   res: NextApiResponse,
   query: string | undefined
 ) {
-  const db = create({
-    schema: {
-      name: "string",
-      productId: "number",
+  const products = await prisma.product.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: query,
+          },
+        },
+        {
+          store: {
+            name: {
+              contains: query,
+            },
+          },
+        },
+      ],
     },
+    select: productSelect,
   });
 
-  const products = await prisma.product.findMany();
-
-  await insertBatch(
-    db,
-    products.map((product) => {
-      return {
-        name: product.title,
-        productId: product.id,
-      };
-    })
-  );
-
-  console.log("search", { query });
-
-  const searchResult = search(db, {
-    term: query || "",
-    properties: ["name"],
-  });
-
-  const { count, hits } = searchResult;
-
-  res.status(200).json({ hits, count });
+  res.status(200).json(products);
 }
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {}
