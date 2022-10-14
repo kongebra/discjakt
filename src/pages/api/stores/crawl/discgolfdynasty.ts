@@ -5,66 +5,75 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  crawlHelper(req, res, {
-    debug: {
-      log: true,
-    },
-    store: {
-      name: "discgolfdynasty.no",
-      slug: "discgolfdynasty",
-      sitemapUrl: "https://discgolfdynasty.no/sitemap.xml",
-      baseUrl: "https://discgolfdynasty.no/",
-    },
-    findSitemapInternal($) {
-      let sitemap = "";
+  crawlHelper(
+    req,
+    res,
+    {
+      store: {
+        name: "Disc Golf Dynasty",
+        slug: "discgolfdynasty",
+        sitemapUrl: "https://discgolfdynasty.no/sitemap.xml",
+        baseUrl: "https://discgolfdynasty.no/",
+      },
 
-      $("sitemap").each((i, el) => {
-        const loc = $(el).find("loc").text().trim();
+      debug: {
+        log: true,
+      },
 
-        if (loc.includes("sitemap_products_1.xml")) {
-          sitemap = loc;
+      findSitemapInternal($) {
+        let sitemap = "";
+
+        $("sitemap").each((i, el) => {
+          const loc = $(el).find("loc").text().trim();
+
+          if (loc.includes("sitemap_products_1.xml")) {
+            sitemap = loc;
+          }
+        });
+
+        return sitemap;
+      },
+      handleSitemap($) {
+        const result: SitemapResponse[] = [];
+
+        $("url").each((i, el) => {
+          const loc = $(el).find("loc").text().trim();
+          const lastmod = $(el).find("lastmod").text().trim();
+
+          if (loc.includes("/products/")) {
+            result.push({ loc, lastmod });
+          }
+        });
+
+        return result;
+      },
+      handleProductPage($) {
+        const priceStr =
+          $('meta[property="og:price:amount"]')
+            .attr("content")
+            ?.trim()
+            .replace(",-", "") || "";
+
+        let price = Number(priceStr.replace(",", "."));
+        if (isNaN(price)) {
+          price = 0;
         }
-      });
 
-      return sitemap;
+        const data = {
+          title: $('meta[property="og:title"]').attr("content")?.trim() || "",
+          description:
+            $('meta[name="description"]').attr("content")?.trim() || "",
+          imageUrl:
+            $('meta[property="og:image"]').attr("content")?.trim() || "",
+        };
+
+        return {
+          price,
+          ...data,
+        };
+      },
     },
-    handleSitemap($) {
-      const result: SitemapResponse[] = [];
-
-      $("url").each((i, el) => {
-        const loc = $(el).find("loc").text().trim();
-        const lastmod = $(el).find("lastmod").text().trim();
-
-        if (loc.includes("/products/")) {
-          result.push({ loc, lastmod });
-        }
-      });
-
-      return result;
-    },
-    handleProductPage($) {
-      const priceStr =
-        $('meta[property="og:price:amount"]')
-          .attr("content")
-          ?.trim()
-          .replace(",-", "") || "";
-
-      let price = Number(priceStr.replace(",", "."));
-      if (isNaN(price)) {
-        price = 0;
-      }
-
-      const data = {
-        title: $('meta[property="og:title"]').attr("content")?.trim() || "",
-        description:
-          $('meta[name="description"]').attr("content")?.trim() || "",
-        imageUrl: $('meta[property="og:image"]').attr("content")?.trim() || "",
-      };
-
-      return {
-        price,
-        ...data,
-      };
-    },
-  });
+    // disableDatabase
+    false
+  );
 }

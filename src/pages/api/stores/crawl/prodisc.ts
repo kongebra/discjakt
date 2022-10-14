@@ -10,24 +10,29 @@ export default async function handler(
     res,
     {
       store: {
-        name: "Frisbee Sør",
-        slug: "frisbeesor",
-        baseUrl: "https://www.frisbeesor.no",
-        sitemapUrl: "https://www.frisbeesor.no/sitemap.xml",
+        name: "Prodisc",
+        slug: "prodisc",
+        sitemapUrl: "https://prodisc.no/sitemap.xml",
+        baseUrl: "https://prodisc.no/",
       },
-
-      sitemaps: [
-        "https://www.frisbeesor.no/product-sitemap1.xml",
-        "https://www.frisbeesor.no/product-sitemap2.xml",
-        "https://www.frisbeesor.no/product-sitemap3.xml",
-        "https://www.frisbeesor.no/product-sitemap4.xml",
-      ],
 
       debug: {
         log: true,
-        // maxCount: 1,
       },
 
+      findSitemapInternal($) {
+        let sitemap = "";
+
+        $("sitemap").each((i, el) => {
+          const loc = $(el).find("loc").text().trim();
+
+          if (loc.includes("sitemap_products_1.xml")) {
+            sitemap = loc;
+          }
+        });
+
+        return sitemap;
+      },
       handleSitemap($) {
         const result: SitemapResponse[] = [];
 
@@ -35,18 +40,21 @@ export default async function handler(
           const loc = $(el).find("loc").text().trim();
           const lastmod = $(el).find("lastmod").text().trim();
 
-          if (loc.includes("/produkt/")) {
+          if (loc.includes("/products/")) {
             result.push({ loc, lastmod });
           }
         });
 
         return result;
       },
-
       handleProductPage($) {
-        const priceStr = $(".product-page-price .amount").text() || "";
+        const priceStr =
+          $('meta[property="og:price:amount"]')
+            .attr("content")
+            ?.trim()
+            .replace(",-", "") || "";
 
-        let price = Number(priceStr.slice(3, priceStr.length));
+        let price = Number(priceStr.replace(",", "."));
         if (isNaN(price)) {
           price = 0;
         }
@@ -58,6 +66,8 @@ export default async function handler(
           imageUrl:
             $('meta[property="og:image"]').attr("content")?.trim() || "",
         };
+
+        console.log({ priceStr, price, data });
 
         return {
           price,

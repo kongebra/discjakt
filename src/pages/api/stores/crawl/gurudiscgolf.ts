@@ -10,22 +10,21 @@ export default async function handler(
     res,
     {
       store: {
-        name: "Frisbee Sør",
-        slug: "frisbeesor",
-        baseUrl: "https://www.frisbeesor.no",
-        sitemapUrl: "https://www.frisbeesor.no/sitemap.xml",
+        name: "Guru Disc Golf",
+        slug: "gurudiscgolf",
+        baseUrl: "https://www.gurudiscgolf.no",
+        sitemapUrl: "https://www.gurudiscgolf.no/sitemap.xml",
       },
 
       sitemaps: [
-        "https://www.frisbeesor.no/product-sitemap1.xml",
-        "https://www.frisbeesor.no/product-sitemap2.xml",
-        "https://www.frisbeesor.no/product-sitemap3.xml",
-        "https://www.frisbeesor.no/product-sitemap4.xml",
+        "https://www.gurudiscgolf.no/product-sitemap1.xml",
+        "https://www.gurudiscgolf.no/product-sitemap2.xml",
+        "https://www.gurudiscgolf.no/product-sitemap3.xml",
+        "https://www.gurudiscgolf.no/product-sitemap4.xml",
       ],
 
       debug: {
         log: true,
-        // maxCount: 1,
       },
 
       handleSitemap($) {
@@ -44,9 +43,15 @@ export default async function handler(
       },
 
       handleProductPage($) {
-        const priceStr = $(".product-page-price .amount").text() || "";
+        const priceStr =
+          $(".woocommerce-Price-amount.amount")
+            .first()
+            .text()
+            ?.replace("kr", "")
+            .trim()
+            .replace(",", ".") || "";
 
-        let price = Number(priceStr.slice(3, priceStr.length));
+        let price = Number(priceStr);
         if (isNaN(price)) {
           price = 0;
         }

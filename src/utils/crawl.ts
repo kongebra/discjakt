@@ -15,7 +15,7 @@ type ProductPageHandler = ($: CheerioAPI) => {
   title: string;
   description: string;
   imageUrl: string;
-};
+} | null;
 type FindSitemapInternalFn = ($: CheerioAPI) => string;
 
 export type CrawlParams = {
@@ -61,7 +61,7 @@ async function POST(
   disableDatabase: boolean
 ) {
   if (debug?.log) {
-    console.time(storeParam.name);
+    console.time(storeParam.slug!);
   }
 
   if (findSitemapInternal !== undefined) {
@@ -82,12 +82,14 @@ async function POST(
 
   const store = (await prisma.store.upsert({
     where: {
-      name: storeParam.name,
+      slug: storeParam.slug!,
     },
     create: {
       ...storeParam,
     },
-    update: {},
+    update: {
+      ...storeParam,
+    },
     select: storeDetailsSelect,
   })) as StoreDetails;
 
@@ -120,7 +122,7 @@ async function POST(
   }
 
   if (debug?.log) {
-    console.timeEnd(storeParam.name);
+    console.timeEnd(storeParam.slug!);
   }
 }
 
@@ -166,12 +168,12 @@ async function scrapeSingleSitemap(
     if (debug?.log) {
       if (debug.sitemapMaxCount && debug.sitemapCount) {
         console.log(
-          `${store.name} ${++count}/${urls.length} (Sitemap: ${
+          `${store.slug} ${++count}/${urls.length} (Sitemap: ${
             debug.sitemapCount
           }/${debug.sitemapMaxCount})`
         );
       } else {
-        console.log(`${store.name} ${++count}/${urls.length}`);
+        console.log(`${store.slug} ${++count}/${urls.length}`);
       }
     }
 

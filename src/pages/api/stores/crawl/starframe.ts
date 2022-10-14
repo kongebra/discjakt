@@ -10,22 +10,14 @@ export default async function handler(
     res,
     {
       store: {
-        name: "Frisbee Sør",
-        slug: "frisbeesor",
-        baseUrl: "https://www.frisbeesor.no",
-        sitemapUrl: "https://www.frisbeesor.no/sitemap.xml",
+        name: "Starframe",
+        slug: "starframe",
+        sitemapUrl: "https://starframe.no/sitemap.xml",
+        baseUrl: "https://starframe.no/",
       },
-
-      sitemaps: [
-        "https://www.frisbeesor.no/product-sitemap1.xml",
-        "https://www.frisbeesor.no/product-sitemap2.xml",
-        "https://www.frisbeesor.no/product-sitemap3.xml",
-        "https://www.frisbeesor.no/product-sitemap4.xml",
-      ],
 
       debug: {
         log: true,
-        // maxCount: 1,
       },
 
       handleSitemap($) {
@@ -35,28 +27,28 @@ export default async function handler(
           const loc = $(el).find("loc").text().trim();
           const lastmod = $(el).find("lastmod").text().trim();
 
-          if (loc.includes("/produkt/")) {
+          if (loc.includes("/products/")) {
             result.push({ loc, lastmod });
           }
         });
 
         return result;
       },
-
       handleProductPage($) {
-        const priceStr = $(".product-page-price .amount").text() || "";
+        const priceStr =
+          $(".product-price").first()?.text()?.trim().replace(",-", "") || "";
 
-        let price = Number(priceStr.slice(3, priceStr.length));
+        let price = Number(priceStr.replace(".", "").replace(",", "."));
         if (isNaN(price)) {
           price = 0;
         }
 
         const data = {
-          title: $('meta[property="og:title"]').attr("content")?.trim() || "",
+          title: $("h1.product-title-v1").text()?.trim() || "",
           description:
-            $('meta[property="og:description"]').attr("content")?.trim() || "",
+            $('meta[name="description"]').attr("content")?.trim() || "",
           imageUrl:
-            $('meta[property="og:image"]').attr("content")?.trim() || "",
+            $(".product_page_slider img").first().attr("src")?.trim() || "",
         };
 
         return {

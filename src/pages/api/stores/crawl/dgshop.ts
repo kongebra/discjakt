@@ -10,22 +10,14 @@ export default async function handler(
     res,
     {
       store: {
-        name: "Frisbee Sør",
-        slug: "frisbeesor",
-        baseUrl: "https://www.frisbeesor.no",
-        sitemapUrl: "https://www.frisbeesor.no/sitemap.xml",
+        name: "DGShop",
+        slug: "dgshop",
+        baseUrl: "https://www.dgshop.no",
+        sitemapUrl: "https://www.dgshop.no/sitemap.xml",
       },
-
-      sitemaps: [
-        "https://www.frisbeesor.no/product-sitemap1.xml",
-        "https://www.frisbeesor.no/product-sitemap2.xml",
-        "https://www.frisbeesor.no/product-sitemap3.xml",
-        "https://www.frisbeesor.no/product-sitemap4.xml",
-      ],
 
       debug: {
         log: true,
-        // maxCount: 1,
       },
 
       handleSitemap($) {
@@ -34,8 +26,9 @@ export default async function handler(
         $("url").each((i, el) => {
           const loc = $(el).find("loc").text().trim();
           const lastmod = $(el).find("lastmod").text().trim();
+          const priority = $(el).find("priority").text().trim();
 
-          if (loc.includes("/produkt/")) {
+          if (priority == "1.0") {
             result.push({ loc, lastmod });
           }
         });
@@ -44,9 +37,13 @@ export default async function handler(
       },
 
       handleProductPage($) {
-        const priceStr = $(".product-page-price .amount").text() || "";
+        const priceStr =
+          $('meta[property="product:price:amount"]')
+            .attr("content")
+            ?.trim()
+            .replace(",-", "") || "";
 
-        let price = Number(priceStr.slice(3, priceStr.length));
+        let price = Number(priceStr.replace(",", "."));
         if (isNaN(price)) {
           price = 0;
         }
@@ -58,6 +55,10 @@ export default async function handler(
           imageUrl:
             $('meta[property="og:image"]').attr("content")?.trim() || "",
         };
+
+        if (!data.title && !data.imageUrl && !data.description && !priceStr) {
+          return null;
+        }
 
         return {
           price,

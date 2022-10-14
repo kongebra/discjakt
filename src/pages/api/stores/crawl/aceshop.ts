@@ -5,49 +5,60 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  crawlHelper(req, res, {
-    store: {
-      name: "aceshop.no",
-      slug: "aceshop",
-      baseUrl: "https://www.aceshop.no",
-      sitemapUrl: "https://www.aceshop.no/sitemap.xml",
-    },
+  crawlHelper(
+    req,
+    res,
+    {
+      store: {
+        name: "Aceshop",
+        slug: "aceshop",
+        baseUrl: "https://www.aceshop.no",
+        sitemapUrl: "https://www.aceshop.no/sitemap.xml",
+      },
 
-    handleSitemap($) {
-      const result: SitemapResponse[] = [];
+      debug: {
+        log: true,
+      },
 
-      $("url").each((i, el) => {
-        const loc = $(el).find("loc").text().trim();
-        const lastmod = $(el).find("lastmod").text().trim();
+      handleSitemap($) {
+        const result: SitemapResponse[] = [];
 
-        if (loc.includes("/products/")) {
-          result.push({ loc, lastmod });
+        $("url").each((i, el) => {
+          const loc = $(el).find("loc").text().trim();
+          const lastmod = $(el).find("lastmod").text().trim();
+
+          if (loc.includes("/products/")) {
+            result.push({ loc, lastmod });
+          }
+        });
+
+        return result;
+      },
+
+      handleProductPage($) {
+        const priceStr =
+          $(".product-price")?.text()?.trim().replace(",-", "") || "";
+
+        let price = Number(priceStr.replace(",", "."));
+        if (isNaN(price)) {
+          price = 0;
         }
-      });
 
-      return result;
+        const data = {
+          title: $('meta[property="og:title"]').attr("content")?.trim() || "",
+          description:
+            $('meta[name="description"]').attr("content")?.trim() || "",
+          imageUrl:
+            $('meta[property="og:image"]').attr("content")?.trim() || "",
+        };
+
+        return {
+          price,
+          ...data,
+        };
+      },
     },
-
-    handleProductPage($) {
-      const priceStr =
-        $(".product-price")?.text()?.trim().replace(",-", "") || "";
-
-      let price = Number(priceStr.replace(",", "."));
-      if (isNaN(price)) {
-        price = 0;
-      }
-
-      const data = {
-        title: $("h1").text()?.trim() || "",
-        description:
-          $('meta[name="description"]').attr("content")?.trim() || "",
-        imageUrl: $(".product_image_price_row img").attr("src")?.trim() || "",
-      };
-
-      return {
-        price,
-        ...data,
-      };
-    },
-  });
+    // disableDatabase
+    false
+  );
 }

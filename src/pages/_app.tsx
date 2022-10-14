@@ -24,6 +24,7 @@ function App({
 }: AuthAppProps) {
   const [queryClient] = useState(new QueryClient(config));
 
+  // TODO: SEO
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>

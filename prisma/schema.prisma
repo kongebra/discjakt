@@ -17,7 +17,7 @@ model Store {
   sitemapUrl  String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  slug        String?   @unique
+  slug        String   @unique
   products    Product[]
 }
 

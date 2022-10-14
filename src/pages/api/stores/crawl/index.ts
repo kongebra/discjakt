@@ -36,11 +36,16 @@ export default async function handler(
 
   const stores = [
     "aceshop",
+    "dgshop",
     "discgolfdynasty",
     "discoverdiscs",
     "frisbeebutikken",
     "frisbeesor",
+    "gurudiscgolf",
     "krokholdgs",
+    "prodisc",
+    "spinnvilldg",
+    "starframe",
   ];
 
   res.status(200).json({ message: "crawl started" });

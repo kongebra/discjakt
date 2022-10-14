@@ -5,50 +5,58 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  crawlHelper(req, res, {
-    debug: {
-      log: true,
-    },
-    store: {
-      name: "frisbeebutikken.no",
-      slug: "frisbeebutikken",
-      sitemapUrl: "https://frisbeebutikken.no/sitemap.xml",
-      baseUrl: "https://frisbeebutikken.no/",
-    },
-    handleSitemap($) {
-      const result: SitemapResponse[] = [];
+  crawlHelper(
+    req,
+    res,
+    {
+      store: {
+        name: "Frisbeebutikken",
+        slug: "frisbeebutikken",
+        sitemapUrl: "https://frisbeebutikken.no/sitemap.xml",
+        baseUrl: "https://frisbeebutikken.no/",
+      },
 
-      $("url").each((i, el) => {
-        const loc = $(el).find("loc").text().trim();
-        const lastmod = $(el).find("lastmod").text().trim();
+      debug: {
+        log: true,
+      },
 
-        if (loc.includes("/products/")) {
-          result.push({ loc, lastmod });
+      handleSitemap($) {
+        const result: SitemapResponse[] = [];
+
+        $("url").each((i, el) => {
+          const loc = $(el).find("loc").text().trim();
+          const lastmod = $(el).find("lastmod").text().trim();
+
+          if (loc.includes("/products/")) {
+            result.push({ loc, lastmod });
+          }
+        });
+
+        return result;
+      },
+      handleProductPage($) {
+        const priceStr =
+          $(".product-price")?.text()?.trim().replace(",-", "") || "";
+
+        let price = Number(priceStr.replace(",", "."));
+        if (isNaN(price)) {
+          price = 0;
         }
-      });
 
-      return result;
+        const data = {
+          title: $("h1").text()?.trim() || "",
+          description:
+            $('meta[name="description"]').attr("content")?.trim() || "",
+          imageUrl: $(".product_image_price_row img").attr("src")?.trim() || "",
+        };
+
+        return {
+          price,
+          ...data,
+        };
+      },
     },
-    handleProductPage($) {
-      const priceStr =
-        $(".product-price")?.text()?.trim().replace(",-", "") || "";
-
-      let price = Number(priceStr.replace(",", "."));
-      if (isNaN(price)) {
-        price = 0;
-      }
-
-      const data = {
-        title: $("h1").text()?.trim() || "",
-        description:
-          $('meta[name="description"]').attr("content")?.trim() || "",
-        imageUrl: $(".product_image_price_row img").attr("src")?.trim() || "",
-      };
-
-      return {
-        price,
-        ...data,
-      };
-    },
-  });
+    // disableDatabase
+    false
+  );
 }
