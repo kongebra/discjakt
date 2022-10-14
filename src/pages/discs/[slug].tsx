@@ -16,6 +16,8 @@ import { FaHeart } from "react-icons/fa";
 import { DiscDetails, discDetailsSelect } from "src/types/prisma";
 import Breadcrumbs from "src/components/Breadcrumbs";
 import { serializeDisc } from "src/utils/disc";
+import { Section } from "src/components";
+import clsx from "clsx";
 
 type Props = {
   disc: DiscDetails;
@@ -117,113 +119,101 @@ const DiscDetailPage: NextPage<Props> = ({ disc }) => {
         ]}
       />
 
-      <Container className="py-8">
-        <div className="flex gap-8">
-          <Image
-            src={disc.imageUrl}
-            alt={disc.name}
-            width={512}
-            height={512}
-            className="max-w-full h-auto"
-          />
-
-          <div>
-            <Heading>{disc.name}</Heading>
+      <Section>
+        <Container className="flex flex-col items-center gap-4">
+          <div className="text-center">
+            <Heading as="h1" className="font-black">
+              {disc.name}
+            </Heading>
             <Heading as="h2">{disc.brand.name}</Heading>
-
-            <Button color="danger" onClick={async () => {}}>
-              <FaHeart className="mr-2" />
-              Favoritt
-            </Button>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-4">
-          <Heading as="h2">Priser</Heading>
+          <div className="p-4">
+            <Image
+              src={disc.imageUrl}
+              alt={disc.name}
+              width={512}
+              height={512}
+              className="max-w-full h-auto rounded"
+            />
+          </div>
+        </Container>
+      </Section>
 
-          {allProducts.map((product) => {
-            const price = [...product.prices].pop();
+      <hr />
 
-            return (
-              <div
-                key={product.id}
-                className="bg-zinc-200 p-4 rounded-lg flex items-center justify-between"
-              >
-                <div className="flex gap-4">
-                  <Image
-                    src={
-                      product.imageUrl ? product.imageUrl : "/placeholder.png"
-                    }
-                    alt={product.title}
-                    width={128}
-                    height={128}
-                    className="max-w-full h-auto aspect-square rounded-md"
-                  />
+      <Section>
+        <Container>
+          <div className="text-center mb-8">
+            <Heading as="h2" className="text-center">
+              Priser
+            </Heading>
 
-                  <div className="flex flex-col justify-between">
-                    <span className="text-xl font-semibold">
-                      {product.title}
-                    </span>
-                    <a
-                      className="text-teal-700 underline hover:no-underline"
-                      href={`${getStore(product.storeId)?.baseUrl}`}
-                      target="_blank"
-                      rel="noreferrer"
+            <p className="text-gray-500">Her ser du en oversikt på</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+            {allProducts.map((product) => {
+              const price = [...product.prices].pop();
+              const storeName = getStoreName(product.storeId);
+              const inStock = price && price.amount !== 0;
+
+              return (
+                <a
+                  key={product.id}
+                  href={product.loc}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group"
+                  title={product.title}
+                >
+                  <div className="flex flex-col items-center">
+                    <div className="relative bg-white rounded-md border-4 mb-4 group-hover:ring-4 transition p-2">
+                      <Image
+                        src={
+                          product.imageUrl
+                            ? product.imageUrl
+                            : "/placeholder.png"
+                        }
+                        alt={product.title}
+                        width={512}
+                        height={512}
+                        className="max-w-full h-auto rounded group-hover:opacity-75 transition aspect-square object-contain"
+                      />
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <span
+                        className="font-light text-gray-500"
+                        aria-label={storeName}
+                        title={storeName}
+                      >
+                        {storeName}
+                      </span>
+                      <span
+                        className="font-semibold text-lg group-hover:underline transition"
+                        aria-label={product.title}
+                        title={product.title}
+                      >
+                        {product.title}
+                      </span>
+                    </div>
+
+                    <span
+                      title={inStock ? `${price.amount} kr` : "Ikke på lager"}
+                      className={clsx({
+                        "text-red-700 font-semibold": !inStock,
+                      })}
                     >
-                      {getStoreName(product.storeId)}
-                    </a>
+                      {inStock ? `${price.amount} kr` : "Ikke på lager"}
+                    </span>
                   </div>
-                </div>
-
-                {price ? (
-                  <Button
-                    as="a"
-                    href={product.loc}
-                    target="_blank"
-                    rel="noreferrer"
-                    disabled={price.amount === 0}
-                  >
-                    {price.amount > 0
-                      ? `${price.amount.toFixed(0)} ${price.currency}`
-                      : "Ikke på lager"}
-                  </Button>
-                ) : (
-                  <Button
-                    as="a"
-                    href={product.loc}
-                    target="_blank"
-                    rel="noreferrer"
-                    disabled
-                  >
-                    Ikke på lager
-                  </Button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* <div className="flex-1 flex flex-col">
-        <div className="flex justify-between">
-          <span>Prishistorikk</span>
-
-          <span>Nå {disc.lowestPrice},-</span>
-        </div>
-
-        <div>
-          <PriceHistory
-            data={disc.products
-              .map((product) =>
-                product.prices.map((price) => ({
-                  ...price,
-                  storeName: getStoreName(product.storeId),
-                }))
-              )
-              .flat()}
-          />
-        </div>
-      </div> */}
-      </Container>
+                </a>
+              );
+            })}
+          </div>
+        </Container>
+      </Section>
     </>
   );
 };
@@ -269,7 +259,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       disc,
     },
-    revalidate: 60,
+    revalidate: 60 * 5, // 5 minutt
   };
 };
 

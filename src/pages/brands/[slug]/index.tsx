@@ -1,26 +1,21 @@
-import { Brand } from "@prisma/client";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Image from "next/future/image";
+import React from "react";
+
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import Breadcrumbs from "src/components/Breadcrumbs";
-import Container from "src/components/Container";
-import DiscFeaturedItem from "src/components/DiscFeaturedItem";
-import Heading from "src/components/Heading";
-import Section from "src/components/Section";
-import Select from "src/components/Select";
-import SelectDiscSort from "src/components/SelectDiscSort";
-import SimpleProduct from "src/components/SimpleProduct";
-import useDiscs from "src/hooks/use-discs";
-import useSortDiscs from "src/hooks/use-sort-discs";
-import { prisma } from "src/lib/prisma";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+
+import { Brand } from "@prisma/client";
+
 import {
-  BrandDetails,
-  brandDetailsSelect,
-  DiscDetails,
-  discDetailsSelect,
-} from "src/types/prisma";
-import { serializeDisc } from "src/utils/disc";
+  Breadcrumbs,
+  Container,
+  Heading,
+  Section,
+  SelectDiscSort,
+  SimpleProduct,
+} from "src/components";
+
+import { prisma } from "src/lib/prisma";
+import { useDiscs, useSortDiscs } from "src/hooks";
 import { discTypeToString } from "src/utils/discType";
 
 type Props = {
@@ -130,7 +125,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       brand: JSON.parse(JSON.stringify(brand)),
     },
-    revalidate: 60,
+    revalidate: 60 * 5, // 5 minutt
   };
 };
 

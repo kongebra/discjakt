@@ -1,16 +1,17 @@
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Image from "next/future/image";
-import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import { SelectDiscSort } from "src/components";
-import Breadcrumbs from "src/components/Breadcrumbs";
-import Container from "src/components/Container";
-import DiscFeaturedItem from "src/components/DiscFeaturedItem";
-import Heading from "src/components/Heading";
-import Section from "src/components/Section";
-import Select from "src/components/Select";
-import SimpleProduct from "src/components/SimpleProduct";
-import useSortDiscs from "src/hooks/use-sort-discs";
+
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+
+import {
+  Breadcrumbs,
+  Container,
+  Heading,
+  Section,
+  SelectDiscSort,
+  SimpleProduct,
+} from "src/components";
+
+import { useSortDiscs } from "src/hooks";
 import { prisma } from "src/lib/prisma";
 import {
   BrandDetails,
@@ -137,7 +138,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       discs,
       type,
     },
-    revalidate: 60,
+    revalidate: 60 * 5,
   };
 };
 

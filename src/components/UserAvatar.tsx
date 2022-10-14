@@ -51,11 +51,12 @@ const UserAvatar = () => {
   }
 
   if (!user) {
-    return (
-      <Link href="/login" passHref>
-        <Button as="a">Logg inn</Button>
-      </Link>
-    );
+    return null;
+    // return (
+    //   <Link href="/login" passHref>
+    //     <Button as="a">Logg inn</Button>
+    //   </Link>
+    // );
   }
 
   return (

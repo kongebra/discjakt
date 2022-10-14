@@ -1,12 +1,12 @@
+import React from "react";
+
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/future/image";
 import Link from "next/link";
-import React from "react";
-import Breadcrumbs from "src/components/Breadcrumbs";
-import Container from "src/components/Container";
-import Heading from "src/components/Heading";
+
 import { prisma } from "src/lib/prisma";
-import { BrandDetails, brandDetailsSelect } from "src/types/prisma";
+import { Breadcrumbs, Container, Heading, Section } from "src/components";
+import { type BrandDetails, brandDetailsSelect } from "src/types/prisma";
 
 type Props = {
   brands: BrandDetails[];
@@ -27,7 +27,7 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
         ]}
       />
 
-      <section className="py-16">
+      <Section>
         <Container className="text-center">
           <Heading className="mb-8 font-bold">Merker</Heading>
           <p className="text-gray-500">
@@ -35,11 +35,11 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
             tilgjengelig på markedet.
           </p>
         </Container>
-      </section>
+      </Section>
 
       <hr />
 
-      <section className="py-16">
+      <Section>
         <Container>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {brands
@@ -56,7 +56,7 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
                         alt={brand.name}
                         width={512}
                         height={512}
-                        className="max-w-full h-auto rounded-md border-4 mb-4 group-hover:ring-4"
+                        className="max-w-full h-auto rounded-md border-4 mb-4 group-hover:ring-4 aspect-square object-contain"
                       />
 
                       <div className="flex flex-col items-center">
@@ -81,7 +81,7 @@ const BrandsPage: NextPage<Props> = ({ brands }) => {
               ))}
           </div>
         </Container>
-      </section>
+      </Section>
     </>
   );
 };
@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       brands,
     },
-    revalidate: 60,
+    revalidate: 60 * 10, // 10 minutt
   };
 };
 

@@ -1,16 +1,8 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
+import { type DiscDetails, discDetailsSelect } from "src/types/prisma";
 
-import useDiscs from "src/hooks/use-discs";
-
-import Container from "src/components/Container";
-import Heading from "src/components/Heading";
-import DiscFeaturedItem from "src/components/DiscFeaturedItem";
-import DiscFeaturedItemSkeleton from "src/components/DiscFeaturedItemSkeleton";
-import config from "src/config";
+import { Container, Heading, Section, SimpleProduct } from "src/components";
 import { prisma } from "src/lib/prisma";
-import { DiscDetails, discDetailsSelect } from "src/types/prisma";
-import { LoadingPage } from "src/components";
-import SimpleProduct from "src/components/SimpleProduct";
 
 type Props = {
   trending: DiscDetails[];
@@ -20,7 +12,7 @@ type Props = {
 const HomePage: NextPage<Props> = ({ trending, latest }) => {
   return (
     <>
-      <section className="py-16">
+      <Section>
         <Container className="text-center mb-8">
           <Heading className="mb-4" aria-label="Populære disker">
             Trendende disker
@@ -35,11 +27,11 @@ const HomePage: NextPage<Props> = ({ trending, latest }) => {
             <SimpleProduct key={disc.id} disc={disc} featured />
           ))}
         </div>
-      </section>
+      </Section>
 
       <hr />
 
-      <section className="py-16">
+      <Section>
         <Container className="text-center mb-8">
           <Heading as="h2" className="mb-8" aria-label="Sist oppdaterte disckr">
             Sist oppdatert disker
@@ -55,7 +47,7 @@ const HomePage: NextPage<Props> = ({ trending, latest }) => {
             ))}
           </div>
         </Container>
-      </section>
+      </Section>
     </>
   );
 };
@@ -71,6 +63,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   const latestData = await prisma.product.findMany({
     select: {
+      id: true,
+
       disc: {
         select: discDetailsSelect,
       },
@@ -78,6 +72,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     where: {
       isDisc: true,
     },
+    distinct: ["discId"],
     orderBy: {
       updatedAt: "desc",
     },
@@ -97,7 +92,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       trending: trendingDiscs || [],
       latest: latestDiscs || [],
     },
-    revalidate: 60,
+    revalidate: 60 * 5,
   };
 };
 

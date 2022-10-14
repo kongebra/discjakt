@@ -16,13 +16,17 @@ const links = [
   //   href: "/discs",
   // },
   {
+    label: "Forsiden",
+    href: "/",
+  },
+  {
     label: "Merker",
     href: "/brands",
   },
-  // {
-  //   label: "Nettbutikker",
-  //   href: "/stores",
-  // },
+  {
+    label: "Nettbutikker",
+    href: "/stores",
+  },
 ];
 
 const NavLink = ({ href, label }: { href: string; label: string }) => {

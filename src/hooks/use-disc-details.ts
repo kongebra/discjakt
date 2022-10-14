@@ -10,7 +10,7 @@ const fetchDisc = async (slug: string) => {
   return response.data;
 };
 
-export function useDiscDetails(slug?: string) {
+export default function useDiscDetails(slug?: string) {
   const { data, ...rest } = useQuery(["disc", slug], () => fetchDisc(slug!), {
     enabled: !!slug,
   });

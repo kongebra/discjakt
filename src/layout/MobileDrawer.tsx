@@ -18,19 +18,17 @@ const MobileDrawer: React.FC<Props> = ({ title, show, onClose }) => {
 
   const menu = [
     {
-      href: "/",
       label: "Forsiden",
+      href: "/",
       icon: FaHome,
     },
-    // {
-    //   href: "/discs",
-    //   label: "Disker",
-    //   icon: FaAccusoft,
-    // },
     {
       label: "Merker",
       href: "/brands",
-      icon: FaWarehouse,
+    },
+    {
+      label: "Nettbutikker",
+      href: "/stores",
     },
   ];
 
@@ -68,7 +66,7 @@ const MobileDrawer: React.FC<Props> = ({ title, show, onClose }) => {
                           : "bg-gray-100 font-semibold"
                       )}
                     >
-                      <item.icon />
+                      {item?.icon && <item.icon />}
                       <span>{item.label}</span>
                     </a>
                   </Link>

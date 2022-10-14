@@ -1,25 +1,22 @@
 import React from "react";
+import Image from "next/future/image";
 import { useRouter } from "next/router";
+
 import { useQuery } from "@tanstack/react-query";
 
 import {
   Container,
-  DiscFeaturedItem,
   SelectDiscSort,
   Heading,
   Breadcrumbs,
+  SimpleProduct,
+  Section,
 } from "src/components";
 
 import config from "src/config";
-
-import useSortDiscs from "src/hooks/use-sort-discs";
-
-import { DiscDetails } from "src/types/prisma";
-
+import { useSortDiscs } from "src/hooks";
+import type { DiscDetails } from "src/types/prisma";
 import { getQueryStringValue } from "src/utils/query";
-import SimpleProduct from "src/components/SimpleProduct";
-import Section from "src/components/Section";
-import Image from "next/future/image";
 
 const fetchSearch = async (query?: string) => {
   const url = `${config.baseUrl}/api/discs/search?q=${query || ""}`;
@@ -60,7 +57,9 @@ const SearchPage = () => {
 
         <Section>
           <Container>
-            <Heading className="mb-8">Søker ...</Heading>
+            <Heading className="mb-8">
+              Søker etter <em>{query}</em> ...
+            </Heading>
 
             <Image
               src="/illustrations/loading.svg"

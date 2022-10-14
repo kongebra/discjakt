@@ -1,8 +1,11 @@
-import { signIn, useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+
+import { FaFacebook, FaGoogle } from "react-icons/fa";
+
 import Image from "next/future/image";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { signIn, useSession } from "next-auth/react";
+
 import { Button, Container, Heading, LoadingPage } from "src/components";
 
 const LoginPage = () => {

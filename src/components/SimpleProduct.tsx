@@ -35,7 +35,7 @@ const SimpleProduct: React.FC<Props> = ({ disc, featured }) => {
               alt={disc.name}
               width={512}
               height={512}
-              className="max-w-full h-auto aspect-square rounded group-hover:opacity-75 transition"
+              className="max-w-full h-auto aspect-square object-contain rounded group-hover:opacity-75 transition"
             />
 
             <div

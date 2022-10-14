@@ -19,7 +19,7 @@ export default function useUser() {
     retry: false,
   });
 
-  const login = () => signIn("auth0");
+  const login = () => signIn();
 
   const logout = () => {
     queryClient.setQueryData(["user"], undefined);
