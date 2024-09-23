@@ -10,26 +10,62 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
-    name: "Build and Test"
+  test:
+    name: "Test"
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "latest"
-
-      # 2. Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.23.x"
 
-      # 3. Cache Go modules and build cache
+      - name: Install, tidy and verify dependencies
+        run: |
+          go mod download
+          go mod tidy
+          go mod verify
+        working-directory: src/backend
+
+      - name: Install go-junit-report
+        run: |
+          go install github.com/jstemmer/go-junit-report@latest
+          echo "${{ github.workspace }}/go/bin" >> $GITHUB_PATH
+        working-directory: src/backend
+
+      - name: Run tests and generate JUnit XML report
+        run: |
+          go test -cover -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml
+        working-directory: src/backend
+
+      - name: Upload test results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: src/backend/report.xml
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Go Tests
+          path: src/backend/report.xml
+          reporter: junit
+
+  build:
+    name: "Build and Test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.x"
+
       - name: Cache Go modules and build cache
         uses: actions/cache@v4
         with:
@@ -40,52 +76,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # 4. Install dependencies
-      - name: Install dependencies
+      - name: Install, tidy and verify dependencies
         run: |
-          cd src/backend
           go mod download
-
-      # 5. Tidy dependencies
-      - name: Tidy dependencies
-        run: |
-          cd src/backend
           go mod tidy
-
-      # 6. Verify module integrity
-      - name: Verify Go modules
-        run: |
-          cd src/backend
           go mod verify
+        working-directory: src/backend
 
-      # 7. Install go-junit-report
-      - name: Install go-junit-report
-        run: |
-          go install github.com/jstemmer/go-junit-report@latest
-        env:
-          PATH: ${{ github.env.PATH }}:${{ github.env.GOPATH }}/bin
-
-      # 8. Build the application
       - name: Build
         run: |
-          cd src/backend
           go build -v ./...
-
-      # 9. Run tests and generate JUnit XML report
-      - name: Test
-        run: |
-          cd src/backend
-          go test ./... -json > TestResults.json
-
-      # 10. Upload test results as artifact (optional)
-      - name: Upload test results as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: src/backend/TestResults.xml
-
-      # 11. Publish Test Results to GitHub
-      - name: Publish Test Results
-        run: |
-          cd src/backend
-          npx github-actions-ctrf TestResults.json
+        working-directory: src/backend
