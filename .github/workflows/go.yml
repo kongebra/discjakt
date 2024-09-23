@@ -18,6 +18,11 @@ jobs:
       # 1. Checkout the repository
       - uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
       # 2. Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -26,7 +31,7 @@ jobs:
 
       # 3. Cache Go modules and build cache
       - name: Cache Go modules and build cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -70,7 +75,7 @@ jobs:
       - name: Test
         run: |
           cd src/backend
-          go test ./... -json | go-junit-report > TestResults.xml
+          go test ./... -json > TestResults.json
 
       # 10. Upload test results as artifact (optional)
       - name: Upload test results as artifact
@@ -81,8 +86,6 @@ jobs:
 
       # 11. Publish Test Results to GitHub
       - name: Publish Test Results
-        uses: dorny/test-reporter@v1
-        with:
-          name: Go Tests
-          path: src/backend/TestResults.xml
-          reporter: junit
+        run: |
+          cd src/backend
+          npx github-actions-ctrf TestResults.json
