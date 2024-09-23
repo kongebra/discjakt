@@ -52,7 +52,7 @@ jobs:
         with:
           name: Go Tests
           path: src/backend/report.xml
-          reporter: junit
+          reporter: java-junit
 
   build:
     name: "Build and Test"
