@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd src/backend
-          go get .
+          go get -v ./...
 
       - name: Install go-junit-report
         run: |
