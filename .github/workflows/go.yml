@@ -1,4 +1,4 @@
-# This workflow will build a golang project
+# This workflow will build and test a Golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
 name: Go
@@ -13,42 +13,73 @@ jobs:
   build:
     name: "Build and Test"
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout the repository
       - uses: actions/checkout@v4
 
+      # 2. Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.23.x"
 
+      # 3. Cache Go modules and build cache
+      - name: Cache Go modules and build cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # 4. Install dependencies
       - name: Install dependencies
         run: |
           cd src/backend
-          go get -v ./...
+          go mod download
 
+      # 5. Tidy dependencies
+      - name: Tidy dependencies
+        run: |
+          cd src/backend
+          go mod tidy
+
+      # 6. Verify module integrity
+      - name: Verify Go modules
+        run: |
+          cd src/backend
+          go mod verify
+
+      # 7. Install go-junit-report
       - name: Install go-junit-report
         run: |
           go install github.com/jstemmer/go-junit-report@latest
-        # Ensure that the GOPATH/bin is in the PATH
         env:
-          GOPATH: ${{ env.GOPATH }}
+          PATH: ${{ github.env.PATH }}:${{ github.env.GOPATH }}/bin
 
+      # 8. Build the application
       - name: Build
         run: |
           cd src/backend
           go build -v ./...
 
+      # 9. Run tests and generate JUnit XML report
       - name: Test
         run: |
           cd src/backend
-          go test ./... -json | $(go env GOPATH)/bin/go-junit-report > TestResults.xml
+          go test ./... -json | go-junit-report > TestResults.xml
 
+      # 10. Upload test results as artifact (optional)
       - name: Upload test results as artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: src/backend/TestResults.xml
 
+      # 11. Publish Test Results to GitHub
       - name: Publish Test Results
         uses: dorny/test-reporter@v1
         with:
