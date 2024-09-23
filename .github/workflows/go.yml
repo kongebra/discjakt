@@ -24,7 +24,14 @@ jobs:
       - name: Install dependencies
         run: |
           cd src/backend
-          go get -v -t -d ./...
+          go get .
+
+      - name: Install go-junit-report
+        run: |
+          go install github.com/jstemmer/go-junit-report@latest
+        # Ensure that the GOPATH/bin is in the PATH
+        env:
+          GOPATH: ${{ env.GOPATH }}
 
       - name: Build
         run: |
@@ -34,4 +41,17 @@ jobs:
       - name: Test
         run: |
           cd src/backend
-          go test -v ./...
+          go test ./... -json | $(go env GOPATH)/bin/go-junit-report > TestResults.xml
+
+      - name: Upload test results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: src/backend/TestResults.xml
+
+      - name: Publish Test Results
+        uses: dorny/test-reporter@v1
+        with:
+          name: Go Tests
+          path: src/backend/TestResults.xml
+          reporter: junit
