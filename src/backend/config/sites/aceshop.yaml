@@ -1,0 +1,13 @@
+{
+  "name": "Aceshop",
+  "base_url": "https://www.aceshop.no",
+  "selectors":
+    {
+      "name": "h1",
+      "price": ".product-price",
+      "description": ".product-description",
+      "image": ".product-image img",
+      "availability": ".product-availability",
+    },
+  "dynamic_content": false,
+}
