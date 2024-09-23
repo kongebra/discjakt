@@ -11,17 +11,27 @@ on:
 
 jobs:
   build:
+    name: "Build and Test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: "1.23"
+          go-version: "1.23.x"
+
+      - name: Install dependencies
+        run: |
+          cd src/backend
+          go get -v -t -d ./...
 
       - name: Build
-        run: go build -v src/backend/...
+        run: |
+          cd src/backend
+          go build -v ./...
 
       - name: Test
-        run: go test -v src/backend/...
+        run: |
+          cd src/backend
+          go test -v ./...
